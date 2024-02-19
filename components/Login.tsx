@@ -1,63 +1,123 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/P80QdwhOT9j
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+"use client"
+
+import Link from "next/link"
+import { registerSchema } from "@/utils/schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useFormState } from "react-dom"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
 import {
-  CardTitle,
+  Card,
+  CardContent,
   CardDescription,
   CardHeader,
-  CardContent,
-  Card,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { signIn, signUp } from "@/app/actions"
+
+import { SubmitButton } from "./SubmitButton"
 
 export default function Component() {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    mode: "onBlur",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
+
+  const [state, formAction] = useFormState(signIn, {} as any)
+
   return (
-    <Card className='mx-auto max-w-md'>
-      <CardHeader className='space-y-1'>
-        <CardTitle className='text-2xl font-bold'>Login</CardTitle>
+    <Card className="mx-auto max-w-md">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold">Login</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className='space-y-4'>
-          <div className='space-y-2'>
-            <Label htmlFor='email'>Email</Label>
-            <Input
-              id='email'
-              placeholder='m@example.com'
-              required
-              type='email'
+        <Form {...form}>
+          <form action={formAction} className="space-y-3">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="Enter email" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='space-y-2'>
-            <div className='flex items-center'>
-              <Label htmlFor='password'>Password</Label>
-              <Link className='ml-auto inline-block text-sm underline' href='#'>
-                Forgot your password?
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      className="ml-auto inline-block text-sm underline"
+                      href="#"
+                    >
+                      Forgot your password?
+                    </Link>
+                  </div>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <SubmitButton
+              formAction={formAction}
+              type="submit"
+              className="w-full"
+              text="Sign In"
+              pendingText="Signing In..."
+            />
+
+            <SubmitButton
+              type="button"
+              className="w-full"
+              variant="outline"
+              text="Login with Google"
+              pendingText="Logging In With Google..."
+            />
+
+            <div className="mt-4 text-center text-sm">
+              Don't have an account?
+              <Link className="underline" href="#">
+                Sign up
               </Link>
             </div>
-            <Input id='password' required type='password' />
-          </div>
-          <Button className='w-full' type='submit'>
-            Login
-          </Button>
-          <Button className='w-full' variant='outline'>
-            Login with Google
-          </Button>
-        </div>
-        <div className='mt-4 text-center text-sm'>
-          Don't have an account?
-          <Link className='underline' href='#'>
-            Sign up
-          </Link>
-        </div>
+          </form>
+        </Form>
       </CardContent>
     </Card>
-  );
+  )
 }
