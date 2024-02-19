@@ -32,7 +32,7 @@ export async function signIn(prevState: any, formData: FormData) {
     return redirect("/login?message=Could not authenticate user")
   }
 
-  return redirect("/protected")
+  return redirect("/dashboard")
 }
 
 export async function signUp(formData: FormData) {

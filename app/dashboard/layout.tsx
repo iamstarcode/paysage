@@ -1,32 +1,31 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/qpqRCGnst98
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { JSX, SVGProps } from "react"
+import { SVGProps } from "react"
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { createClient } from "@/utils/supabase/server"
+import { Home } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import AuthButton from "@/components/AuthButton"
+import DeployButton from "@/components/DeployButton"
+import Header from "@/components/Header"
+import FetchDataSteps from "@/components/tutorial/FetchDataSteps"
 
-export default function Component() {
+export default async function DashboardLayout({
+  children, // will be a page or nested layout
+}: {
+  children: React.ReactNode
+}) {
+  const supabase = createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return redirect("/login")
+  }
+
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
@@ -41,7 +40,7 @@ export default function Component() {
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="#"
+                href="/dashboard"
               >
                 <HomeIcon className="h-4 w-4" />
                 Home
@@ -99,7 +98,7 @@ export default function Component() {
               </div>
             </form>
           </div>
-          <DropdownMenu>
+          {/*   <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
@@ -128,11 +127,12 @@ export default function Component() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="border shadow-sm rounded-lg p-2">
-            <Table>
+            {children}
+            {/*  <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">Order</TableHead>
@@ -358,7 +358,7 @@ export default function Component() {
                   </TableCell>
                 </TableRow>
               </TableBody>
-            </Table>
+            </Table> */}
           </div>
         </main>
       </div>
