@@ -3,7 +3,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "reset": "supabase db reset ",
+    "sgen": "npx snaplet generate",
+    "seed": "npx tsx seed.mts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -32,10 +35,14 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
+    "@snaplet/copycat": "^4.1.0",
+    "@snaplet/seed": "^0.88.0",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "encoding": "^0.1.13",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "snaplet": "^0.88.0",
+    "tsx": "^4.7.1"
   }
 }

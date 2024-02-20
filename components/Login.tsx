@@ -41,6 +41,7 @@ export default function Component() {
   })
 
   const [state, formAction] = useFormState(signIn, {} as any)
+  const [st, action] = useFormState(signUp, {} as any)
 
   return (
     <Card className="mx-auto max-w-md">
@@ -52,7 +53,7 @@ export default function Component() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form action={formAction} className="space-y-3">
+          <form className="space-y-3">
             <FormField
               control={form.control}
               name="email"
@@ -99,6 +100,14 @@ export default function Component() {
               className="w-full"
               text="Sign In"
               pendingText="Signing In..."
+            />
+
+            <SubmitButton
+              formAction={action}
+              type="submit"
+              className="w-full"
+              text="Sign Up"
+              pendingText="Signing Up..."
             />
 
             <SubmitButton

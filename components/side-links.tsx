@@ -60,6 +60,12 @@ export default function SideLinks() {
     },
 
     {
+      title: "Wallet",
+      href: "/dashboard/wallet",
+      icon: <Home className="h-4 w-4" />,
+    },
+
+    {
       title: "Transactions",
       href: "/dashboard/transactions",
       icon: <Home className="h-4 w-4" />,

@@ -35,7 +35,7 @@ export async function signIn(prevState: any, formData: FormData) {
   return redirect("/dashboard")
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(prevState: any, formData: FormData) {
   "use server"
 
   const origin = headers().get("origin")
