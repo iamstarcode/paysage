@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/server"
-import { createServerClient } from "@supabase/ssr"
 
 import { Tables } from "@/types/supabase"
 import { Button } from "@/components/ui/button"

@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react"
 import { TransferSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/client"
+import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { QueryData, QueryError, QueryResult } from "@supabase/supabase-js"
 import { DollarSign, Euro } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Tables } from "@/types/supabase"
+import { BalanceWithCurrency } from "@/types/isupabase"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -39,15 +40,6 @@ import {
 } from "@/components/ui/select"
 
 export default function Transfer() {
-  const supabase = createClient()
-
-  const balanceWithCurrencyQuery = supabase.from("wallets").select(`
-  balance,
-  currencies(*)
-`)
-
-  type BalanceWithCurrency = QueryData<typeof balanceWithCurrencyQuery>
-
   const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
   const form = useForm<z.infer<typeof TransferSchema>>({
@@ -57,14 +49,12 @@ export default function Transfer() {
   useEffect(() => {
     async function setDefaults() {
       const { data } = await balanceWithCurrencyQuery
-      console.log(data, "rfrfrfr")
+
       setWallet(data)
     }
 
     setDefaults()
   }, [])
-
-  console.log(wallets)
 
   function onSubmit(data: z.infer<typeof TransferSchema>) {}
 
@@ -110,19 +100,14 @@ export default function Transfer() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="usd">
-                            <div className="inline-flex items-center">
-                              <DollarSign className="w-6 h-6" />
-                              <p>USD</p>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="EUR">
-                            <Euro />
-                            EUR
-                          </SelectItem>
-                          <SelectItem value="m@support.com">
-                            m@support.com
-                          </SelectItem>
+                          {wallets?.map((wallet) => (
+                            <SelectItem
+                              value={wallet.currencies?.currency_code ?? ""}
+                            >
+                              {wallet.currencies?.currency_sign}
+                              {wallet.balance}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
