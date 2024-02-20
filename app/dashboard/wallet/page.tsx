@@ -1,11 +1,22 @@
+import { createClient } from "@/utils/supabase/server"
+import { createServerClient } from "@supabase/ssr"
+
+import { Tables } from "@/types/supabase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Transfer from "@/components/transfer"
 
-export default function Page() {
+async function getWallet() {
+  const supabase = createClient()
+  const { data: wallets } = await supabase.from("wallets").select("*")
+
+  console.log(wallets)
+}
+export default async function Page() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <div className="flex justify-between">
-        <div className="grid gap-4 md:grid-cols-3 max-w-fit">
+      <div className="flex flex-col-reverse md:flex-row md:justify-between">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full md:max-w-fit">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">
@@ -64,7 +75,7 @@ export default function Page() {
           </Card>
         </div>
 
-        <div className="flex  gap-2 ml-auto">
+        <div className="flex gap-2">
           <Button size="sm">Add funds</Button>
           <Button size="sm" variant="outline">
             Withdraw
@@ -123,6 +134,8 @@ export default function Page() {
           </div>
         </CardContent>
       </Card>
+
+      <Transfer />
     </div>
   )
 }

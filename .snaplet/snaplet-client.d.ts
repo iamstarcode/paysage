@@ -59,6 +59,7 @@ type Override = {
       id?: string;
       currency_name?: string;
       currency_code?: string;
+      currency_sign?: string;
       wallets?: string;
     };
   }

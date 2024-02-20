@@ -42,6 +42,7 @@ interface Table_public_currencies {
   id: number;
   currency_name: string;
   currency_code: string;
+  currency_sign: string;
 }
 interface Table_auth_flow_state {
   id: string;

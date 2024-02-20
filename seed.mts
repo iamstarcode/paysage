@@ -7,10 +7,17 @@ const seed = await createSeedClient()
 const currencyStore = await seed.currencies([
   {
     currencyName: "Naira",
-    currencyCode: "NG",
+    currencyCode: "NGN",
+    currencySign: "₦",
   },
   {
     currencyName: "Dollar",
     currencyCode: "USD",
+    currencySign: "$",
+  },
+  {
+    currencyName: "Euro",
+    currencyCode: "EUR",
+    currencySign: "€",
   },
 ])
