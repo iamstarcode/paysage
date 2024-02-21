@@ -15,6 +15,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 import { BalanceWithCurrency } from "@/types/isupabase"
+import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -47,6 +48,7 @@ import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 const initialState = {
   message: "",
   errors: [],
+  type: "",
 }
 export default function Transfer() {
   const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
@@ -57,8 +59,10 @@ export default function Transfer() {
   const [state, formAction] = useFormState(transferFromWallet, initialState)
 
   useEffect(() => {
-    if (state?.errors?.length! > 0) {
-      toast.error(state?.message, {
+    if (state?.type == "ValidationError" && state?.errors?.length! > 0) {
+      useToast({
+        message: state?.message,
+        type: "error",
         description: (
           <>
             {state?.errors?.map((error, i) => (
@@ -71,8 +75,16 @@ export default function Transfer() {
       })
     }
 
-    if (state?.message) {
-      toast.info(state?.message)
+    if (state?.type == "WarningError") {
+      useToast({ type: "warning", message: state.message })
+    }
+
+    if (state?.type == "Success") {
+      useToast({ type: "warning", message: state.message })
+    }
+
+    if (state?.type == "Error") {
+      useToast({ type: "error", message: state.message })
     }
   }, [state])
 

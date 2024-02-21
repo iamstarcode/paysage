@@ -19,40 +19,39 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
       errorMsg.push(issue.path[0] + ": " + issue.message)
     })
 
-    return { errors: errorMsg, message: "Error: Please Check Your Input!" }
+    return {
+      errors: errorMsg,
+      message: "Error: Please Check Your Input!",
+      type: "ValidationError",
+    }
   }
 
+  const supabase = createClient()
   const {
     data: { user },
-  } = await getUserQuery()
+  } = await supabase.auth.getUser()
 
   const recieverId = formData.get("to") as string
 
-  const supabase = createClient()
   try {
     // Check if wallets exist and belong to the user
-    const { data: fromWallet, error: fromWalletError } = await supabase
-      .from("wallets")
-      .select("*")
-      .eq("id", user?.id + "ss"!)
-      .single()
 
-    if (fromWalletError || !fromWallet) {
-      console.log("ddd")
-      return {
-        message: "Wallet does not belong to you",
-      }
-      throw new Error("Invalid source wallet ID or unauthorized access")
-    }
+    /*   return {
+      message: "Transfer Complete",
+      type: "Success",
+    } */
 
     const { data: toWallet, error: toWalletError } = await supabase
-      .from("wallets")
+      .from("users")
       .select("*")
-      .eq("id", result.data.reciever)
+      .eq("email", result.data.reciever)
       .single()
 
     if (toWalletError || !toWallet) {
-      throw new Error("Invalid destination wallet ID")
+      return {
+        message: "Reciever not found!",
+        type: "Error",
+      }
     }
 
     /*  // Validate sufficient balance
