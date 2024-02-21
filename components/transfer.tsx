@@ -1,13 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { TransferSchema } from "@/utils/schema"
-import { createClient } from "@/utils/supabase/client"
-import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
+import {
+  balanceWithCurrencyQuery,
+  getUserQuery,
+} from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { QueryData, QueryError, QueryResult } from "@supabase/supabase-js"
-import { DollarSign, Euro } from "lucide-react"
+import { User } from "@supabase/supabase-js"
+import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
 
 import { BalanceWithCurrency } from "@/types/isupabase"
@@ -30,7 +34,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -38,25 +41,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { SubmitButton } from "@/components/SubmitButton"
+import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 
+const initialState = {
+  message: "",
+  errors: [],
+}
 export default function Transfer() {
   const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
+  //const [to, setTo] = useState<User | null>()
+
+  //const transferFromWalletWithTo = transferFromWallet.bind(null, { id: "111" })
+  const [state, formAction] = useFormState(transferFromWallet, initialState)
+
+  useEffect(() => {
+    if (state?.errors?.length! > 0) {
+      toast.error(state?.message, {
+        description: (
+          <>
+            {state?.errors?.map((error, i) => (
+              <p key={i} className="capitalize text-white">
+                {error}
+              </p>
+            ))}
+          </>
+        ),
+      })
+    }
+
+    if (state?.message) {
+      toast.info(state?.message)
+    }
+  }, [state])
+
   const form = useForm<z.infer<typeof TransferSchema>>({
     resolver: zodResolver(TransferSchema),
+    mode: "onChange",
+    defaultValues: {
+      currency: "",
+      reciever: "",
+    },
   })
 
   useEffect(() => {
     async function setDefaults() {
       const { data } = await balanceWithCurrencyQuery
-
       setWallet(data)
     }
 
     setDefaults()
   }, [])
 
-  function onSubmit(data: z.infer<typeof TransferSchema>) {}
+  async function clientAction(formData: FormData) {
+    formData.set("currency", form.getValues("currency"))
+
+    const data = {
+      reciever: formData.get("reciever"),
+      //amount: formData.get("amount"),
+      currency: formData.get("currency"),
+    }
+
+    const result = TransferSchema.safeParse(data)
+    if (!result.success) {
+      form.trigger()
+    } else {
+      return formAction(formData)
+    }
+  }
 
   return (
     <div className="grid md:grid-cols-2 md:gap-8">
@@ -71,19 +124,34 @@ export default function Transfer() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sender">Your name</Label>
-                  <Input id="sender" placeholder="Enter your name" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="recipient">Recipient's name</Label>
-                  <Input id="recipient" placeholder="Enter recipient's name" />
-                </div>
-                <div className="space-y-2">
+                {/*  <div className="space-y-2">
                   <Label htmlFor="amount">Amount</Label>
                   <Input id="amount" placeholder="Enter amount" />
-                </div>
+                </div> */}
 
+                <FormField
+                  control={form.control}
+                  name="reciever"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center">
+                        <FormLabel>Reciever</FormLabel>
+                        <p className="ml-auto inline-block text-sm underline">
+                          Forgot your password?
+                        </p>
+                      </div>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter Reciever Email"
+                          {...field}
+                          required
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="currency"
@@ -93,21 +161,24 @@ export default function Transfer() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        required
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a verified email to display" />
+                            <SelectValue placeholder="Select a wallet" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {wallets?.map((wallet) => (
-                            <SelectItem
-                              value={wallet.currencies?.currency_code ?? ""}
-                            >
-                              {wallet.currencies?.currency_sign}
-                              {wallet.balance}
-                            </SelectItem>
-                          ))}
+                          {wallets != null &&
+                            wallets.map((wallet) => (
+                              <SelectItem
+                                key={wallet.currencies?.id}
+                                value={wallet.currencies?.currency_code!}
+                              >
+                                {wallet.currencies?.currency_sign}
+                                {wallet.balance}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -116,7 +187,12 @@ export default function Transfer() {
                 />
               </CardContent>
               <CardFooter>
-                <Button className="ml-auto">Send</Button>
+                <SubmitButton
+                  className="ml-auto"
+                  formAction={clientAction}
+                  text="Transfer"
+                  pendingText="Transfering..."
+                />
               </CardFooter>
             </Card>
           </form>

@@ -8,8 +8,7 @@ export const registerSchema = z.object({
 })
 
 export const TransferSchema = z.object({
-  to: z.string(),
-  from: z.string(),
-  amount: z.string(),
-  currency: z.string(),
+  reciever: z.string().min(3),
+  //amount: z.string(),
+  currency: z.string().min(1, { message: "Please select a wallet" }),
 })

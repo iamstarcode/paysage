@@ -15,6 +15,7 @@ export function SubmitButton({ text, pendingText, ...props }: Props) {
 
   const isPending = pending && action === props.formAction
 
+  //console.log(action)
   return (
     <Button {...props} disabled={isPending}>
       {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}

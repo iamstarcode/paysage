@@ -6,3 +6,5 @@ export const balanceWithCurrencyQuery = supabase.from("wallets").select(`
   balance,
   currencies(*)
 `)
+
+export const getUserQuery = async () => await supabase.auth.getUser()
