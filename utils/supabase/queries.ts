@@ -20,5 +20,3 @@ export const getProfileByUsernameQuery = (
 
 export const getUserWalletByIdQuery = (id: string, supabase: SupabaseClient) =>
   supabase.from("wallets").select("balance,currencies(*)").eq("user_id", id!)
-
-export const getUserQuery = async () => await supabase.auth.getUser()

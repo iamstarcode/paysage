@@ -71,41 +71,32 @@ create policy "Only Users can view own wallet."
 create policy "Users can update their own wallet balance."
     on wallets for update
     to authenticated                    
-    using ( auth.uid() = user_id )
+    using ( auth.uid() = user_id );
 -- Comtemplate for delete permission
 
-create function public.transfer_funds(sender_id text, receiver_id text, amount numeric)
+create or replace function public.transfer_funds(sender_id text, receiver_id text, amount numeric, _currency_id bigint)
 returns void
 security definer set search_path = public
 as $$
 begin
-  -- Check that the sender and receiver IDs are valid
-  if not exists (select 1 from wallets where user_id = sender_id) then
-    raise exception 'Invalid sender ID: %', sender_id;
+  -- Create a wallet for the receiver if it doesn't exist
+  if not exists (select 1 from wallets where user_id = receiver_id::uuid and wallets.currency_id = _currency_id) then
+    insert into wallets (user_id, currency_id, balance) values (receiver_id::uuid, _currency_id, 0);
   end if;
 
-  if not exists (select 1 from wallets where user_id = receiver_id) then
-    raise exception 'Invalid receiver ID: %', receiver_id;
-  end if;
-
-  -- Check that the sender has sufficient funds
-  if (select balance from wallets where user_id = sender_id) < amount then
-    raise exception 'Insufficient funds: %', sender_id;
-  end if;
-
-  -- Update the sender's balance
+  -- Deduct the amount from the sender's balance
   update wallets
-  set balance = balance - amount
-  where user_id = sender_id;
+  set balance = balance - amount::numeric
+  where user_id = sender_id::uuid and wallets.currency_id = _currency_id;
 
-  -- Update the receiver's balance
+  -- Add the amount to the receiver's balance
   update wallets
-  set balance = balance + amount
-  where user_id = receiver_id;
+  set balance = balance + amount::numeric
+  where user_id = receiver_id::uuid and wallets.currency_id = _currency_id;
 end;
 $$ language plpgsql;
 
-grant execute on function public.transfer_funds(text, text, numeric) to authenticated;
+grant execute on function public.transfer_funds(text, text, numeric, bigint) to authenticated;
 
 
 CREATE TABLE transactions (

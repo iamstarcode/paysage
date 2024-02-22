@@ -1,23 +1,18 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import { FormState } from "@/types"
+import { handleToast } from "@/utils/handle-toast"
 import { TransferSchema } from "@/utils/schema"
-import {
-  balanceWithCurrencyQuery,
-  getProfileByUsernameQuery,
-  getUserQuery,
-} from "@/utils/supabase/queries"
+import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@supabase/supabase-js"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { BalanceWithCurrency } from "@/types/isupabase"
+import { BalanceWithCurrency } from "@/types/supabase"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -29,7 +24,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -49,17 +43,13 @@ import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 const initialState = {
   message: "",
   errors: [],
-  type: "",
 }
 export default function Transfer() {
   const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
-  //const [to, setTo] = useState<User | null>()
-
-  //const transferFromWalletWithTo = transferFromWallet.bind(null, { id: "111" })
   const [state, formAction] = useFormState(transferFromWallet, initialState)
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (state?.type == "ValidationError" && state?.errors?.length! > 0) {
       useToast({
         message: state?.message,
@@ -81,21 +71,25 @@ export default function Transfer() {
     }
 
     if (state?.type == "Success") {
-      useToast({ type: "warning", message: state.message })
+      useToast({ type: "success", message: state.message })
     }
 
     if (state?.type == "Error") {
       useToast({ type: "error", message: state.message })
     }
+  }, [state]) */
+
+  useEffect(() => {
+    handleToast(state!)
   }, [state])
 
   const form = useForm<z.infer<typeof TransferSchema>>({
     resolver: zodResolver(TransferSchema),
     mode: "onChange",
     defaultValues: {
-      currency: "",
-      reciever: "",
-      //amount: 0,
+      currency: "1",
+      reciever: "favour",
+      amount: 50,
     },
   })
 
@@ -112,16 +106,10 @@ export default function Transfer() {
   async function clientAction(formData: FormData) {
     formData.set("currency", form.getValues("currency"))
 
-    const data = {
-      reciever: formData.get("reciever"),
-      amount: parseInt(formData.get("amount")?.toString()!),
-      currency: formData.get("currency"),
-    }
-
-    console.log(data)
-    const result = TransferSchema.safeParse(data)
+    const result = TransferSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    )
     if (!result.success) {
-      console.log(result.error.issues)
       form.trigger()
     } else {
       return formAction(formData)
@@ -210,7 +198,7 @@ export default function Transfer() {
                             wallets.map((wallet) => (
                               <SelectItem
                                 key={wallet.currencies?.id}
-                                value={wallet.currencies?.currency_code!}
+                                value={wallet.currencies?.id! + ""}
                               >
                                 {wallet.currencies?.currency_sign}
                                 {wallet.balance}

@@ -1,22 +1,18 @@
 "use server"
 
-import { isCurrencyPresent, selectBalanceByCurrency } from "@/utils/helpers"
+import { FormState } from "@/types"
+import { selectBalanceByCurrency } from "@/utils/helpers"
 import { TransferSchema } from "@/utils/schema"
 import {
   getProfileByUsernameQuery,
-  getUserQuery,
   getUserWalletByIdQuery,
 } from "@/utils/supabase/queries"
 import { createClient } from "@/utils/supabase/server"
 
 export async function transferFromWallet(prevState: any, formData: FormData) {
-  const data = {
-    reciever: formData.get("reciever"),
-    amount: formData.get("amount"),
-    currency: formData.get("currency")!,
-  }
-
-  const result = TransferSchema.safeParse(data)
+  const result = TransferSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  )
   if (!result.success) {
     let errorMsg: string[] = []
 
@@ -28,7 +24,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
       errors: errorMsg,
       message: "Error: Please Check Your Input!",
       type: "ValidationError",
-    }
+    } as FormState
   }
 
   const supabase = createClient()
@@ -44,7 +40,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
       return {
         message: "Reciever not found!",
         type: "Error",
-      }
+      } as FormState
     }
 
     const { data: senderWallet, error: senderError } =
@@ -52,47 +48,38 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
 
     const { data: recieverWallet, error: recieverWalletError } =
       await getUserWalletByIdQuery(reciever?.id!, supabase)
-    //Check if reciever has currency wallet
-    const isPresent = isCurrencyPresent(recieverWallet, result.data.currency)
+
     //Select the balance given by the currency
-    const wallet = selectBalanceByCurrency(senderWallet, result.data.currency)
+    const wallet = selectBalanceByCurrency(senderWallet, +result.data.currency)
 
     if (wallet.balance < result.data.amount) {
       return {
         message: "Insufficient fund!",
         type: "Error",
-      }
+      } as FormState
     }
     //console.log(balance)
 
     //console.log(senderWallet, recieverWallet)
+    const { data: trans, error: err } = await supabase.rpc("transfer_funds", {
+      sender_id: user?.id!,
+      receiver_id: reciever?.id!,
+      amount: result.data.amount,
+      _currency_id: +result.data.currency,
+    })
 
-    // Start a transaction
-    const { data: transaction, error: transactionError } = await supabase
-      .from("wallets")
-      .update({ balance: wallet.balance - result.data.amount })
-      .eq("id", user?.id!)
-      .single()
-
-     
-    
-    // Update destination wallet balance
-    const { data: updatedWallet, error: updateError } = await supabase
-      .from("wallets")
-      .upsert({
-        user_id: reciever.id,
-        balance: wallet.balance - result.data.amount,
-        currency_id: wallet.currencies.currency_id,
-      })
-      //.eq("id", reciever.id)
-      .single()
-
-    console.log(transaction, updatedWallet)
-    /*  return {
-      message: "Transfer Complete",
-      type: "Success",
+    if (!err) {
+      return {
+        message: "Transfer Complete",
+        type: "Success",
+      } as FormState
+    } else {
+      return {
+        message: "An error Occured",
+        type: "Error",
+      } as FormState
     }
- */
+
     /* 
 
   
@@ -120,10 +107,6 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
     if (insertError) {
       throw new Error("Failed to record transaction")
     } */
-    return {
-      message: "Please enter a valid email",
-    }
-    console.log("Transfer successful!")
   } catch (error: any) {
     console.error(error.message)
   }

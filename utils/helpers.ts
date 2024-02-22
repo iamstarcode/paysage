@@ -1,13 +1,11 @@
-export const isCurrencyPresent = (wallets: any, currencyCode: any) => {
+export const isCurrencyPresent = (wallets: any, id: any) => {
   return wallets.some(
-    (item: { currencies: { currency_code: any } }) =>
-      item.currencies.currency_code === currencyCode
+    (item: { currencies: { id: any } }) => item.currencies.id === id
   )
 }
 
-export const selectBalanceByCurrency = (wallet: any, currencyCode: any) => {
+export const selectBalanceByCurrency = (wallet: any, id: any) => {
   return wallet.find(
-    (item: { currencies: { currency_code: any } }) =>
-      item.currencies.currency_code === currencyCode
+    (item: { currencies: { id: any } }) => item.currencies.id === id
   )
 }

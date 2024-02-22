@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { ExternalToast, toast } from "sonner"
 
 interface Props {
-  type: "info" | "warning" | "error"
+  type: "info" | "warning" | "error" | "success"
   message?: ReactNode
   description?: ReactNode
 }
@@ -19,7 +19,7 @@ export const useToast = ({ type, message, description }: Props) => {
   }
 
   if (type == "warning") {
-    return toast.error(message, build)
+    return toast.error(message, {})
   }
 
   return toast.success(message, build)

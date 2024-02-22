@@ -1,20 +1,11 @@
-import { getUserQuery } from "@/utils/supabase/queries"
 import { createClient } from "@/utils/supabase/server"
 
-import { Tables } from "@/types/supabase"
+import { Tables } from "@/types/g-supabase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Transfer from "@/components/transfer"
 
-async function getWallet() {
-  const supabase = createClient()
-  const { data: wallets } = await supabase.from("wallets").select("*")
-  const user = await getUserQuery()
-
-  return user
-}
 export default async function Page() {
-  const { data } = await getUserQuery()
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex flex-col-reverse md:flex-row md:justify-between">
