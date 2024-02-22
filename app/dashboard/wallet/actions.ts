@@ -1,7 +1,12 @@
 "use server"
 
+import { isCurrencyPresent, selectBalanceByCurrency } from "@/utils/helpers"
 import { TransferSchema } from "@/utils/schema"
-import { getUserQuery } from "@/utils/supabase/queries"
+import {
+  getProfileByUsernameQuery,
+  getUserQuery,
+  getUserWalletByIdQuery,
+} from "@/utils/supabase/queries"
 import { createClient } from "@/utils/supabase/server"
 
 export async function transferFromWallet(prevState: any, formData: FormData) {
@@ -31,51 +36,72 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const recieverId = formData.get("to") as string
-
   try {
-    // Check if wallets exist and belong to the user
+    const { data: reciever, error: recieverError } =
+      await getProfileByUsernameQuery(result.data.reciever, supabase)
 
-    /*   return {
-      message: "Transfer Complete",
-      type: "Success",
-    } */
-
-    const { data: toWallet, error: toWalletError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", result.data.reciever)
-      .single()
-
-    if (toWalletError || !toWallet) {
+    if (recieverError || !reciever) {
       return {
         message: "Reciever not found!",
         type: "Error",
       }
     }
 
-    /*  // Validate sufficient balance
-    if (fromWallet.balance < amount) {
-      throw new Error("Insufficient funds")
+    const { data: senderWallet, error: senderError } =
+      await getUserWalletByIdQuery(user?.id!, supabase)
+
+    const { data: recieverWallet, error: recieverWalletError } =
+      await getUserWalletByIdQuery(reciever?.id!, supabase)
+    //Check if reciever has currency wallet
+    const isPresent = isCurrencyPresent(recieverWallet, result.data.currency)
+    //Select the balance given by the currency
+    const wallet = selectBalanceByCurrency(senderWallet, result.data.currency)
+
+    if (wallet.balance < result.data.amount) {
+      return {
+        message: "Insufficient fund!",
+        type: "Error",
+      }
     }
+    //console.log(balance)
+
+    //console.log(senderWallet, recieverWallet)
 
     // Start a transaction
     const { data: transaction, error: transactionError } = await supabase
       .from("wallets")
-      .update({ balance: supabase.raw("balance - amount") })
-      .eq("id", fromWalletId)
+      .update({ balance: wallet.balance - result.data.amount })
+      .eq("id", user?.id!)
       .single()
+
+     
+    
+    // Update destination wallet balance
+    const { data: updatedWallet, error: updateError } = await supabase
+      .from("wallets")
+      .upsert({
+        user_id: reciever.id,
+        balance: wallet.balance - result.data.amount,
+        currency_id: wallet.currencies.currency_id,
+      })
+      //.eq("id", reciever.id)
+      .single()
+
+    console.log(transaction, updatedWallet)
+    /*  return {
+      message: "Transfer Complete",
+      type: "Success",
+    }
+ */
+    /* 
+
+  
 
     if (transactionError) {
       throw new Error("Failed to deduct balance from source wallet")
     }
 
-    // Update destination wallet balance
-    const { data: updatedWallet, error: updateError } = await supabase
-      .from("wallets")
-      .update({ balance: supabase.raw("balance + amount") })
-      .eq("id", toWalletId)
-      .single()
+    
 
     if (updateError) {
       throw new Error("Failed to add balance to destination wallet")
@@ -102,3 +128,9 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
     console.error(error.message)
   }
 }
+
+/* const { data, error } = await supabase.rpc('transfer_balance', {
+  sender_id: 'sender-user-id',
+  receiver_id: 'receiver-user-id',
+  amount: 100
+}); */

@@ -69,7 +69,40 @@ create policy "Users can update their own wallet balance."
     on wallets for update
     to authenticated                    -- the Postgres Role (recommended)
     using ( auth.uid() = user_id )       -- checks if the existing row complies with the policy expression
-    with check ( auth.uid() = user_id ); --
+
+create function public.transfer_funds(sender_id text, receiver_id text, amount numeric)
+returns void
+security definer set search_path = public
+as $$
+begin
+  -- Check that the sender and receiver IDs are valid
+  if not exists (select 1 from wallets where user_id = sender_id) then
+    raise exception 'Invalid sender ID: %', sender_id;
+  end if;
+
+  if not exists (select 1 from wallets where user_id = receiver_id) then
+    raise exception 'Invalid receiver ID: %', receiver_id;
+  end if;
+
+  -- Check that the sender has sufficient funds
+  if (select balance from wallets where user_id = sender_id) < amount then
+    raise exception 'Insufficient funds: %', sender_id;
+  end if;
+
+  -- Update the sender's balance
+  update wallets
+  set balance = balance - amount
+  where user_id = sender_id;
+
+  -- Update the receiver's balance
+  update wallets
+  set balance = balance + amount
+  where user_id = receiver_id;
+end;
+$$ language plpgsql;
+
+grant execute on function public.transfer_funds(text, text, numeric) to authenticated;
+
 
 CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,

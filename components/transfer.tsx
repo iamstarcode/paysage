@@ -5,6 +5,7 @@ import Link from "next/link"
 import { TransferSchema } from "@/utils/schema"
 import {
   balanceWithCurrencyQuery,
+  getProfileByUsernameQuery,
   getUserQuery,
 } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -94,12 +95,14 @@ export default function Transfer() {
     defaultValues: {
       currency: "",
       reciever: "",
+      //amount: 0,
     },
   })
 
   useEffect(() => {
     async function setDefaults() {
       const { data } = await balanceWithCurrencyQuery
+
       setWallet(data)
     }
 
@@ -111,12 +114,14 @@ export default function Transfer() {
 
     const data = {
       reciever: formData.get("reciever"),
-      //amount: formData.get("amount"),
+      amount: parseInt(formData.get("amount")?.toString()!),
       currency: formData.get("currency"),
     }
 
+    console.log(data)
     const result = TransferSchema.safeParse(data)
     if (!result.success) {
+      console.log(result.error.issues)
       form.trigger()
     } else {
       return formAction(formData)
@@ -156,6 +161,26 @@ export default function Transfer() {
                         <Input
                           type="text"
                           placeholder="Enter Reciever Email"
+                          {...field}
+                          required
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center">
+                        <FormLabel>Amount</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter Amount"
                           {...field}
                           required
                         />

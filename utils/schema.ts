@@ -9,6 +9,8 @@ export const registerSchema = z.object({
 
 export const TransferSchema = z.object({
   reciever: z.string().min(3),
-  //amount: z.string(),
+  amount: z.coerce
+    .number({ invalid_type_error: "Must be a number" })
+    .gte(50, "Must be 50 and above"),
   currency: z.string().min(1, { message: "Please select a wallet" }),
 })
