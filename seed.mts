@@ -68,10 +68,14 @@ const profileStore = await seed.profiles((x) => [
   {
     id: usersStore.users[0].id,
     username: "iamstarcode",
+    firstName: "Bakare",
+    lastName: "Abiola",
   },
   {
     id: usersStore.users[1].id,
     username: "favour",
+    firstName: "Ijapa",
+    lastName: "Tiroko",
   },
 ])
 
@@ -112,4 +116,4 @@ const walletSrore = await seed.wallets((x) => [
   },
 ])
 
-await seed.transactions((x) => x(3))
+//await seed.transactions((x) => x(3))

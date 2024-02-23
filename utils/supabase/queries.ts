@@ -24,3 +24,6 @@ export const getUserWalletByIdQuery = (
   id: string,
   supabase: SupabaseClient<Database>
 ) => supabase.from("wallets").select("balance,currencies(*)").eq("user_id", id!)
+
+export const getTransactionsQuery = () =>
+  supabase.from("transactions").select("*")

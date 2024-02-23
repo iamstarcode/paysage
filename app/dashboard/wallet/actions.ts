@@ -83,11 +83,11 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
         .from("transactions")
         .insert({
           amount: result.data.amount,
-          transaction_type: "Fiat Transfer",
-          sender_id: user?.id,
-          receiver_id: reciever.id,
+          transaction_type: "fiat",
+          actor: user?.id!,
+          party: reciever.id,
           currency: result.data.currency,
-          description: `Transfer to ${reciever?.first_name} ${reciever?.last_name}`,
+          description: `${senderProfile?.username}&&${reciever?.username}`,
           status: "Completed",
         })
         .select()

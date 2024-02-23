@@ -167,39 +167,47 @@ export interface Database {
       }
       transactions: {
         Row: {
+          actor: string
           amount: number | null
           currency: string | null
           description: string | null
           id: number
-          receiver_id: string | null
-          sender_id: string | null
+          party: string | null
           status: string | null
           transaction_date: string | null
-          transaction_type: string
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Insert: {
+          actor: string
           amount?: number | null
           currency?: string | null
           description?: string | null
           id?: number
-          receiver_id?: string | null
-          sender_id?: string | null
+          party?: string | null
           status?: string | null
           transaction_date?: string | null
-          transaction_type: string
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Update: {
+          actor?: string
           amount?: number | null
           currency?: string | null
           description?: string | null
           id?: number
-          receiver_id?: string | null
-          sender_id?: string | null
+          party?: string | null
           status?: string | null
           transaction_date?: string | null
-          transaction_type?: string
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transactions_actor_fkey"
+            columns: ["actor"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       wallets: {
         Row: {
@@ -253,7 +261,12 @@ export interface Database {
       }
     }
     Enums: {
-      [_ in never]: never
+      transaction_type:
+        | "fiat"
+        | "processing"
+        | "shipped"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
