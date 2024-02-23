@@ -1,18 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
 import { TransferSchema } from "@/utils/schema"
 import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import { z } from "zod"
 
 import { BalanceWithCurrency } from "@/types/supabase"
-import { useToast } from "@/hooks/use-toast"
 import {
   Card,
   CardContent,

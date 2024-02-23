@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import { FormState } from "@/types"
-import { ExternalToast, toast } from "sonner"
-
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 
 export const handleToast = (state?: FormState) => {
   if (!state) return // Handle potential undefined state
@@ -24,9 +22,9 @@ export const handleToast = (state?: FormState) => {
   } else if (state.type === "WarningError") {
     toast.warning(state.message)
   } else if (state.type === "Success") {
-    useToast({ type: "success", message: state.message })
+    toast.success(state.message)
   } else if (state.type === "Error") {
-    useToast({ type: "error", message: state.message })
+    toast.error(state.message)
   }
 }
 

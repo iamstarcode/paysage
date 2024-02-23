@@ -4,7 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "reset": "supabase db reset && npx tsx seed.mts",
+    "reset": "supabase db reset --debug && npx tsx seed.mts",
     "sngen": "npx snaplet generate",
     "sugen": "supabase gen types typescript --local > types/g-supabase.ts",
     "seed": "npx tsx seed.mts"
