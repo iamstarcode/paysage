@@ -103,16 +103,28 @@ export interface Database {
       }
       fiat_transfers: {
         Row: {
+          amount: number | null
+          full_name: string | null
           id: number | null
+          receiver_id: string | null
           reference_number: string | null
+          sender_id: string | null
         }
         Insert: {
+          amount?: number | null
+          full_name?: string | null
           id?: number | null
+          receiver_id?: string | null
           reference_number?: string | null
+          sender_id?: string | null
         }
         Update: {
+          amount?: number | null
+          full_name?: string | null
           id?: number | null
+          receiver_id?: string | null
           reference_number?: string | null
+          sender_id?: string | null
         }
         Relationships: [
           {

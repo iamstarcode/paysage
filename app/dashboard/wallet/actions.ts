@@ -1,9 +1,13 @@
 "use server"
 
 import { FormState } from "@/types"
-import { selectBalanceByCurrency } from "@/utils/helpers"
+import {
+  generateTransactionReference,
+  selectBalanceByCurrency,
+} from "@/utils/helpers"
 import { TransferSchema } from "@/utils/schema"
 import {
+  getProfileByIdQuery,
   getProfileByUsernameQuery,
   getUserWalletByIdQuery,
 } from "@/utils/supabase/queries"
@@ -59,14 +63,47 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
       } as FormState
     }
 
-    const { data: trans, error: err } = await supabase.rpc("transfer_funds", {
-      sender_id: user?.id!,
-      receiver_id: reciever?.id!,
-      amount: result.data.amount,
-      _currency_id: +result.data.currency,
-    })
+    const { error: err } = await supabase
+      .rpc("transfer_funds", {
+        sender_id: user?.id!,
+        receiver_id: reciever?.id!,
+        amount: result.data.amount,
+        _currency_id: +result.data.currency,
+      })
+      .single()
 
     if (!err) {
+      //four queries
+      const { data: senderProfile } = await getProfileByIdQuery(
+        user?.id!,
+        supabase
+      )
+
+      const { data: trans } = await supabase
+        .from("transactions")
+        .insert({
+          amount: result.data.amount,
+          transaction_type: "Fiat Transfer",
+          sender_id: user?.id,
+          receiver_id: reciever.id,
+          currency: result.data.currency,
+          description: `Transfer to ${reciever?.first_name} ${reciever?.last_name}`,
+          status: "Completed",
+        })
+        .select()
+        .single()
+
+      const referenceNumber = generateTransactionReference("F")
+
+      await supabase.from("fiat_transfers").insert({
+        id: trans?.id,
+        amount: result.data.amount,
+        full_name: `${senderProfile?.first_name} ${senderProfile?.last_name}`,
+        sender_id: user?.id,
+        receiver_id: reciever.id,
+        reference_number: referenceNumber,
+      })
+
       return {
         message: "Transfer Complete",
         type: "Success",

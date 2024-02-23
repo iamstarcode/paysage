@@ -97,11 +97,16 @@ CREATE TABLE public.transactions (
     description TEXT,
     status VARCHAR(20) DEFAULT 'Pending'
 );
-
+-- currency, should probably become currency_id
 CREATE TABLE public.fiat_transfers (
     id bigint references transactions,
+    amount DECIMAL(18, 6),
+    full_name text,
+    sender_id uuid,
+    receiver_id uuid,
     reference_number VARCHAR(50)
 );
+CREATE INDEX idx_fiat_transfers_reference_number ON public.fiat_transfers(reference_number);
 
 CREATE TABLE public.crypto_transfers (
     id bigint references transactions,

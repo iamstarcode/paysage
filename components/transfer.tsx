@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { handleToast } from "@/utils/handle-toast"
+import {
+  generateReferenceNumber,
+  generateTransactionReference,
+} from "@/utils/helpers"
 import { TransferSchema } from "@/utils/schema"
 import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -53,12 +57,12 @@ export default function Transfer() {
       keepValues: false,
     },
     defaultValues: {
-      /*   currency: "1",
+      currency: "1",
       reciever: "favour",
-      amount: 50,  */
-      currency: "",
+      amount: 50,
+      /* currency: "",
       reciever: "",
-      amount: 0,
+      amount: 0, */
     },
   })
 

@@ -110,11 +110,6 @@ const walletSrore = await seed.wallets((x) => [
     userId: usersStore.users[1].id,
     currencyId: 1,
   },
-  {
-    balance: 5000,
-    userId: usersStore.users[1].id,
-    currencyId: 2,
-  },
 ])
 
 await seed.transactions((x) => x(3))
