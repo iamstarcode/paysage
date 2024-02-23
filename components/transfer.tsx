@@ -49,57 +49,35 @@ export default function Transfer() {
 
   const [state, formAction] = useFormState(transferFromWallet, initialState)
 
-  /* useEffect(() => {
-    if (state?.type == "ValidationError" && state?.errors?.length! > 0) {
-      useToast({
-        message: state?.message,
-        type: "error",
-        description: (
-          <>
-            {state?.errors?.map((error, i) => (
-              <p key={i} className="capitalize text-white">
-                {error}
-              </p>
-            ))}
-          </>
-        ),
-      })
-    }
-
-    if (state?.type == "WarningError") {
-      useToast({ type: "warning", message: state.message })
-    }
-
-    if (state?.type == "Success") {
-      useToast({ type: "success", message: state.message })
-    }
-
-    if (state?.type == "Error") {
-      useToast({ type: "error", message: state.message })
-    }
-  }, [state]) */
-
-  useEffect(() => {
-    handleToast(state!)
-  }, [state])
-
   const form = useForm<z.infer<typeof TransferSchema>>({
     resolver: zodResolver(TransferSchema),
     mode: "onChange",
+    resetOptions: {
+      keepValues: false,
+    },
     defaultValues: {
-      currency: "1",
+      /*   currency: "1",
       reciever: "favour",
-      amount: 50,
+      amount: 50,  */
+      currency: "",
+      reciever: "",
+      amount: 0,
     },
   })
 
+  async function setDefaults() {
+    const { data } = await balanceWithCurrencyQuery
+    setWallet(data)
+  }
+
   useEffect(() => {
-    async function setDefaults() {
-      const { data } = await balanceWithCurrencyQuery
-
-      setWallet(data)
+    if (state?.type == "Success") {
+      window.location.reload()
     }
+    handleToast(state!)
+  }, [state])
 
+  useEffect(() => {
     setDefaults()
   }, [])
 
@@ -129,11 +107,6 @@ export default function Transfer() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/*  <div className="space-y-2">
-                  <Label htmlFor="amount">Amount</Label>
-                  <Input id="amount" placeholder="Enter amount" />
-                </div> */}
-
                 <FormField
                   control={form.control}
                   name="reciever"
