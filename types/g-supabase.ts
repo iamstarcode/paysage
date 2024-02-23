@@ -34,6 +34,52 @@ export interface Database {
   }
   public: {
     Tables: {
+      bill_payments: {
+        Row: {
+          bill_reference_number: string | null
+          id: number | null
+        }
+        Insert: {
+          bill_reference_number?: string | null
+          id?: number | null
+        }
+        Update: {
+          bill_reference_number?: string | null
+          id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_payments_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      crypto_transfers: {
+        Row: {
+          id: number | null
+          transaction_hash: string | null
+        }
+        Insert: {
+          id?: number | null
+          transaction_hash?: string | null
+        }
+        Update: {
+          id?: number | null
+          transaction_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crypto_transfers_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       currencies: {
         Row: {
           currency_code: string
@@ -54,6 +100,29 @@ export interface Database {
           id?: number
         }
         Relationships: []
+      }
+      fiat_transfers: {
+        Row: {
+          id: number | null
+          reference_number: string | null
+        }
+        Insert: {
+          id?: number | null
+          reference_number?: string | null
+        }
+        Update: {
+          id?: number | null
+          reference_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fiat_transfers_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       profiles: {
         Row: {
@@ -87,41 +156,38 @@ export interface Database {
       transactions: {
         Row: {
           amount: number | null
-          created_at: string | null
+          currency: string | null
+          description: string | null
           id: number
-          receiver_wallet_id: number | null
-          sender_wallet_id: number | null
+          receiver_id: string | null
+          sender_id: string | null
+          status: string | null
+          transaction_date: string | null
+          transaction_type: string
         }
         Insert: {
           amount?: number | null
-          created_at?: string | null
+          currency?: string | null
+          description?: string | null
           id?: number
-          receiver_wallet_id?: number | null
-          sender_wallet_id?: number | null
+          receiver_id?: string | null
+          sender_id?: string | null
+          status?: string | null
+          transaction_date?: string | null
+          transaction_type: string
         }
         Update: {
           amount?: number | null
-          created_at?: string | null
+          currency?: string | null
+          description?: string | null
           id?: number
-          receiver_wallet_id?: number | null
-          sender_wallet_id?: number | null
+          receiver_id?: string | null
+          sender_id?: string | null
+          status?: string | null
+          transaction_date?: string | null
+          transaction_type?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "transactions_receiver_wallet_id_fkey"
-            columns: ["receiver_wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "transactions_sender_wallet_id_fkey"
-            columns: ["sender_wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       wallets: {
         Row: {

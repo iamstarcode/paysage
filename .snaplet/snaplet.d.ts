@@ -38,12 +38,6 @@ interface Table_storage_buckets {
   allowed_mime_types: string[] | null;
   owner_id: string | null;
 }
-interface Table_public_currencies {
-  id: number;
-  currency_name: string;
-  currency_code: string;
-  currency_sign: string;
-}
 interface Table_auth_flow_state {
   id: string;
   user_id: string | null;
@@ -151,12 +145,6 @@ interface Table_storage_objects {
   version: string | null;
   owner_id: string | null;
 }
-interface Table_public_profiles {
-  id: string;
-  first_name: string | null;
-  last_name: string | null;
-  username: string | null;
-}
 interface Table_auth_refresh_tokens {
   instance_id: string | null;
   id: number;
@@ -228,13 +216,6 @@ interface Table_auth_sso_providers {
   created_at: string | null;
   updated_at: string | null;
 }
-interface Table_public_transactions {
-  id: number;
-  sender_wallet_id: number | null;
-  receiver_wallet_id: number | null;
-  amount: number | null;
-  created_at: string | null;
-}
 interface Table_auth_users {
   instance_id: string | null;
   id: string;
@@ -269,12 +250,6 @@ interface Table_auth_users {
   reauthentication_sent_at: string | null;
   is_sso_user: boolean;
   deleted_at: string | null;
-}
-interface Table_public_wallets {
-  id: number;
-  user_id: string;
-  currency_id: number | null;
-  balance: number | null;
 }
 interface Schema_analytics {
 
@@ -319,10 +294,7 @@ interface Schema_pgsodium_masks {
 
 }
 interface Schema_public {
-  currencies: Table_public_currencies;
-  profiles: Table_public_profiles;
-  transactions: Table_public_transactions;
-  wallets: Table_public_wallets;
+
 }
 interface Schema_realtime {
 
@@ -368,14 +340,6 @@ interface Tables_relationships {
     };
     children: {
        objects_bucketId_fkey: "storage.objects";
-    };
-  };
-  "public.currencies": {
-    parent: {
-
-    };
-    children: {
-       wallets_currency_id_fkey: "public.wallets";
     };
   };
   "auth.flow_state": {
@@ -430,14 +394,6 @@ interface Tables_relationships {
   "storage.objects": {
     parent: {
        objects_bucketId_fkey: "storage.buckets";
-    };
-    children: {
-
-    };
-  };
-  "public.profiles": {
-    parent: {
-       profiles_id_fkey: "auth.users";
     };
     children: {
 
@@ -503,15 +459,6 @@ interface Tables_relationships {
        sso_domains_sso_provider_id_fkey: "auth.sso_domains";
     };
   };
-  "public.transactions": {
-    parent: {
-       transactions_receiver_wallet_id_fkey: "public.wallets";
-       transactions_sender_wallet_id_fkey: "public.wallets";
-    };
-    children: {
-
-    };
-  };
   "auth.users": {
     parent: {
 
@@ -520,18 +467,6 @@ interface Tables_relationships {
        identities_user_id_fkey: "auth.identities";
        mfa_factors_user_id_fkey: "auth.mfa_factors";
        sessions_user_id_fkey: "auth.sessions";
-       profiles_id_fkey: "public.profiles";
-       wallets_user_id_fkey: "public.wallets";
-    };
-  };
-  "public.wallets": {
-    parent: {
-       wallets_user_id_fkey: "auth.users";
-       wallets_currency_id_fkey: "public.currencies";
-    };
-    children: {
-       transactions_receiver_wallet_id_fkey: "public.transactions";
-       transactions_sender_wallet_id_fkey: "public.transactions";
     };
   };
 }

@@ -29,6 +29,7 @@ export async function signIn(prevState: any, formData: FormData) {
   })
 
   if (error) {
+    console.log(error)
     return redirect("/login?message=Could not authenticate user")
   }
 

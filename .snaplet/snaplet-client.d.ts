@@ -53,16 +53,6 @@ type Override = {
       objects?: string;
     };
   }
-  currencies?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      currency_name?: string;
-      currency_code?: string;
-      currency_sign?: string;
-      wallets?: string;
-    };
-  }
   flow_state?: {
     name?: string;
     fields?: {
@@ -218,16 +208,6 @@ type Override = {
       buckets?: string;
     };
   }
-  profiles?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      first_name?: string;
-      last_name?: string;
-      username?: string;
-      users?: string;
-    };
-  }
   refresh_tokens?: {
     name?: string;
     fields?: {
@@ -335,18 +315,6 @@ type Override = {
       sso_domains?: string;
     };
   }
-  transactions?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      sender_wallet_id?: string;
-      receiver_wallet_id?: string;
-      amount?: string;
-      created_at?: string;
-      wallets_transactions_receiver_wallet_idTowallets?: string;
-      wallets_transactions_sender_wallet_idTowallets?: string;
-    };
-  }
   users?: {
     name?: string;
     fields?: {
@@ -387,21 +355,6 @@ type Override = {
       identities?: string;
       mfa_factors?: string;
       sessions?: string;
-      profiles?: string;
-      wallets?: string;
-    };
-  }
-  wallets?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      user_id?: string;
-      currency_id?: string;
-      balance?: string;
-      users?: string;
-      currencies?: string;
-      transactions_transactions_receiver_wallet_idTowallets?: string;
-      transactions_transactions_sender_wallet_idTowallets?: string;
     };
   }}
 export type Alias = {
@@ -442,10 +395,6 @@ export interface Fingerprint {
     updatedAt?: FingerprintDateField;
     fileSizeLimit?: FingerprintNumberField;
     objects?: FingerprintRelationField;
-  }
-  currencies?: {
-    id?: FingerprintNumberField;
-    wallets?: FingerprintRelationField;
   }
   flowStates?: {
     createdAt?: FingerprintDateField;
@@ -512,9 +461,6 @@ export interface Fingerprint {
     metadata?: FingerprintJsonField;
     bucket?: FingerprintRelationField;
   }
-  profiles?: {
-    i?: FingerprintRelationField;
-  }
   refreshTokens?: {
     id?: FingerprintNumberField;
     createdAt?: FingerprintDateField;
@@ -562,15 +508,6 @@ export interface Fingerprint {
     samlRelayStates?: FingerprintRelationField;
     ssoDomains?: FingerprintRelationField;
   }
-  transactions?: {
-    id?: FingerprintNumberField;
-    senderWalletId?: FingerprintNumberField;
-    receiverWalletId?: FingerprintNumberField;
-    amount?: FingerprintNumberField;
-    createdAt?: FingerprintDateField;
-    receiverWallet?: FingerprintRelationField;
-    senderWallet?: FingerprintRelationField;
-  }
   users?: {
     emailConfirmedAt?: FingerprintDateField;
     invitedAt?: FingerprintDateField;
@@ -592,15 +529,4 @@ export interface Fingerprint {
     identities?: FingerprintRelationField;
     mfaFactors?: FingerprintRelationField;
     sessions?: FingerprintRelationField;
-    profiles?: FingerprintRelationField;
-    wallets?: FingerprintRelationField;
-  }
-  wallets?: {
-    id?: FingerprintNumberField;
-    currencyId?: FingerprintNumberField;
-    balance?: FingerprintNumberField;
-    user?: FingerprintRelationField;
-    currency?: FingerprintRelationField;
-    transactionsByReceiverWalletId?: FingerprintRelationField;
-    transactionsBySenderWalletId?: FingerprintRelationField;
   }}

@@ -58,9 +58,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
         type: "Error",
       } as FormState
     }
-    //console.log(balance)
 
-    //console.log(senderWallet, recieverWallet)
     const { data: trans, error: err } = await supabase.rpc("transfer_funds", {
       sender_id: user?.id!,
       receiver_id: reciever?.id!,
@@ -74,6 +72,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
         type: "Success",
       } as FormState
     } else {
+      console.log(err)
       return {
         message: "An error Occured",
         type: "Error",
