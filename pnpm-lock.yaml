@@ -28,7 +28,10 @@ dependencies:
     version: 1.1.5(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@supabase-cache-helpers/postgrest-swr':
     specifier: ^1.6.0
-    version: 1.6.0(@supabase/postgrest-js@1.9.2)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5)
+    version: 1.6.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5)
+  '@supabase/postgrest-js':
+    specifier: ^1.11.0
+    version: 1.11.0
   '@supabase/ssr':
     specifier: ^0.1.0
     version: 0.1.0(@supabase/supabase-js@2.39.6)
@@ -74,6 +77,9 @@ dependencies:
   sonner:
     specifier: ^1.4.0
     version: 1.4.0(react-dom@18.2.0)(react@18.2.0)
+  swr:
+    specifier: ^2.2.5
+    version: 2.2.5(react@18.2.0)
   tailwind-merge:
     specifier: ^2.2.1
     version: 2.2.1
@@ -1740,13 +1746,13 @@ packages:
       - supports-color
     dev: true
 
-  /@supabase-cache-helpers/postgrest-core@0.4.0(@supabase/postgrest-js@1.9.2)(@supabase/supabase-js@2.39.6):
+  /@supabase-cache-helpers/postgrest-core@0.4.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6):
     resolution: {integrity: sha512-kgZcJJrRq8unpSaC2r+bTLeMj8PMo7WYCePQx8P/8fas/6zEe5ry8y/3Q0+XfY11nrISLX45wD9tMQG/CNMzqQ==}
     peerDependencies:
       '@supabase/postgrest-js': ^1.9.0
       '@supabase/supabase-js': ^2.0.0
     dependencies:
-      '@supabase/postgrest-js': 1.9.2
+      '@supabase/postgrest-js': 1.11.0
       '@supabase/supabase-js': 2.39.6
       fast-equals: 5.0.1
       flat: 5.0.2
@@ -1754,15 +1760,15 @@ packages:
       xregexp: 5.1.1
     dev: false
 
-  /@supabase-cache-helpers/postgrest-swr@1.6.0(@supabase/postgrest-js@1.9.2)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5):
+  /@supabase-cache-helpers/postgrest-swr@1.6.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5):
     resolution: {integrity: sha512-mCe+HnTNCMfIio6pM7UHEm5nmAApk6uQD/lB1uTTsVe+CeA49/KLsFVw3MtwETisaSpTni+mDVX4531g7HMHsQ==}
     peerDependencies:
       '@supabase/postgrest-js': ^1.9.0
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
       swr: ^2.2.0
     dependencies:
-      '@supabase-cache-helpers/postgrest-core': 0.4.0(@supabase/postgrest-js@1.9.2)(@supabase/supabase-js@2.39.6)
-      '@supabase/postgrest-js': 1.9.2
+      '@supabase-cache-helpers/postgrest-core': 0.4.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)
+      '@supabase/postgrest-js': 1.11.0
       react: 18.2.0
       server-only: 0.0.1
       swr: 2.2.5(react@18.2.0)
@@ -1787,6 +1793,12 @@ packages:
     engines: {node: 4.x || >=6.0.0}
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
+
+  /@supabase/postgrest-js@1.11.0:
+    resolution: {integrity: sha512-Q2WwEid0I2rZfSZ0hDjmI20Fhu31Hzl4bwYTGJjLNMGbUOLoAQSaw0Hv/yHLZnl6OmOrH/trZqDiE5WocHN0oQ==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
     dev: false
 
   /@supabase/postgrest-js@1.9.2:
