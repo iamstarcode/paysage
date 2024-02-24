@@ -35,4 +35,11 @@ export const useRecentFiatTransactions = () => {
   return { data, isLoading, error, mutate }
 }
 
+export const useProfile = (id: string) => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabaseClient.from("profiles").select("*").eq("id", id).single()
+  )
+  return { data, isLoading, error, mutate }
+}
+
 export type BalanceWithCurrency = Pick<ReturnType<typeof useWallet>, "data">
