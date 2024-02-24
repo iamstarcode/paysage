@@ -29,8 +29,10 @@ export default async function Page() {
         <div className="h-2 flex-1 min-w-0" />
         <div className="text-xs shrink-0">30% of $5,000 spending limit</div>
       </div>
-      <Transfer />
-      <RecentTransactions />
+      <div className="grid md:grid-cols-2 md:gap-8">
+        <Transfer />
+        <RecentTransactions />
+      </div>
     </div>
   )
 }

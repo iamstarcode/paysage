@@ -103,107 +103,103 @@ export default function Transfer() {
   }
 
   return (
-    <div className="grid md:grid-cols-2 md:gap-8">
-      <div className="space-y-4">
-        <Form {...form}>
-          <form>
-            <Card>
-              <CardHeader>
-                <CardTitle>Send money </CardTitle>
-                <CardDescription>
-                  Transfer money to someone else.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="reciever"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center">
-                        <FormLabel>Reciever</FormLabel>
-                        <p className="ml-auto inline-block text-sm underline">
-                          Forgot your password?
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter Reciever Email"
-                          {...field}
-                          required
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center">
-                        <FormLabel>Amount</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter Amount"
-                          {...field}
-                          required
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="currency"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Currency</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
+    <div className="space-y-4">
+      <Form {...form}>
+        <form>
+          <Card>
+            <CardHeader>
+              <CardTitle>Send money </CardTitle>
+              <CardDescription>Transfer money to someone else.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="reciever"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center">
+                      <FormLabel>Reciever</FormLabel>
+                      <p className="ml-auto inline-block text-sm underline">
+                        Forgot your password?
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter Reciever Email"
+                        {...field}
                         required
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a wallet" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {wallets != null &&
-                            wallets.map((wallet) => (
-                              <SelectItem
-                                key={wallet.currencies?.id}
-                                value={wallet.currencies?.id! + ""}
-                              >
-                                {wallet.currencies?.currency_sign}
-                                {wallet.balance}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-              <CardFooter>
-                <SubmitButton
-                  className="ml-auto"
-                  formAction={clientAction}
-                  text="Transfer"
-                  pendingText="Transfering..."
-                />
-              </CardFooter>
-            </Card>
-          </form>
-        </Form>
-      </div>
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center">
+                      <FormLabel>Amount</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter Amount"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      required
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a wallet" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {wallets != null &&
+                          wallets.map((wallet) => (
+                            <SelectItem
+                              key={wallet.currencies?.id}
+                              value={wallet.currencies?.id! + ""}
+                            >
+                              {wallet.currencies?.currency_sign}
+                              {wallet.balance}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter>
+              <SubmitButton
+                className="ml-auto"
+                formAction={clientAction}
+                text="Transfer"
+                pendingText="Transfering..."
+              />
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
     </div>
   )
 }
