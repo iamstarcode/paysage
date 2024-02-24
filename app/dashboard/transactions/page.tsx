@@ -31,10 +31,12 @@ async function getTransctions() {
     .select("*")
     .order("id", { ascending: false })
 
-  return { transactions, user }
+  const { data: currencies } = await supabase.from("currencies").select("*")
+
+  return { transactions, user, currencies }
 }
 export default async function Page() {
-  const { transactions, user } = await getTransctions()
+  const { transactions, user, currencies } = await getTransctions()
 
   function generateDescription(
     id: string,
@@ -71,6 +73,7 @@ export default async function Page() {
               id,
               actor,
               amount,
+              currency,
               transaction_type,
               description,
               transaction_date,
@@ -84,7 +87,13 @@ export default async function Page() {
                 <TableCell className="hidden md:table-cell">
                   {transaction_date}
                 </TableCell>
-                <TableCell className="text-right">${amount}</TableCell>
+                <TableCell className="text-right">
+                  {
+                    currencies?.find((c) => c.id === parseInt(currency!))
+                      ?.currency_sign
+                  }
+                  {amount}
+                </TableCell>
                 <TableCell className="hidden sm:table-cell">{status}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
