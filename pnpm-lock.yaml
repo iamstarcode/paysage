@@ -27,8 +27,8 @@ dependencies:
     specifier: ^1.1.5
     version: 1.1.5(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@supabase-cache-helpers/postgrest-swr':
-    specifier: ^1.6.0
-    version: 1.6.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5)
+    specifier: ^1.5.0
+    version: 1.5.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5)
   '@supabase/postgrest-js':
     specifier: ^1.11.0
     version: 1.11.0
@@ -1746,8 +1746,8 @@ packages:
       - supports-color
     dev: true
 
-  /@supabase-cache-helpers/postgrest-core@0.4.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6):
-    resolution: {integrity: sha512-kgZcJJrRq8unpSaC2r+bTLeMj8PMo7WYCePQx8P/8fas/6zEe5ry8y/3Q0+XfY11nrISLX45wD9tMQG/CNMzqQ==}
+  /@supabase-cache-helpers/postgrest-core@0.3.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6):
+    resolution: {integrity: sha512-anLCZeyKcTl5ggrn2xyZ7WRq6q1QnHxIemevg7OX+3NOw+xatZ0g0HpBBFrQfRLTz2UD6K5oeqmIKN9EPrNgeA==}
     peerDependencies:
       '@supabase/postgrest-js': ^1.9.0
       '@supabase/supabase-js': ^2.0.0
@@ -1760,14 +1760,14 @@ packages:
       xregexp: 5.1.1
     dev: false
 
-  /@supabase-cache-helpers/postgrest-swr@1.6.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5):
-    resolution: {integrity: sha512-mCe+HnTNCMfIio6pM7UHEm5nmAApk6uQD/lB1uTTsVe+CeA49/KLsFVw3MtwETisaSpTni+mDVX4531g7HMHsQ==}
+  /@supabase-cache-helpers/postgrest-swr@1.5.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)(react@18.2.0)(swr@2.2.5):
+    resolution: {integrity: sha512-SFdUS5ikQXz8k01psBCPK38Pg+MNYCdwV0vbOqqp1ue2fiu9IDwxXAtVRwgByOwqQqvckwmLy+L51LMoH3gA1Q==}
     peerDependencies:
       '@supabase/postgrest-js': ^1.9.0
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
       swr: ^2.2.0
     dependencies:
-      '@supabase-cache-helpers/postgrest-core': 0.4.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)
+      '@supabase-cache-helpers/postgrest-core': 0.3.0(@supabase/postgrest-js@1.11.0)(@supabase/supabase-js@2.39.6)
       '@supabase/postgrest-js': 1.11.0
       react: 18.2.0
       server-only: 0.0.1

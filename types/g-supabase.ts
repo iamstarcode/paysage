@@ -34,29 +34,6 @@ export interface Database {
   }
   public: {
     Tables: {
-      bill_payments: {
-        Row: {
-          bill_reference_number: string | null
-          id: number | null
-        }
-        Insert: {
-          bill_reference_number?: string | null
-          id?: number | null
-        }
-        Update: {
-          bill_reference_number?: string | null
-          id?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bill_payments_id_fkey"
-            columns: ["id"]
-            isOneToOne: false
-            referencedRelation: "transactions"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       crypto_transfers: {
         Row: {
           id: number | null

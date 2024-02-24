@@ -144,14 +144,26 @@ CREATE TABLE public.fiat_transfers (
     reference_number VARCHAR(50)
 );
 CREATE INDEX idx_fiat_transfers_reference_number ON public.fiat_transfers(reference_number);
+create policy "Only Users to create new fiat."
+    on public.fiat_transfers for insert
+    to authenticated 
+    with check ( auth.uid() = sender_id OR auth.uid() = receiver_id );
+create policy "Only Users can view own fiat."
+    on public.fiat_transfers for select
+    to authenticated 
+    using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
+create policy "Users can update their own wallet fiat."
+    on public.fiat_transfers for update
+    to authenticated                    
+    using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
 
 CREATE TABLE public.crypto_transfers (
     id bigint references transactions,
     transaction_hash VARCHAR(100)
 );
 
-CREATE TABLE public.bill_payments (
+/* CREATE TABLE public.bill_payments (
     id bigint references transactions,
     bill_reference_number VARCHAR(50)
 );
-
+ */

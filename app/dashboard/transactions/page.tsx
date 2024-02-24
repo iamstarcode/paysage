@@ -4,6 +4,14 @@ import { createClient } from "@/utils/supabase/server"
 import { Tables } from "@/types/g-supabase"
 import { Button } from "@/components/ui/button"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import TransactionDetails from "@/components/trasaction-details"
 
 async function getTransctions() {
   const supabase = createClient()
@@ -104,7 +113,9 @@ export default async function Page() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View order</DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <TransactionDetails />
+                      </DropdownMenuItem>
                       <DropdownMenuItem>Customer details</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
