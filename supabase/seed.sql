@@ -144,6 +144,7 @@ CREATE TABLE public.fiat_transfers (
     reference_number VARCHAR(50)
 );
 CREATE INDEX idx_fiat_transfers_reference_number ON public.fiat_transfers(reference_number);
+alter table public.fiat_transfers enable row level security;
 create policy "Only Users to create new fiat."
     on public.fiat_transfers for insert
     to authenticated 
