@@ -1,6 +1,12 @@
 "use client"
 
-import { useRecentFiatTransactions } from "@/hooks/supabase"
+import { createClient } from "@/utils/supabase/client"
+
+import {
+  useProfile,
+  useRecentFiatTransactions,
+  useUser,
+} from "@/hooks/supabase"
 import {
   Card,
   CardContent,
@@ -10,7 +16,36 @@ import {
 } from "@/components/ui/card"
 
 function RecentTransactions() {
-  const { data: transactions } = useRecentFiatTransactions()
+  let user
+
+  const supabase = createClient()
+
+  supabase.auth.getUser().then((data) => (user = data))
+  const { data: transactions, isLoading } = useRecentFiatTransactions()
+
+  if (isLoading && !user) return
+
+  //const {} = useProfile(transactions)
+
+  // const {} = useProfile()
+  //If iam the sender, do nothing
+  //If we are making it global then we have to think of those not in our system
+  //sender_id
+  //reciever_id
+  //Then NUBEN will have our number
+  //sender Bakare Abiola
+  //Reciever So so name
+  //Account Paysage
+  //NUBEN will be the username
+  //Paysage
+  /* 
+  
+  account 221045040/12040540/starcode/email/
+  provider_name PaySage/UBA/First Bank
+  sender_name Bakare Abiola
+  reciever_name Ijapa Tiroko
+
+  */
   return (
     <>
       <div className="space-y-4">

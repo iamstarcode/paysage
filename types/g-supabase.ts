@@ -80,28 +80,37 @@ export interface Database {
       }
       fiat_transfers: {
         Row: {
+          _provider: string | null
           amount: number | null
-          full_name: string | null
           id: number | null
-          receiver_id: string | null
-          reference_number: string | null
-          sender_id: string | null
+          receiver_account: string | null
+          receiver_name: string | null
+          sender_account: string | null
+          sender_name: string | null
+          transaction_id: string | null
+          user_id: string | null
         }
         Insert: {
+          _provider?: string | null
           amount?: number | null
-          full_name?: string | null
           id?: number | null
-          receiver_id?: string | null
-          reference_number?: string | null
-          sender_id?: string | null
+          receiver_account?: string | null
+          receiver_name?: string | null
+          sender_account?: string | null
+          sender_name?: string | null
+          transaction_id?: string | null
+          user_id?: string | null
         }
         Update: {
+          _provider?: string | null
           amount?: number | null
-          full_name?: string | null
           id?: number | null
-          receiver_id?: string | null
-          reference_number?: string | null
-          sender_id?: string | null
+          receiver_account?: string | null
+          receiver_name?: string | null
+          sender_account?: string | null
+          sender_name?: string | null
+          transaction_id?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -109,6 +118,13 @@ export interface Database {
             columns: ["id"]
             isOneToOne: false
             referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fiat_transfers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]
@@ -144,42 +160,49 @@ export interface Database {
       }
       transactions: {
         Row: {
-          actor: string
           amount: number | null
           currency: string | null
           description: string | null
           id: number
-          party: string | null
+          receiver_id: string | null
+          sender_id: string | null
           status: string | null
           transaction_date: string | null
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Insert: {
-          actor: string
           amount?: number | null
           currency?: string | null
           description?: string | null
           id?: number
-          party?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
           status?: string | null
           transaction_date?: string | null
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Update: {
-          actor?: string
           amount?: number | null
           currency?: string | null
           description?: string | null
           id?: number
-          party?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
           status?: string | null
           transaction_date?: string | null
           transaction_type?: Database["public"]["Enums"]["transaction_type"]
         }
         Relationships: [
           {
-            foreignKeyName: "transactions_actor_fkey"
-            columns: ["actor"]
+            foreignKeyName: "transactions_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_sender_id_fkey"
+            columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -238,12 +261,7 @@ export interface Database {
       }
     }
     Enums: {
-      transaction_type:
-        | "fiat"
-        | "processing"
-        | "shipped"
-        | "delivered"
-        | "cancelled"
+      transaction_type: "FIAT" | "AIRTIME"
     }
     CompositeTypes: {
       [_ in never]: never

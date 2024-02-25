@@ -42,4 +42,24 @@ export const useProfile = (id: string) => {
   return { data, isLoading, error, mutate }
 }
 
+export const useUser = async () => {
+  const {
+    data: { user },
+  } = await supabaseClient.auth.getUser()
+
+  return { user }
+  // return { data, isLoading, error, mutate }
+}
+
+export const useGetFiatTransfer = async (id: number) => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabaseClient
+      .from("transactions")
+      .select("*, fiat_transfers!inner(*)")
+      .eq("user_id", id)
+      .single()
+  )
+  return { data, isLoading, error, mutate }
+}
+
 export type BalanceWithCurrency = Pick<ReturnType<typeof useWallet>, "data">
