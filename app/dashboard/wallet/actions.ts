@@ -108,11 +108,14 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
           transaction_id: generateTransactionReference("F"),
         })
         .select()
+        .single()
+
       //Reciever
       await supabase.from("fiat_transfers").insert({
         ...data,
         id: trans?.id,
         user_id: reciever?.id,
+        amount: result.data.amount,
         transaction_id: generateTransactionReference("F"),
       })
 
