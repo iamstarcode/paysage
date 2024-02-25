@@ -107,34 +107,15 @@ alter table public.transactions enable row level security;
 create policy "Only auth Users to create new trx."
     on public.transactions for insert
     to authenticated 
-    with check ( 
-        CASE
-            WHEN sender_id IS NULL THEN auth.uid() = receiver_id
-            WHEN receiver_id IS NULL THEN auth.uid() = sender_id
-            ELSE auth.uid() = sender_id OR auth.uid() = receiver_id
-        END
-    );
+    with check ( auth.uid() = sender_id OR auth.uid() = receiver_id );
 create policy "Only auth Users can view own trx."
     on public.transactions for select
     to authenticated 
-    using   ( 
-        CASE
-            WHEN sender_id IS NULL THEN auth.uid() = receiver_id
-            WHEN receiver_id IS NULL THEN auth.uid() = sender_id
-            ELSE auth.uid() = sender_id OR auth.uid() = receiver_id
-        END
-     );
+    using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
 create policy "Users can update their own trx."
     on public.transactions for update
     to authenticated                    
-    using  ( 
-        CASE
-            WHEN sender_id IS NULL THEN auth.uid() = receiver_id
-            WHEN receiver_id IS NULL THEN auth.uid() = sender_id
-            ELSE auth.uid() = sender_id OR auth.uid() = receiver_id
-        END 
-    );
-
+    using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
 CREATE TABLE public.fiat_transfers (
     id bigint references transactions,
     user_id uuid references auth.users,

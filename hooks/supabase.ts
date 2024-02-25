@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/client"
 import {
+  useInfiniteOffsetPaginationQuery,
   useInsertMutation,
   useQuery,
 } from "@supabase-cache-helpers/postgrest-swr"
@@ -21,9 +22,17 @@ export const useWallet = () => {
   return { data, isLoading, error, mutate }
 }
 
-export const useRecentTransactions = () => {
+export const useTransactions = () => {
   const { data, isLoading, error, mutate } = useQuery(
     supabaseClient.from("transactions").select("*").limit(3)
+  )
+  return { data, isLoading, error, mutate }
+}
+
+export const useRecentTransactions = () => {
+  const { data, isLoading, error, mutate } = useInfiniteOffsetPaginationQuery(
+    supabaseClient.from("transactions").select("*").limit(3),
+    {}
   )
   return { data, isLoading, error, mutate }
 }

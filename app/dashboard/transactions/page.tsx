@@ -1,5 +1,10 @@
 import { SVGProps } from "react"
+import {
+  getProfileByIdQuery,
+  getProfileByUsernameQuery,
+} from "@/utils/supabase/queries"
 import { createClient } from "@/utils/supabase/server"
+import useSWR from "swr"
 
 import { Tables } from "@/types/g-supabase"
 import { Button } from "@/components/ui/button"
@@ -29,8 +34,9 @@ import {
 } from "@/components/ui/table"
 import TransactionDetails from "@/components/trasaction-details"
 
+const supabase = createClient()
+
 async function getTransctions() {
-  const supabase = createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -46,16 +52,26 @@ async function getTransctions() {
 }
 export default async function Page() {
   const { transactions, user, currencies } = await getTransctions()
+  console.log(transactions?.length, "sssssssssss")
 
-  function generateDescription(
-    id: string,
+  async function generateDescription(
+    senderId: string,
+    recieverId: string,
     type: Tables<"transactions">["transaction_type"],
     description: string
   ) {
-    if (type == "fiat") {
-      const splited = description.split("&&")
-      if (user?.id! == id) return `Transfer to ${splited[1]}`
-      return `Transfer from ${splited[0]}`
+    if (type == "FIAT") {
+      if (senderId && recieverId) {
+        //in house
+        if (user?.id == senderId) {
+          return description
+        } else {
+          const { data } = await getProfileByIdQuery(senderId, supabase)
+          return `Recieved from ${data?.first_name} ${data?.last_name}`
+        }
+      } else {
+        return description
+      }
     }
   }
 
@@ -80,7 +96,8 @@ export default async function Page() {
           {transactions?.map(
             ({
               id,
-              actor,
+              sender_id,
+              receiver_id,
               amount,
               currency,
               transaction_type,
@@ -89,7 +106,14 @@ export default async function Page() {
               status,
             }) => (
               <TableRow key={id}>
-                <TableCell>{`${generateDescription(actor!, transaction_type, description!)}`}</TableCell>
+                <TableCell>
+                  {generateDescription(
+                    sender_id!,
+                    receiver_id!,
+                    transaction_type,
+                    description!
+                  )}
+                </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {transaction_type}
                 </TableCell>
@@ -97,6 +121,7 @@ export default async function Page() {
                   {transaction_date}
                 </TableCell>
                 <TableCell className="text-right">
+                  {user?.id === sender_id ? "-" : null}
                   {
                     currencies?.find((c) => c.id === parseInt(currency!))
                       ?.currency_sign
@@ -123,29 +148,6 @@ export default async function Page() {
               </TableRow>
             )
           )}
-          <TableRow>
-            <TableCell>Olivia Martin</TableCell>
-            <TableCell className="hidden md:table-cell">Online Store</TableCell>
-            <TableCell className="hidden md:table-cell">
-              February 20, 2022
-            </TableCell>
-            <TableCell className="text-right">$42.25</TableCell>
-            <TableCell className="hidden sm:table-cell">Shipped</TableCell>
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost">
-                    <MoreHorizontalIcon className="w-4 h-4" />
-                    <span className="sr-only">Actions</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>View order</DropdownMenuItem>
-                  <DropdownMenuItem>Customer details</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
         </TableBody>
       </Table>
     </div>
