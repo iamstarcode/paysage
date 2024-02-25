@@ -83,25 +83,37 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
         .from("transactions")
         .insert({
           amount: result.data.amount,
-          transaction_type: "fiat",
-          actor: user?.id!,
-          party: reciever.id,
+          transaction_type: "FIAT",
+          sender_id: user?.id!,
+          receiver_id: reciever.id,
           currency: result.data.currency,
-          description: `${senderProfile?.username}&&${reciever?.username}`,
+          description: `Transfer from ${senderProfile?.username} to ${reciever?.username}`,
           status: "Completed",
         })
         .select()
         .single()
 
-      const referenceNumber = generateTransactionReference("F")
-
+      //Sender
+      const { data } = await supabase
+        .from("fiat_transfers")
+        .insert({
+          id: trans?.id,
+          user_id: senderProfile?.id,
+          amount: -result.data.amount,
+          sender_account: senderProfile?.username,
+          receiver_account: reciever?.username,
+          sender_name: `${senderProfile?.first_name} ${senderProfile?.last_name}`,
+          receiver_name: `${reciever.first_name} ${reciever.first_name}`,
+          _provider: "PaySage",
+          transaction_id: generateTransactionReference("F"),
+        })
+        .select()
+      //Reciever
       await supabase.from("fiat_transfers").insert({
+        ...data,
         id: trans?.id,
-        amount: result.data.amount,
-        full_name: `${senderProfile?.first_name} ${senderProfile?.last_name}`,
-        sender_id: user?.id,
-        receiver_id: reciever.id,
-        reference_number: referenceNumber,
+        user_id: reciever?.id,
+        transaction_id: generateTransactionReference("F"),
       })
 
       return {

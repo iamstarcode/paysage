@@ -151,7 +151,7 @@ alter table public.fiat_transfers enable row level security;
 create policy "Only Users to create new fiat."
     on public.fiat_transfers for insert
     to authenticated 
-    with check ( auth.uid() = user_id );
+    with check ( true );
 create policy "Only Users can view own fiat."
     on public.fiat_transfers for select
     to authenticated 
