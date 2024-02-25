@@ -1,12 +1,22 @@
+"use client"
+
 import { SVGProps } from "react"
+import { Transaction } from "@/types"
+import { createClient } from "@/utils/supabase/client"
 import {
   getProfileByIdQuery,
   getProfileByUsernameQuery,
 } from "@/utils/supabase/queries"
-import { createClient } from "@/utils/supabase/server"
+import { LoaderIcon } from "lucide-react"
 import useSWR from "swr"
 
 import { Tables } from "@/types/g-supabase"
+import {
+  useCurrencies,
+  useProfileById,
+  useTransactions,
+  useUser,
+} from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -32,11 +42,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { TransactionSkeleton } from "@/components/skeletons/transactions"
 import TransactionDetails from "@/components/trasaction-details"
 
 const supabase = createClient()
 
-async function getTransctions() {
+/* async function getTransctions() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -49,15 +60,23 @@ async function getTransctions() {
   const { data: currencies } = await supabase.from("currencies").select("*")
 
   return { transactions, user, currencies }
-}
-export default async function Page() {
-  const { transactions, user, currencies } = await getTransctions()
-  console.log(transactions?.length, "sssssssssss")
+} */
+export default function Page() {
+  const {
+    transactions,
+    isTranasctionsLoading,
+    loadMoreTranasction,
+    isTranasctionsValidating,
+    transactionsError,
+  } = useTransactions()
+
+  const { user, isUserLoading } = useUser()
+  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
   async function generateDescription(
     senderId: string,
     recieverId: string,
-    type: Tables<"transactions">["transaction_type"],
+    type: Transaction["transaction_type"],
     description: string
   ) {
     if (type == "FIAT") {
@@ -66,8 +85,13 @@ export default async function Page() {
         if (user?.id == senderId) {
           return description
         } else {
-          const { data } = await getProfileByIdQuery(senderId, supabase)
-          return `Recieved from ${data?.first_name} ${data?.last_name}`
+          const { data: profile } = await createClient()
+            .from("profiles")
+            .select("*")
+            .eq("id", senderId)
+            .single()
+          //const { profile } = useProfileById(senderId)
+          return `Recieved from ${profile?.first_name} ${profile?.last_name}`
         }
       } else {
         return description
@@ -75,12 +99,11 @@ export default async function Page() {
     }
   }
 
-  function fromOrTo(id: string) {
-    if (user?.id! == id) return "to"
-    return "from"
-  }
+  if (transactionsError) <div>An error occured</div>
+  if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
+
   return (
-    <div>
+    <div className="flex flex-col">
       <Table>
         <TableHeader>
           <TableRow>
@@ -104,7 +127,7 @@ export default async function Page() {
               description,
               transaction_date,
               status,
-            }) => (
+            }: Transaction) => (
               <TableRow key={id}>
                 <TableCell>
                   {generateDescription(
@@ -150,6 +173,20 @@ export default async function Page() {
           )}
         </TableBody>
       </Table>
+      <Button
+        disabled={isTranasctionsValidating}
+        onClick={loadMoreTranasction!}
+        className="ml-auto mt-5"
+      >
+        {isTranasctionsValidating && (
+          <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+        )}
+        {isTranasctionsValidating
+          ? "Loading..."
+          : !loadMoreTranasction
+            ? "Load Complete"
+            : "Load More"}
+      </Button>
     </div>
   )
 }

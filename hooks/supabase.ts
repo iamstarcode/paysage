@@ -1,15 +1,25 @@
+import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import {
   useInfiniteOffsetPaginationQuery,
   useInsertMutation,
+  useOffsetInfiniteScrollQuery,
   useQuery,
 } from "@supabase-cache-helpers/postgrest-swr"
+import useSWR from "swr"
 
-const supabaseClient = createClient()
+const supabase = createClient()
+
+export const useCurrencies = () => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabase.from("currencies").select("*")
+  )
+  return { data, isLoading, error, mutate }
+}
 
 export const useWallet = () => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabaseClient.from("wallets").select(`
+    supabase.from("wallets").select(`
     balance,
     currencies(
       id,
@@ -23,46 +33,77 @@ export const useWallet = () => {
 }
 
 export const useTransactions = () => {
-  const { data, isLoading, error, mutate } = useQuery(
-    supabaseClient.from("transactions").select("*").limit(3)
-  )
-  return { data, isLoading, error, mutate }
+  const { data, loadMore, isValidating, error, isLoading } =
+    useOffsetInfiniteScrollQuery(
+      supabase
+        .from("transactions")
+        .select(
+          `
+      id,
+      sender_id,
+      receiver_id,
+      amount,currency,
+      transaction_type,
+      description,
+      transaction_date,
+      status
+    `
+        )
+        .order("id", { ascending: false }),
+      { pageSize: 10 }
+    )
+
+  return {
+    transactions: data,
+    isTranasctionsLoading: isLoading,
+    loadMoreTranasction: loadMore,
+    isTranasctionsValidating: isValidating,
+    transactionsError: error,
+  }
 }
 
 export const useRecentTransactions = () => {
-  const { data, isLoading, error, mutate } = useInfiniteOffsetPaginationQuery(
-    supabaseClient.from("transactions").select("*").limit(3),
-    {}
+  const { data, isValidating, error } = useQuery(
+    supabase
+      .from("transactions")
+      .select("id,")
+      .order("id", { ascending: false })
   )
-  return { data, isLoading, error, mutate }
+
+  // return { data, isLoading, error, mutate }
 }
 
 export const useRecentFiatTransactions = () => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabaseClient.from("fiat_transfers").select("*").limit(5)
+    supabase.from("fiat_transfers").select("*").limit(5)
   )
   return { data, isLoading, error, mutate }
 }
 
-export const useProfile = (id: string) => {
+export const useProfileById = (id: string) => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabaseClient.from("profiles").select("*").eq("id", id).single()
+    supabase.from("profiles").select("*").eq("id", id).single()
   )
-  return { data, isLoading, error, mutate }
+  return {
+    profile: data,
+    isProfileLoading: isLoading,
+    profileError: error,
+    mutate,
+  }
 }
 
-export const useUser = async () => {
+export const useUser = () => {
   const {
-    data: { user },
-  } = await supabaseClient.auth.getUser()
-
-  return { user }
-  // return { data, isLoading, error, mutate }
+    data,
+    isLoading: isUserLoading,
+    error: userError,
+  } = useSWR("user", () => supabase.auth.getUser())
+  return { user: data?.data.user, isUserLoading, userError }
 }
 
 export const useGetFiatTransfer = async (id: number) => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabaseClient
+    supabase
       .from("transactions")
       .select("*, fiat_transfers!inner(*)")
       .eq("user_id", id)
