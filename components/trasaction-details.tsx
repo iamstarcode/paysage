@@ -1,52 +1,160 @@
 "use client"
 
+import { ReactNode, useRef, useState } from "react"
+import * as React from "react"
+import * as Dialog from "@radix-ui/react-dialog"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import {
-  Dialog,
+  CheckIcon,
+  MoreHorizontal,
+  PencilIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
+  DialogPortal,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Label } from "./ui/label"
-
-function TransactionDetails() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
+type Props = {
+  triggerChildren: ReactNode
+  children: ReactNode
+  onSelect: () => void
+  onOpenChange: (open: boolean) => void
 }
 
-export default TransactionDetails
+const DialogItem = ({
+  triggerChildren,
+  children,
+  onSelect,
+  onOpenChange,
+}: Props) => {
+  return (
+    <Dialog.Root onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <DropdownMenuItem
+          className="p-3"
+          onSelect={(event) => {
+            event.preventDefault()
+            onSelect && onSelect()
+          }}
+        >
+          {triggerChildren}
+        </DropdownMenuItem>
+      </DialogTrigger>
+      <DialogPortal>
+        <DialogContent>
+          {children}
+          <DialogClose asChild>
+            <button className="IconButton" aria-label="Close">
+              <XIcon />
+            </button>
+          </DialogClose>
+        </DialogContent>
+      </DialogPortal>
+    </Dialog.Root>
+  )
+}
+//export default DialogItem
+
+export default DropdownWithDialogItemsSolution2
+function DropdownWithDialogItemsSolution2() {
+  const [dropdownOpen, setDropdownOpen] = React.useState(false)
+  const [hasOpenDialog, setHasOpenDialog] = React.useState(false)
+  const dropdownTriggerRef = React.useRef(null)
+  const focusRef = React.useRef(null)
+
+  function handleDialogItemSelect() {
+    focusRef.current = dropdownTriggerRef.current
+  }
+
+  function handleDialogItemOpenChange(
+    open: boolean | ((prevState: boolean) => boolean)
+  ) {
+    setHasOpenDialog(open)
+    if (open === false) {
+      setDropdownOpen(false)
+    }
+  }
+
+  return (
+    <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
+      <DropdownMenu.Trigger asChild>
+        <button className="Button violet" ref={dropdownTriggerRef}>
+          Actions
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        className="DropdownMenuContent"
+        sideOffset={5}
+        hidden={hasOpenDialog}
+        onCloseAutoFocus={(event) => {
+          if (focusRef.current) {
+            focusRef.current?.focus()
+            focusRef.current = null
+            event.preventDefault()
+          }
+        }}
+      >
+        <DropdownMenu.Group>
+          <DropdownMenu.Label className="DropdownMenuLabel">
+            Items with dialog
+          </DropdownMenu.Label>
+          <DialogItem
+            triggerChildren="Edit"
+            onSelect={handleDialogItemSelect}
+            onOpenChange={handleDialogItemOpenChange}
+          >
+            <Dialog.Title className="DialogTitle">Edit</Dialog.Title>
+            <Dialog.Description className="DialogDescription">
+              Edit this record below.
+            </Dialog.Description>
+            <p>…</p>
+          </DialogItem>
+
+          <DialogItem
+            triggerChildren="Delete"
+            onSelect={handleDialogItemSelect}
+            onOpenChange={handleDialogItemOpenChange}
+          >
+            <Dialog.Title className="DialogTitle">Delete</Dialog.Title>
+            <Dialog.Description className="DialogDescription">
+              Are you sure you want to delete this record?
+            </Dialog.Description>
+          </DialogItem>
+        </DropdownMenu.Group>
+
+        <DropdownMenu.Separator className="DropdownMenuSeparator" />
+
+        <DropdownMenu.Group>
+          <DropdownMenu.Label className="DropdownMenuLabel">
+            Regular items
+          </DropdownMenu.Label>
+          <DropdownMenu.Item className="DropdownMenuItem">
+            Duplicate
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="DropdownMenuItem">
+            Copy
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="DropdownMenuItem">
+            Save
+          </DropdownMenu.Item>
+        </DropdownMenu.Group>
+
+        <DropdownMenu.Arrow className="DropdownMenuArrow" />
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  )
+}

@@ -47,20 +47,6 @@ import TransactionDetails from "@/components/trasaction-details"
 
 const supabase = createClient()
 
-/* async function getTransctions() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const { data: transactions } = await supabase
-    .from("transactions")
-    .select("*")
-    .order("id", { ascending: false })
-
-  const { data: currencies } = await supabase.from("currencies").select("*")
-
-  return { transactions, user, currencies }
-} */
 export default function Page() {
   const {
     transactions,
@@ -73,7 +59,7 @@ export default function Page() {
   const { user, isUserLoading } = useUser()
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
-  async function generateDescription(
+  function generateDescription(
     senderId: string,
     recieverId: string,
     type: Transaction["transaction_type"],
@@ -85,13 +71,15 @@ export default function Page() {
         if (user?.id == senderId) {
           return description
         } else {
-          const { data: profile } = await createClient()
+          let profile: any
+          supabase
             .from("profiles")
             .select("*")
             .eq("id", senderId)
             .single()
-          //const { profile } = useProfileById(senderId)
-          return `Recieved from ${profile?.first_name} ${profile?.last_name}`
+            .then((v) => (profile = v))
+          // const { profile } = useProfileById(senderId)
+          return `Recieved from ${profile?.first_name!} ${profile?.last_name!}`
         }
       } else {
         return description
@@ -161,9 +149,7 @@ export default function Page() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <TransactionDetails />
-                      </DropdownMenuItem>
+                      <DropdownMenuItem></DropdownMenuItem>
                       <DropdownMenuItem>Customer details</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -187,6 +173,7 @@ export default function Page() {
             ? "Load Complete"
             : "Load More"}
       </Button>
+      <TransactionDetails />
     </div>
   )
 }
