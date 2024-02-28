@@ -2,23 +2,17 @@ import { SVGProps } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/server"
-import { Home } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import AuthButton from "@/components/AuthButton"
-import CustomLink from "@/components/CustomLinks"
-import DeployButton from "@/components/DeployButton"
-import Header from "@/components/Header"
-import { SheetDemo } from "@/components/MobileNav"
 import SideLinks from "@/components/side-links"
-import FetchDataSteps from "@/components/tutorial/FetchDataSteps"
 import UserAccount from "@/components/user-account"
 
 export default async function DashboardLayout({
   children, // will be a page or nested layout
+  transaction,
 }: {
   children: React.ReactNode
+  transaction: React.ReactNode
 }) {
   const supabase = createClient()
 
@@ -71,6 +65,7 @@ export default async function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="border shadow-sm rounded-lg p-2 h-full">
             {children}
+            {transaction}
           </div>
         </main>
       </div>

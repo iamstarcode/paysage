@@ -29,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "components/icons",
-    "app/dashboard/transactions/@transaction/default.js"
+    "app/dashboard/@transaction/default.js",
+    "app/dashboard/transactions/layout"
   ],
   "exclude": ["node_modules"]
 }

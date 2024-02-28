@@ -1,6 +1,7 @@
 "use client"
 
 import { SVGProps } from "react"
+import Link from "next/link"
 import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import {
@@ -138,6 +139,7 @@ export default function Page() {
                       ?.currency_sign
                   }
                   {amount}
+                  <Link href="/dashboard/transactions/1">Linjjuhunjj</Link>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">{status}</TableCell>
                 <TableCell className="text-right">
