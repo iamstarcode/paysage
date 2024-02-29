@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { BalanceWithCurrency } from "@/types/supabase"
-import { useWallet } from "@/hooks/supabase"
+import { useTransactions, useWallet } from "@/hooks/supabase"
 import {
   Card,
   CardContent,
@@ -53,6 +53,7 @@ export default function Transfer() {
   //const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
   const { data: wallets, mutate } = useWallet()
+  const { mutate: mutateTransactions } = useTransactions()
 
   const [state, formAction] = useFormState(transferFromWallet, initialState)
 
@@ -79,6 +80,7 @@ export default function Transfer() {
 
   useEffect(() => {
     async function _mutate() {
+      await mutateTransactions()
       await mutate()
     }
     if (state?.type == "Success") {

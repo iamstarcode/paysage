@@ -1,9 +1,7 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import Transaction from "@/components/transactions/transaction"
 
-function Page() {
-  return <Transaction />
+function Page({ params }: { params: { id: number } }) {
+  return <Transaction transaction_id={params.id} />
 }
 
 export default Transaction

@@ -1,39 +1,17 @@
 "use client"
 
-import { SVGProps } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
-import {
-  getProfileByIdQuery,
-  getProfileByUsernameQuery,
-} from "@/utils/supabase/queries"
-import { LoaderIcon } from "lucide-react"
-import useSWR from "swr"
+import { LoaderIcon, MoreHorizontal } from "lucide-react"
 
-import { Tables } from "@/types/g-supabase"
-import {
-  useCurrencies,
-  useProfileById,
-  useTransactions,
-  useUser,
-} from "@/hooks/supabase"
+import { useCurrencies, useTransactions, useUser } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -45,7 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TransactionSkeleton } from "@/components/skeletons/transactions"
-import TransactionDetails from "@/components/trasaction-details"
 
 const supabase = createClient()
 
@@ -78,10 +55,11 @@ export default function Page() {
           supabase
             .from("profiles")
             .select("*")
-            .eq("id", senderId)
+            .eq("id", recieverId)
             .single()
             .then((v) => (profile = v))
           // const { profile } = useProfileById(senderId)
+          console.log(recieverId, "bxshbxshxshxbh")
           return `Recieved from ${profile?.first_name!} ${profile?.last_name!}`
         }
       } else {
@@ -93,6 +71,7 @@ export default function Page() {
   if (transactionsError) <div>An error occured</div>
   if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
 
+  console.log(transactions)
   return (
     <div className="flex flex-col">
       <Table>
@@ -151,7 +130,8 @@ export default function Page() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button size="icon" variant="ghost">
-                        <MoreHorizontalIcon className="w-4 h-4" />
+                        <MoreHorizontal className="w-4 h-4" color="#5c5757" />
+
                         <span className="sr-only">Actions</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -184,28 +164,5 @@ export default function Page() {
             : "Load More"}
       </Button>
     </div>
-  )
-}
-
-function MoreHorizontalIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="19" cy="12" r="1" />
-      <circle cx="5" cy="12" r="1" />
-    </svg>
   )
 }

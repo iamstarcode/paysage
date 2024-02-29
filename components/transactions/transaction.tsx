@@ -3,13 +3,20 @@
 import { useRouter } from "next/navigation"
 import { ArrowDown, ArrowUp, X } from "lucide-react"
 
+import { useGetFiatTransfer } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 
-export default function Transaction() {
+export default function Transaction({
+  transaction_id,
+}: {
+  transaction_id?: number
+}) {
   const router = useRouter()
+  const { transfer } = useGetFiatTransfer(transaction_id!)
+  console.log(transfer)
   return (
-    <div className="flex items-center  py-12 md:py-24 z-50">
-      <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full shadow-lg dark:border-gray-800 dark:bg-gray-950">
+    <div className="flex items-center z-50">
+      <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full md:max-w-lg md:mt-auto shadow-lg dark:border-gray-800 dark:bg-gray-950">
         <div className="grid gap-4 p-6">
           <div className="inline-flex justify-between items-center">
             <h1 className="font-semibold text-2xl">Transaction Details</h1>

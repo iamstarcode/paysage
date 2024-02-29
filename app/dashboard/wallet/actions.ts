@@ -87,7 +87,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
           sender_id: user?.id!,
           receiver_id: reciever.id,
           currency: result.data.currency,
-          description: `Transfer from ${senderProfile?.username} to ${reciever?.username}`,
+          description: `Transfer to ${reciever?.username}`,
           status: "Completed",
         })
         .select()

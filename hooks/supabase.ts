@@ -33,7 +33,7 @@ export const useWallet = () => {
 }
 
 export const useTransactions = () => {
-  const { data, loadMore, isValidating, error, isLoading } =
+  const { data, loadMore, isValidating, error, isLoading, mutate } =
     useOffsetInfiniteScrollQuery(
       supabase
         .from("transactions")
@@ -59,6 +59,7 @@ export const useTransactions = () => {
     loadMoreTranasction: loadMore,
     isTranasctionsValidating: isValidating,
     transactionsError: error,
+    mutate,
   }
 }
 
@@ -101,15 +102,21 @@ export const useUser = () => {
   return { user: data?.data.user, isUserLoading, userError }
 }
 
-export const useGetFiatTransfer = async (id: number) => {
+export const useGetFiatTransfer = (id: number) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase
       .from("transactions")
       .select("*, fiat_transfers!inner(*)")
-      .eq("user_id", id)
+      .eq("id", id)
       .single()
   )
-  return { data, isLoading, error, mutate }
+
+  return {
+    transfer: data,
+    isTransferLoading: isLoading,
+    transferError: error,
+    mutate,
+  }
 }
 
 export type BalanceWithCurrency = Pick<ReturnType<typeof useWallet>, "data">
