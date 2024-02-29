@@ -87,7 +87,8 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
           sender_id: user?.id!,
           receiver_id: reciever.id,
           currency: result.data.currency,
-          description: `Transfer to ${reciever?.username}`,
+          receiver_description: `Recieved from ${senderProfile?.first_name} ${senderProfile?.last_name}`,
+          sender_description: `Transfer to ${reciever.first_name} ${reciever.last_name}`,
           status: "Completed",
         })
         .select()
@@ -103,7 +104,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
           sender_account: senderProfile?.username,
           receiver_account: reciever?.username,
           sender_name: `${senderProfile?.first_name} ${senderProfile?.last_name}`,
-          receiver_name: `${reciever.first_name} ${reciever.first_name}`,
+          receiver_name: `${reciever.first_name} ${reciever.last_name}`,
           _provider: "PaySage",
           transaction_id: generateTransactionReference("F"),
         })

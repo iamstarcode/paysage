@@ -37,18 +37,7 @@ export const useTransactions = () => {
     useOffsetInfiniteScrollQuery(
       supabase
         .from("transactions")
-        .select(
-          `
-      id,
-      sender_id,
-      receiver_id,
-      amount,currency,
-      transaction_type,
-      description,
-      transaction_date,
-      status
-    `
-        )
+        .select("*")
         .order("id", { ascending: false }),
       { pageSize: 10 }
     )

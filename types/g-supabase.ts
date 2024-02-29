@@ -162,9 +162,10 @@ export interface Database {
         Row: {
           amount: number | null
           currency: string | null
-          description: string | null
           id: number
+          receiver_description: string | null
           receiver_id: string | null
+          sender_description: string | null
           sender_id: string | null
           status: string | null
           transaction_date: string | null
@@ -173,9 +174,10 @@ export interface Database {
         Insert: {
           amount?: number | null
           currency?: string | null
-          description?: string | null
           id?: number
+          receiver_description?: string | null
           receiver_id?: string | null
+          sender_description?: string | null
           sender_id?: string | null
           status?: string | null
           transaction_date?: string | null
@@ -184,9 +186,10 @@ export interface Database {
         Update: {
           amount?: number | null
           currency?: string | null
-          description?: string | null
           id?: number
+          receiver_description?: string | null
           receiver_id?: string | null
+          sender_description?: string | null
           sender_id?: string | null
           status?: string | null
           transaction_date?: string | null

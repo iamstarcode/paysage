@@ -13,7 +13,7 @@ export default function Transaction({
 }) {
   const router = useRouter()
   const { transfer } = useGetFiatTransfer(transaction_id!)
-  console.log(transfer)
+  ///console.log(transfer)
   return (
     <div className="flex items-center z-50">
       <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full md:max-w-lg md:mt-auto shadow-lg dark:border-gray-800 dark:bg-gray-950">

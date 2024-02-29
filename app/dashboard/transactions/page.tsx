@@ -37,9 +37,10 @@ export default function Page() {
   } = useTransactions()
 
   const { user, isUserLoading } = useUser()
+
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
-  function generateDescription(
+  /*   function generateDescription(
     senderId: string,
     recieverId: string,
     type: Transaction["transaction_type"],
@@ -55,18 +56,18 @@ export default function Page() {
           supabase
             .from("profiles")
             .select("*")
-            .eq("id", recieverId)
+            .eq("id", senderId)
             .single()
             .then((v) => (profile = v))
           // const { profile } = useProfileById(senderId)
-          console.log(recieverId, "bxshbxshxshxbh")
+          console.log(profile, "bxshbxshxshxbh")
           return `Recieved from ${profile?.first_name!} ${profile?.last_name!}`
         }
       } else {
         return description
       }
     }
-  }
+  } */
 
   if (transactionsError) <div>An error occured</div>
   if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
@@ -94,7 +95,8 @@ export default function Page() {
               amount,
               currency,
               transaction_type,
-              description,
+              sender_description,
+              receiver_description,
               transaction_date,
               status,
             }: Transaction) => (
@@ -104,12 +106,9 @@ export default function Page() {
                 onClick={() => router.push(`/dashboard/transactions/${id}`)}
               >
                 <TableCell>
-                  {generateDescription(
-                    sender_id!,
-                    receiver_id!,
-                    transaction_type,
-                    description!
-                  )}
+                  {user?.id == sender_id
+                    ? sender_description
+                    : receiver_description}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {transaction_type}
