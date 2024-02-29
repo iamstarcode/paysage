@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { ArrowDown, ArrowUp, X } from "lucide-react"
 
-import { useGetFiatTransfer } from "@/hooks/supabase"
+import { useCurrencies, useGetFiatTransfer, useUser } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 
 export default function Transaction({
@@ -13,7 +13,18 @@ export default function Transaction({
 }) {
   const router = useRouter()
   const { transfer } = useGetFiatTransfer(transaction_id!)
-  ///console.log(transfer)
+  const { data: currencies } = useCurrencies()
+  const { user } = useUser()
+
+  function debitOrCredit() {
+    if (transfer?.fiat_transfers[0].amount! > 0) {
+      return 1
+      //credit
+    }
+    //debit
+    return -1
+  }
+
   return (
     <div className="flex items-center z-50">
       <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full md:max-w-lg md:mt-auto shadow-lg dark:border-gray-800 dark:bg-gray-950">
@@ -30,12 +41,21 @@ export default function Transaction({
 
           <div className="grid gap-1.5 text-sm">
             <div className="flex items-center gap-1.5">
-              <ArrowUp className="h-4 w-4 text-green-500" />
-              <span className="font-medium">+ $500.00</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ArrowDown className="h-4 w-4 text-red-500" />
-              <span className="font-medium">- $500.00</span>
+              {debitOrCredit() > 0 ? (
+                <ArrowUp className="h-4 w-4 text-green-500" />
+              ) : (
+                <ArrowDown className="h-4 w-4 text-red-500" />
+              )}
+
+              <span className="font-medium">
+                {debitOrCredit() > 0 ? "+" : "-"}
+                {
+                  currencies?.find(
+                    (c) => c.id === parseInt(transfer?.currency!)
+                  )?.currency_sign
+                }
+                {transfer?.amount}
+              </span>
             </div>
           </div>
           <div className="grid gap-2 text-sm">

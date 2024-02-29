@@ -40,39 +40,9 @@ export default function Page() {
 
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
-  /*   function generateDescription(
-    senderId: string,
-    recieverId: string,
-    type: Transaction["transaction_type"],
-    description: string
-  ) {
-    if (type == "FIAT") {
-      if (senderId && recieverId) {
-        //in house
-        if (user?.id == senderId) {
-          return description
-        } else {
-          let profile: any
-          supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", senderId)
-            .single()
-            .then((v) => (profile = v))
-          // const { profile } = useProfileById(senderId)
-          console.log(profile, "bxshbxshxshxbh")
-          return `Recieved from ${profile?.first_name!} ${profile?.last_name!}`
-        }
-      } else {
-        return description
-      }
-    }
-  } */
-
   if (transactionsError) <div>An error occured</div>
   if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
 
-  console.log(transactions)
   return (
     <div className="flex flex-col">
       <Table>
