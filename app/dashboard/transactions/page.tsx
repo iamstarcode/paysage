@@ -2,6 +2,7 @@
 
 import { SVGProps } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import {
@@ -49,6 +50,7 @@ import TransactionDetails from "@/components/trasaction-details"
 const supabase = createClient()
 
 export default function Page() {
+  const router = useRouter()
   const {
     transactions,
     isTranasctionsLoading,
@@ -117,7 +119,11 @@ export default function Page() {
               transaction_date,
               status,
             }: Transaction) => (
-              <TableRow key={id}>
+              <TableRow
+                className="cursor-pointer"
+                key={id}
+                onClick={() => router.push(`/dashboard/transactions/${id}`)}
+              >
                 <TableCell>
                   {generateDescription(
                     sender_id!,
@@ -139,7 +145,6 @@ export default function Page() {
                       ?.currency_sign
                   }
                   {amount}
-                  <Link href="/dashboard/transactions/1">Linjjuhunjj</Link>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">{status}</TableCell>
                 <TableCell className="text-right">
@@ -151,8 +156,11 @@ export default function Page() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem></DropdownMenuItem>
-                      <DropdownMenuItem>Customer details</DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link href={`/dashboard/transactions/${id}`}>
+                          View details
+                        </Link>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -175,7 +183,6 @@ export default function Page() {
             ? "Load Complete"
             : "Load More"}
       </Button>
-      <TransactionDetails />
     </div>
   )
 }

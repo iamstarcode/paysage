@@ -9,6 +9,7 @@ type Enum_auth_factor_type = 'totp' | 'webauthn';
 type Enum_net_request_status = 'ERROR' | 'PENDING' | 'SUCCESS';
 type Enum_pgsodium_key_status = 'default' | 'expired' | 'invalid' | 'valid';
 type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' | 'hmacsha256' | 'hmacsha512' | 'kdf' | 'secretbox' | 'secretstream' | 'shorthash' | 'stream_xchacha20';
+type Enum_public_transaction_type = 'AIRTIME' | 'FIAT';
 interface Table_net_http_response {
   id: number | null;
   status_code: number | null;
@@ -37,6 +38,27 @@ interface Table_storage_buckets {
   file_size_limit: number | null;
   allowed_mime_types: string[] | null;
   owner_id: string | null;
+}
+interface Table_public_crypto_transfers {
+  id: number | null;
+  transaction_hash: string | null;
+}
+interface Table_public_currencies {
+  id: number;
+  currency_name: string;
+  currency_code: string;
+  currency_sign: string;
+}
+interface Table_public_fiat_transfers {
+  id: number | null;
+  user_id: string | null;
+  amount: number | null;
+  sender_name: string | null;
+  receiver_name: string | null;
+  sender_account: string | null;
+  receiver_account: string | null;
+  _provider: string | null;
+  transaction_id: string | null;
 }
 interface Table_auth_flow_state {
   id: string;
@@ -145,6 +167,12 @@ interface Table_storage_objects {
   version: string | null;
   owner_id: string | null;
 }
+interface Table_public_profiles {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  username: string | null;
+}
 interface Table_auth_refresh_tokens {
   instance_id: string | null;
   id: number;
@@ -216,6 +244,17 @@ interface Table_auth_sso_providers {
   created_at: string | null;
   updated_at: string | null;
 }
+interface Table_public_transactions {
+  id: number;
+  transaction_type: Enum_public_transaction_type;
+  transaction_date: string | null;
+  sender_id: string | null;
+  receiver_id: string | null;
+  amount: number | null;
+  currency: string | null;
+  description: string | null;
+  status: string | null;
+}
 interface Table_auth_users {
   instance_id: string | null;
   id: string;
@@ -250,6 +289,12 @@ interface Table_auth_users {
   reauthentication_sent_at: string | null;
   is_sso_user: boolean;
   deleted_at: string | null;
+}
+interface Table_public_wallets {
+  id: number;
+  user_id: string;
+  currency_id: number | null;
+  balance: number | null;
 }
 interface Schema_analytics {
 
@@ -294,7 +339,12 @@ interface Schema_pgsodium_masks {
 
 }
 interface Schema_public {
-
+  crypto_transfers: Table_public_crypto_transfers;
+  currencies: Table_public_currencies;
+  fiat_transfers: Table_public_fiat_transfers;
+  profiles: Table_public_profiles;
+  transactions: Table_public_transactions;
+  wallets: Table_public_wallets;
 }
 interface Schema_realtime {
 
@@ -340,6 +390,31 @@ interface Tables_relationships {
     };
     children: {
        objects_bucketId_fkey: "storage.objects";
+    };
+  };
+  "public.crypto_transfers": {
+    parent: {
+       crypto_transfers_id_fkey: "public.transactions";
+    };
+    children: {
+
+    };
+  };
+  "public.currencies": {
+    parent: {
+
+    };
+    children: {
+       wallets_currency_id_fkey: "public.wallets";
+    };
+  };
+  "public.fiat_transfers": {
+    parent: {
+       fiat_transfers_user_id_fkey: "auth.users";
+       fiat_transfers_id_fkey: "public.transactions";
+    };
+    children: {
+
     };
   };
   "auth.flow_state": {
@@ -394,6 +469,14 @@ interface Tables_relationships {
   "storage.objects": {
     parent: {
        objects_bucketId_fkey: "storage.buckets";
+    };
+    children: {
+
+    };
+  };
+  "public.profiles": {
+    parent: {
+       profiles_id_fkey: "auth.users";
     };
     children: {
 
@@ -459,6 +542,16 @@ interface Tables_relationships {
        sso_domains_sso_provider_id_fkey: "auth.sso_domains";
     };
   };
+  "public.transactions": {
+    parent: {
+       transactions_receiver_id_fkey: "auth.users";
+       transactions_sender_id_fkey: "auth.users";
+    };
+    children: {
+       crypto_transfers_id_fkey: "public.crypto_transfers";
+       fiat_transfers_id_fkey: "public.fiat_transfers";
+    };
+  };
   "auth.users": {
     parent: {
 
@@ -467,6 +560,20 @@ interface Tables_relationships {
        identities_user_id_fkey: "auth.identities";
        mfa_factors_user_id_fkey: "auth.mfa_factors";
        sessions_user_id_fkey: "auth.sessions";
+       fiat_transfers_user_id_fkey: "public.fiat_transfers";
+       profiles_id_fkey: "public.profiles";
+       transactions_receiver_id_fkey: "public.transactions";
+       transactions_sender_id_fkey: "public.transactions";
+       wallets_user_id_fkey: "public.wallets";
+    };
+  };
+  "public.wallets": {
+    parent: {
+       wallets_user_id_fkey: "auth.users";
+       wallets_currency_id_fkey: "public.currencies";
+    };
+    children: {
+
     };
   };
 }

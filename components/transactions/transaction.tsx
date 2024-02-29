@@ -1,18 +1,26 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/dB6GF9F4L06
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { ArrowDown, ArrowUp } from "lucide-react"
+"use client"
+
+import { useRouter } from "next/navigation"
+import { ArrowDown, ArrowUp, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
 export default function Transaction() {
+  const router = useRouter()
   return (
     <div className="flex items-center  py-12 md:py-24 z-50">
-      <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full max-w-2xl shadow-lg dark:border-gray-800 dark:bg-gray-950">
+      <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full shadow-lg dark:border-gray-800 dark:bg-gray-950">
         <div className="grid gap-4 p-6">
-          <h1 className="font-semibold text-2xl">Transaction Details</h1>
+          <div className="inline-flex justify-between items-center">
+            <h1 className="font-semibold text-2xl">Transaction Details</h1>
+
+            <X
+              onClick={() => router.back()}
+              className="w-4 h-4 cursor-pointer"
+              color="#5c5757"
+            />
+          </div>
+
           <div className="grid gap-1.5 text-sm">
             <div className="flex items-center gap-1.5">
               <ArrowUp className="h-4 w-4 text-green-500" />
@@ -49,7 +57,7 @@ export default function Transaction() {
               <div className="ml-auto">1234567890</div>
             </div>
           </div>
-          <Button>View Details</Button>
+          <Button>Raise A Dispute</Button>
         </div>
       </div>
     </div>
