@@ -1,9 +1,5 @@
-import { revalidatePath } from "next/cache"
-import { createClient } from "@/utils/supabase/server"
 
-import { Tables } from "@/types/g-supabase"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
 import RecentTransactions from "@/components/wallet/recent-transactions"
