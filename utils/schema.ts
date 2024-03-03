@@ -1,5 +1,10 @@
 import { z } from "zod"
 
+export const todoSchema = z.object({
+  title: z.string().min(5),
+  description: z.string().min(5),
+})
+
 export const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6, {
