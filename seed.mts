@@ -95,6 +95,11 @@ const currencyStore = await seed.currencies([
     currencyCode: "EUR",
     currencySign: "€",
   },
+  {
+    currencyName: "Bitcoin",
+    currencyCode: "BTC",
+    currencySign: "BTC",
+  },
 ])
 
 const walletSrore = await seed.wallets((x) => [
@@ -107,6 +112,12 @@ const walletSrore = await seed.wallets((x) => [
     balance: 5000,
     userId: usersStore.users[0].id,
     currencyId: 2,
+  },
+
+  {
+    balance: 1.5,
+    userId: usersStore.users[0].id,
+    currencyId: 3,
   },
 
   {
