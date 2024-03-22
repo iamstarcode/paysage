@@ -98,7 +98,7 @@ const currencyStore = await seed.currencies([
   {
     currencyName: "Bitcoin",
     currencyCode: "BTC",
-    currencySign: "BTC",
+    currencySign: "₿",
   },
 ])
 
