@@ -79,7 +79,7 @@ const profileStore = await seed.profiles((x) => [
   },
 ])
 
-const currencyStore = await seed.currencies([
+/* const currencyStore = await seed.currencies([
   {
     currencyName: "Naira",
     currencyCode: "NGN",
@@ -104,30 +104,30 @@ const currencyStore = await seed.currencies([
     currencySign: "₿",
     currencyType: "CRYPTO",
   },
-])
+]) */
 
 const walletSrore = await seed.wallets((x) => [
   {
     balance: 5000,
     userId: usersStore.users[0].id,
-    currencyId: 1,
+    currencyId: 37, //Naira
   },
   {
     balance: 5000,
     userId: usersStore.users[0].id,
-    currencyId: 2,
+    currencyId: 4, //Dollar
   },
 
   {
     balance: 1.5,
     userId: usersStore.users[0].id,
-    currencyId: 3,
+    currencyId: 1, //BTC
   },
 
   {
     balance: 5000,
     userId: usersStore.users[1].id,
-    currencyId: 1,
+    currencyId: 37,
   },
 ])
 

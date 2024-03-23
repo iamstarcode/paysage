@@ -19,15 +19,7 @@ export const useCurrencies = () => {
 
 export const useWallet = () => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabase.from("wallets").select(`
-    balance,
-    currencies(
-      id,
-      currency_name,
-      currency_code,
-      currency_sign
-       )
-    `)
+    supabase.from("wallets").select("*")
   )
   return { data, isLoading, error, mutate }
 }

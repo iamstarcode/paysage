@@ -69,7 +69,6 @@ type Override = {
       currency_code?: string;
       currency_sign?: string;
       currency_type?: string;
-      wallets?: string;
     };
   }
   fiat_transfers?: {
@@ -434,7 +433,6 @@ type Override = {
       currency_id?: string;
       balance?: string;
       users?: string;
-      currencies?: string;
     };
   }}
 export type Alias = {
@@ -482,7 +480,6 @@ export interface Fingerprint {
   }
   currencies?: {
     id?: FingerprintNumberField;
-    wallets?: FingerprintRelationField;
   }
   fiatTransfers?: {
     id?: FingerprintNumberField;
@@ -646,5 +643,4 @@ export interface Fingerprint {
     currencyId?: FingerprintNumberField;
     balance?: FingerprintNumberField;
     user?: FingerprintRelationField;
-    currency?: FingerprintRelationField;
   }}

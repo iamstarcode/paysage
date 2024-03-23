@@ -296,7 +296,7 @@ interface Table_auth_users {
 interface Table_public_wallets {
   id: number;
   user_id: string;
-  currency_id: number | null;
+  currency_id: number;
   balance: number | null;
 }
 interface Schema_analytics {
@@ -401,14 +401,6 @@ interface Tables_relationships {
     };
     children: {
 
-    };
-  };
-  "public.currencies": {
-    parent: {
-
-    };
-    children: {
-       wallets_currency_id_fkey: "public.wallets";
     };
   };
   "public.fiat_transfers": {
@@ -573,7 +565,6 @@ interface Tables_relationships {
   "public.wallets": {
     parent: {
        wallets_user_id_fkey: "auth.users";
-       wallets_currency_id_fkey: "public.currencies";
     };
     children: {
 

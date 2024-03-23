@@ -19,7 +19,7 @@ function Balance() {
 
   return (
     <>
-      {data?.map(({ balance, currencies }) => (
+      {data?.map(({ balance }) => (
         <Card key={currencies?.id}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">

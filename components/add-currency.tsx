@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { CurrencyType } from "@/types"
 
+import { useWallet } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -22,6 +23,8 @@ type CurrencyCheckType = CurrencyType & { isChecked: boolean }
 
 export function DrawerDemo() {
   const [checkedItems, setCheckedItems] = useState<CurrencyCheckType[] | null>()
+
+  const { data: wallet } = useWallet()
 
   useEffect(() => {
     async function getCurrencies() {
@@ -47,6 +50,10 @@ export function DrawerDemo() {
     // Do whatever you need with the selected items
     console.log("Selected items:", selectedItems)
   }
+
+  useEffect(() => {
+    console.log(wallet, "wallwtx")
+  }, [wallet])
 
   return (
     <Drawer>
