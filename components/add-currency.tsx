@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { CurrencyType } from "@/types"
-import { Minus, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,8 +14,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
@@ -50,30 +47,35 @@ export function DrawerDemo() {
               You can add new currencies to the list of available.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="flex items-center justify-center space-x-2">
-            <div className="p-4 pb-0 space-y-4 max-h-60 overflow-scroll">
-              {currencies &&
-                currencies?.map((currency) => (
-                  <div
-                    key={currency.id}
-                    className="inline-flex w-full justify-between"
-                  >
-                    <p>{currency.currency}</p>
-                    <Switch />
-                  </div>
-                ))}
+          <div className="flex items-center justify-center space-x-2 px-2">
+            <ScrollArea className="h-72 w-full p-4 rounded-md border">
+              <div className=" space-y-4">
+                {currencies &&
+                  currencies?.map((currency) => (
+                    <div>
+                      <div
+                        key={currency.id}
+                        className="inline-flex w-full justify-between"
+                      >
+                        <p>{currency.currency}</p>
+                        <Switch />
+                      </div>
+                      <Separator className="my-2" />
+                    </div>
+                  ))}
 
-              {currencies &&
-                currencies?.map((currency) => (
-                  <div
-                    key={currency.id}
-                    className="inline-flex w-full justify-between"
-                  >
-                    <p>{currency.currency}</p>
-                    <Switch />
-                  </div>
-                ))}
-            </div>
+                {currencies &&
+                  currencies?.map((currency) => (
+                    <div
+                      key={currency.id}
+                      className="inline-flex w-full justify-between"
+                    >
+                      <p>{currency.currency}</p>
+                      <Switch />
+                    </div>
+                  ))}
+              </div>
+            </ScrollArea>
           </div>
           <DrawerFooter>
             <Button>Submit</Button>
