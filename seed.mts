@@ -84,21 +84,25 @@ const currencyStore = await seed.currencies([
     currencyName: "Naira",
     currencyCode: "NGN",
     currencySign: "₦",
+    currencyType: "FIAT",
   },
   {
     currencyName: "Dollar",
     currencyCode: "USD",
     currencySign: "$",
+    currencyType: "FIAT",
   },
   {
     currencyName: "Euro",
     currencyCode: "EUR",
     currencySign: "€",
+    currencyType: "FIAT",
   },
   {
     currencyName: "Bitcoin",
     currencyCode: "BTC",
     currencySign: "₿",
+    currencyType: "CRYPTO",
   },
 ])
 

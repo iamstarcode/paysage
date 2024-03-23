@@ -68,6 +68,7 @@ type Override = {
       currency_name?: string;
       currency_code?: string;
       currency_sign?: string;
+      currency_type?: string;
       wallets?: string;
     };
   }
@@ -365,11 +366,12 @@ type Override = {
       id?: string;
       transaction_type?: string;
       transaction_date?: string;
+      amount?: string;
       sender_id?: string;
       receiver_id?: string;
-      amount?: string;
       currency?: string;
-      description?: string;
+      sender_description?: string;
+      receiver_description?: string;
       status?: string;
       users_transactions_receiver_idTousers?: string;
       users_transactions_sender_idTousers?: string;

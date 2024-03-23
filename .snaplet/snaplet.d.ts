@@ -9,6 +9,7 @@ type Enum_auth_factor_type = 'totp' | 'webauthn';
 type Enum_net_request_status = 'ERROR' | 'PENDING' | 'SUCCESS';
 type Enum_pgsodium_key_status = 'default' | 'expired' | 'invalid' | 'valid';
 type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' | 'hmacsha256' | 'hmacsha512' | 'kdf' | 'secretbox' | 'secretstream' | 'shorthash' | 'stream_xchacha20';
+type Enum_public_currency_type = 'CRYPTO' | 'FIAT';
 type Enum_public_transaction_type = 'AIRTIME' | 'FIAT';
 interface Table_net_http_response {
   id: number | null;
@@ -48,6 +49,7 @@ interface Table_public_currencies {
   currency_name: string;
   currency_code: string;
   currency_sign: string;
+  currency_type: Enum_public_currency_type;
 }
 interface Table_public_fiat_transfers {
   id: number | null;
@@ -248,11 +250,12 @@ interface Table_public_transactions {
   id: number;
   transaction_type: Enum_public_transaction_type;
   transaction_date: string | null;
+  amount: number | null;
   sender_id: string | null;
   receiver_id: string | null;
-  amount: number | null;
   currency: string | null;
-  description: string | null;
+  sender_description: string | null;
+  receiver_description: string | null;
   status: string | null;
 }
 interface Table_auth_users {

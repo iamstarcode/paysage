@@ -7,6 +7,7 @@
     "reset": "supabase db reset --debug && npx tsx seed.mts",
     "sngen": "npx snaplet generate",
     "sugen": "supabase gen types typescript --local > types/g-supabase.ts",
+    "gen": "pnpm sngen && pnpm sugen",
     "seed": "npx tsx seed.mts"
   },
   "dependencies": {
