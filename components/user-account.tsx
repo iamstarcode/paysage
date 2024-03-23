@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,7 +20,7 @@ export default function UserAccount() {
           size="icon"
           variant="ghost"
         >
-          <img
+          <Image
             alt="Avatar"
             className="rounded-full"
             height="32"

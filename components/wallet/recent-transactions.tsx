@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { createClient } from "@/utils/supabase/client"
 
 import {
@@ -56,10 +57,10 @@ function RecentTransactions() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {transactions?.map(({ amount, full_name, id }) => (
-                <div className="flex items-center space-x-4">
+              {transactions?.map(({ amount, id }) => (
+                <div key={id} className="flex items-center space-x-4">
                   <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                    <img
+                    <Image
                       alt="User 1"
                       className="rounded-full"
                       height="32"
@@ -84,7 +85,7 @@ function RecentTransactions() {
               ))}
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <img
+                  <Image
                     alt="User 1"
                     className="rounded-full"
                     height="32"
@@ -109,7 +110,7 @@ function RecentTransactions() {
 
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <img
+                  <Image
                     alt="User 2"
                     className="rounded-full"
                     height="32"
@@ -133,7 +134,7 @@ function RecentTransactions() {
               </div>
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <img
+                  <Image
                     alt="User 3"
                     className="rounded-full"
                     height="32"
@@ -157,7 +158,7 @@ function RecentTransactions() {
               </div>
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <img
+                  <Image
                     alt="User 3"
                     className="rounded-full"
                     height="32"
@@ -181,7 +182,7 @@ function RecentTransactions() {
               </div>
               <div className="flex items-center space-x-4">
                 <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <img
+                  <Image
                     alt="User 3"
                     className="rounded-full"
                     height="32"

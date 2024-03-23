@@ -4,6 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "next lint",
     "reset": "supabase db reset --debug && npx tsx seed.mts",
     "sngen": "npx snaplet generate",
     "sugen": "supabase gen types typescript --local > types/g-supabase.ts",
@@ -55,6 +56,8 @@
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "encoding": "^0.1.13",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.1.4",
     "prettier": "^3.2.5",
     "snaplet": "^0.88.0",
     "tsx": "^4.7.1"

@@ -84,6 +84,7 @@ export default function Transfer() {
       //window.location.reload()
     }
     handleToast(state!)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
   async function clientAction(formData: FormData) {
