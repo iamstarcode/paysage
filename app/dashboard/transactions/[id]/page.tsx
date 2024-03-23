@@ -4,4 +4,4 @@ function Page({ params }: { params: { id: number } }) {
   return <Transaction transaction_id={params.id} />
 }
 
-export default Transaction
+export default Page
