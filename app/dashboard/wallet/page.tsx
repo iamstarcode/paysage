@@ -1,11 +1,21 @@
+import { data } from "autoprefixer"
+
 import { Button } from "@/components/ui/button"
+import { DrawerDemo } from "@/components/add-currency"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
 import RecentTransactions from "@/components/wallet/recent-transactions"
 
 export default async function Page() {
+  const paramsArray = { visible: true }
+  const requestBody = JSON.stringify(paramsArray)
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+      <div className="flex justify-between items-center">
+        <p className="text-2xl font-bold">Wallets</p>
+        <DrawerDemo />
+      </div>
       <div className="flex flex-col-reverse md:flex-row md:justify-between">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full md:min-w-24">
           <Balance />

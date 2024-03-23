@@ -1,3 +1,5 @@
+const crypto = require("crypto")
+
 export const isCurrencyPresent = (wallets: any, id: any) => {
   return wallets.some(
     (item: { currencies: { id: any } }) => item.currencies.id === id
@@ -43,4 +45,13 @@ export function generateTransactionReference(prefix: string): string {
   const referenceNumber = `${prefix}${year}${month}${day}${hours}${minutes}-${seconds}${randomNumber}`
 
   return referenceNumber
+}
+
+export function generateSignature(requestBody: any, apiSecret: any) {
+  const signature = crypto
+    .createHmac("sha512", process.env.COINPAID_SECRET_KEY)
+    .update(requestBody)
+    .digest("hex")
+
+  return signature
 }
