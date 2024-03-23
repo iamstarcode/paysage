@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
@@ -8,16 +7,8 @@ export default async function Page() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex flex-col-reverse md:flex-row md:justify-between">
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full md:max-w-fit">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full md:min-w-24">
           <Balance />
-        </div>
-
-        <div className="flex gap-2">
-          <Button size="sm">Add funds</Button>
-
-          <Button size="sm" variant="outline">
-            Withdraw
-          </Button>
         </div>
       </div>
 
