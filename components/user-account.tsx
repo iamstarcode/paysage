@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { signOut } from "@/app/actions"
+import { signOut } from "@/app/auth/actions"
 
 export default function UserAccount() {
   return (

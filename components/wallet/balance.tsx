@@ -19,18 +19,18 @@ function Balance() {
 
   return (
     <>
-      {data?.map(({ balance }) => (
-        <Card key={currencies?.id}>
+      {data?.map(({ balance, id }) => (
+        <Card key={id}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
               Account Balance
             </CardTitle>
-            {currencies?.currency_sign}
+            {"Sign"}
           </CardHeader>
           <CardContent>
             <div className="flex flex-row justify-between items-center mt-5">
               <p className="text-sm font-bold">
-                {currencies?.currency_sign}
+                {"Sign"}
                 {balance}
               </p>
 

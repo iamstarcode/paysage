@@ -1,15 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { CurrencyType } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
 import { TransferSchema } from "@/utils/schema"
-import { balanceWithCurrencyQuery } from "@/utils/supabase/queries"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { BalanceWithCurrency } from "@/types/supabase"
 import { useTransactions, useWallet } from "@/hooks/supabase"
 import {
   Card,
@@ -38,8 +37,6 @@ import {
 import { SubmitButton } from "@/components/SubmitButton"
 import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 
-import { Button } from "./ui/button"
-
 const initialState = {
   message: "",
   errors: [],
@@ -47,7 +44,9 @@ const initialState = {
 export default function Transfer() {
   //const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
+  const [currencies, setCurrencies] = useState<CurrencyType[] | null>()
   const { data: wallets, mutate } = useWallet()
+
   const { mutate: mutateTransactions } = useTransactions()
 
   const [state, formAction] = useFormState(transferFromWallet, initialState)
@@ -68,11 +67,17 @@ export default function Transfer() {
     },
   })
 
-  async function setDefaults() {
-    const { data } = await balanceWithCurrencyQuery
-    //  setWallet(data)
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/currencies", { method: "POST" })
+      const data = await response.json()
+      setCurrencies(data)
+    }
 
+    fetchData()
+  }, [])
+
+  console.log(currencies)
   useEffect(() => {
     async function _mutate() {
       await mutateTransactions()
@@ -170,7 +175,7 @@ export default function Transfer() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {wallets != null &&
+                        {/* {wallets != null &&
                           wallets.map((wallet) => (
                             <SelectItem
                               key={wallet.currencies?.id}
@@ -179,7 +184,7 @@ export default function Transfer() {
                               {wallet.currencies?.currency_sign}
                               {wallet.balance}
                             </SelectItem>
-                          ))}
+                          ))} */}
                       </SelectContent>
                     </Select>
                     <FormMessage />

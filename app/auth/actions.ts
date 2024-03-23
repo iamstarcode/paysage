@@ -30,7 +30,7 @@ export async function signIn(prevState: any, formData: FormData) {
 
   if (error) {
     console.log(error)
-    return redirect("/login?message=Could not authenticate user")
+    return redirect("/auth/login?message=Could not authenticate user")
   }
 
   return redirect("/dashboard")
@@ -54,14 +54,14 @@ export async function signUp(prevState: any, formData: FormData) {
 
   if (error) {
     console.log(error, "fefwfd")
-    return redirect("/login?message=Could not authenticate user")
+    return redirect("/auth/login?message=Could not authenticate user")
   }
 
-  return redirect("/login?message=Check email to continue sign in process")
+  return redirect("/auth/login?message=Check email to continue sign in process")
 }
 
 export const signOut = async () => {
   const supabase = createClient()
   await supabase.auth.signOut()
-  return redirect("/login")
+  return redirect("/auth/login")
 }

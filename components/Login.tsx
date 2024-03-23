@@ -7,7 +7,6 @@ import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -18,15 +17,13 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { signIn, signUp } from "@/app/actions"
+import { signIn, signUp } from "@/app/auth/actions"
 
 import { SubmitButton } from "./SubmitButton"
 
@@ -40,8 +37,8 @@ export default function Component() {
     },
   })
 
-  const [state, formAction] = useFormState(signIn, {} as any)
-  const [st, action] = useFormState(signUp, {} as any)
+  const [_, signInAction] = useFormState(signIn, {} as any)
+  const [__, signUpAction] = useFormState(signUp, {} as any)
 
   return (
     <Card className="mx-auto max-w-md">
@@ -95,7 +92,7 @@ export default function Component() {
             />
 
             <SubmitButton
-              formAction={formAction}
+              formAction={signInAction}
               type="submit"
               className="w-full"
               text="Sign In"
@@ -103,7 +100,7 @@ export default function Component() {
             />
 
             <SubmitButton
-              formAction={action}
+              formAction={signUpAction}
               type="submit"
               className="w-full"
               text="Sign Up"
