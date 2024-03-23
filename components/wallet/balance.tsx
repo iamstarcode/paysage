@@ -15,12 +15,12 @@ import { Button } from "../ui/button"
 function Balance() {
   const { data } = useWallet()
 
-  console.log(data)
+  // console.log(data)
 
   return (
     <>
       {data?.map(({ balance, currencies }) => (
-        <Card>
+        <Card key={currencies?.id}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
               Account Balance

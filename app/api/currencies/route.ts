@@ -19,5 +19,7 @@ export async function POST() {
   })
   const currencies = await res.json()
 
-  return Response.json({ ...currencies?.data })
+  //console.log(currencies, "cuwww")
+
+  return Response.json({ data: currencies.data })
 }

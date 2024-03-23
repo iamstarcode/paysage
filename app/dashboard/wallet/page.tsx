@@ -7,9 +7,6 @@ import Balance from "@/components/wallet/balance"
 import RecentTransactions from "@/components/wallet/recent-transactions"
 
 export default async function Page() {
-  const paramsArray = { visible: true }
-  const requestBody = JSON.stringify(paramsArray)
-
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex justify-between items-center">
