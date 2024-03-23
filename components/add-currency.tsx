@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useEffect, useState } from "react"
 import { CurrencyType } from "@/types"
 
 import { Button } from "@/components/ui/button"
@@ -18,21 +18,35 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 
-export function DrawerDemo() {
-  const [currencies, setCurrencies] = React.useState<CurrencyType[] | null>()
+type CurrencyCheckType = CurrencyType & { isChecked: boolean }
 
-  React.useEffect(() => {
+export function DrawerDemo() {
+  const [checkedItems, setCheckedItems] = useState<CurrencyCheckType[] | null>()
+
+  useEffect(() => {
     async function getCurrencies() {
       const res = await fetch("/api/currencies", { method: "POST" })
       const data = await res.json()
 
-      setCurrencies(data.data)
+      setCheckedItems(
+        data.data?.map((item: CurrencyType) => ({ ...item, isChecked: false }))
+      )
     }
 
     getCurrencies()
   }, [])
 
-  //console.log(currencies)
+  const toggleItem = (index: number) => {
+    const updatedItems = [...checkedItems!]
+    updatedItems[index].isChecked = !updatedItems[index].isChecked
+    setCheckedItems(updatedItems)
+  }
+
+  const getAllCheckedStates = () => {
+    const selectedItems = checkedItems?.filter((item) => item.isChecked)
+    // Do whatever you need with the selected items
+    console.log("Selected items:", selectedItems)
+  }
 
   return (
     <Drawer>
@@ -50,35 +64,24 @@ export function DrawerDemo() {
           <div className="flex items-center justify-center space-x-2 px-2">
             <ScrollArea className="h-72 w-full p-4 rounded-md border">
               <div className=" space-y-4">
-                {currencies &&
-                  currencies?.map((currency) => (
-                    <div>
-                      <div
-                        key={currency.id}
-                        className="inline-flex w-full justify-between"
-                      >
+                {checkedItems &&
+                  checkedItems?.map((currency, index) => (
+                    <div key={currency.id}>
+                      <div className="inline-flex w-full justify-between">
                         <p>{currency.currency}</p>
-                        <Switch />
+                        <Switch
+                          checked={checkedItems[index].isChecked}
+                          onCheckedChange={() => toggleItem(index)}
+                        />
                       </div>
                       <Separator className="my-2" />
-                    </div>
-                  ))}
-
-                {currencies &&
-                  currencies?.map((currency) => (
-                    <div
-                      key={currency.id}
-                      className="inline-flex w-full justify-between"
-                    >
-                      <p>{currency.currency}</p>
-                      <Switch />
                     </div>
                   ))}
               </div>
             </ScrollArea>
           </div>
           <DrawerFooter>
-            <Button>Submit</Button>
+            <Button onClick={getAllCheckedStates}>Submit</Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
