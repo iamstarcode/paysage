@@ -3,11 +3,7 @@
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/client"
 
-import {
-  useProfile,
-  useRecentFiatTransactions,
-  useUser,
-} from "@/hooks/supabase"
+import { useRecentFiatTransactions } from "@/hooks/supabase"
 import {
   Card,
   CardContent,

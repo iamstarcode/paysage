@@ -1,34 +1,35 @@
-import crypto from "crypto" // For signature verification (optional)
-import { NextApiRequest, NextApiResponse } from "next"
+import { createHmac, timingSafeEqual } from "crypto" // For signature verification (optional)
 
-const COINPAID_SECRET_KEY = process.env.COINPAID_SECRET_KEY // Replace with your secret
+const COINPAID_SECRET_KEY = process.env.COINPAID_SECRET_KEY! // Replace with your secret
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { ipn_mode, ...data } = req.body // Destructure incoming data
+export async function POST(request: Request) {
+  const { headers, body } = request // Destructure incoming data
 
-  // Basic validation (optional)
-  if (ipn_mode !== "hmac") {
-    return res.status(400).json({ message: "Invalid IPN mode" })
+  const {
+    "x-processing-key": publicKey,
+    "x-processing-signature": signature,
+  }: any = headers
+
+  // Verify the signature
+  const expectedSignature = createHmac("sha512", COINPAID_SECRET_KEY)
+    .update(JSON.stringify(body))
+    .digest("hex")
+  const isSignatureValid = timingSafeEqual(
+    Buffer.from(expectedSignature, "hex"),
+    Buffer.from(signature, "hex")
+  )
+
+  if (!isSignatureValid) {
+    return Response.json({ error: "Invalid signature" }, { status: 401 })
   }
 
-  // Signature verification (optional, recommended for security)
-  if (COINPAID_SECRET_KEY) {
-    const hmac = crypto.createHmac("sha256", COINPAID_SECRET_KEY)
-    const calculatedSignature = hmac.update(JSON.stringify(data)).digest("hex")
-
-    if (calculatedSignature !== req.headers["hmac"]) {
-      return res.status(403).json({ message: "Invalid signature" })
-    }
-  }
-
+  // Process the callback payload
+  console.log("CoinsPaid callback received:", body)
   // Process CoinPayments notification data (e.g., transaction status, etc.)
-  console.log("CoinPayments notification:", data)
+  // console.log("CoinPayments notification:", data)
 
   // Handle the notification data as needed in your application logic
   // (e.g., update order status, send email notifications, etc.)
 
-  res.status(200).json({ message: "OK" })
+  return Response.json({ message: "OK" })
 }
