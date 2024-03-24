@@ -24,8 +24,6 @@ import {
 } from "@/components/ui/table"
 import { TransactionSkeleton } from "@/components/skeletons/transactions"
 
-const supabase = createClient()
-
 export default function Page() {
   const router = useRouter()
   const {

@@ -1,6 +1,5 @@
+import crypto from "crypto"
 import { FormState } from "@/types"
-
-const crypto = require("crypto")
 
 export const isCurrencyPresent = (wallets: any, id: any) => {
   return wallets.some(
@@ -51,7 +50,7 @@ export function generateTransactionReference(prefix: string): string {
 
 export function generateSignature(requestBody: any, apiSecret: any) {
   const signature = crypto
-    .createHmac("sha512", process.env.COINPAID_SECRET_KEY)
+    .createHmac("sha512", process.env.COINPAID_SECRET_KEY!)
     .update(requestBody)
     .digest("hex")
 
