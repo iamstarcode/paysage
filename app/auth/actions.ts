@@ -4,7 +4,7 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { FormState } from "@/types"
 import { handleValidationError } from "@/utils/helpers"
-import { signUpSchema } from "@/utils/schema"
+import { forgotSchema, resetSchema, signUpSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/server"
 
 export async function signIn(prevState: any, formData: FormData) {
@@ -67,10 +67,40 @@ export async function signUp(prevState: any, formData: FormData) {
   } as FormState
 }
 
-export async function sendResetPasswordLink(
+export async function sendForgotPasswordResetLink(
   prevState: any,
   formData: FormData
-) {}
+) {
+  const result = forgotSchema.safeParse({
+    email: formData.get("email") as string,
+  })
+
+  if (!result.success) {
+    return handleValidationError(result)
+  }
+
+  const origin = headers().get("origin")
+  const supabase = createClient()
+
+  try {
+    await supabase.auth.resetPasswordForEmail(result.data.email, {
+      redirectTo: `${origin}/auth/reset-password/`,
+    })
+  } catch (error) {
+    console.error("Error sending reset password email:", error)
+    return {
+      message: "Error sending reset password email",
+      type: "Error",
+    } as FormState
+  }
+
+  return {
+    message: `A password reset link has been sent to your email address. Please
+    follow the instructions in the email to reset your password.`,
+    type: "Success",
+  } as FormState
+}
+
 export const signOut = async () => {
   const supabase = createClient()
   await supabase.auth.signOut()

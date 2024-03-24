@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import { FormState } from "@/types"
+import { handleToast } from "@/utils/handle-toast"
 import { forgotSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/client"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,28 +32,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { SubmitButton } from "@/components/SubmitButton"
 
+import { sendForgotPasswordResetLink } from "../actions"
+
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("")
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [formState, formAction] = useFormState(
+    sendForgotPasswordResetLink,
+    {} as FormState
+  )
 
-  const handleResetPassword = async (e: any) => {
-    e.preventDefault()
-
-    setLoading(true)
-    const supabase = createClient()
-    try {
-      await supabase.auth.resetPasswordForEmail(form.getValues("email"), {
-        redirectTo: `${window.location.origin}/auth/reset-password/`,
-      })
-      setLoading(false)
-    } catch (error) {
-      console.error("Error sending reset password email:", error)
-    }
-
-    setLoading(false)
-  }
+  useEffect(() => {
+    handleToast(formState!)
+  }, [formState])
 
   const form = useForm<z.infer<typeof forgotSchema>>({
     resolver: zodResolver(forgotSchema),
@@ -70,48 +61,38 @@ export default function ForgotPassword() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {success ? (
-          <p>
-            A password reset link has been sent to your email address. Please
-            follow the instructions in the email to reset your password.
-          </p>
-        ) : (
-          <Form {...form}>
-            <form onSubmit={handleResetPassword} className="space-y-3">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="Enter email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
+        <Form {...form}>
+          <form className="space-y-3">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="Enter email" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
 
-              <Button disabled={loading} type="submit" className="w-full">
-                {loading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Reset Password
-              </Button>
+            <SubmitButton
+              formAction={formAction}
+              type="submit"
+              className="w-full"
+              text="Send Reset Email"
+              pendingText="Signing Reset Email..."
+            />
 
-              <div className="mt-4 text-center text-sm">
-                Don&apos;t have an account?
-                <Link className="underline" href="/auth/login">
-                  Sign up
-                </Link>
-              </div>
-            </form>
-          </Form>
-        )}
+            <div className="mt-4 text-center text-sm">
+              Don&apos;t have an account?
+              <Link className="underline" href="/auth/login">
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   )
