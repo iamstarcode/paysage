@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev --debug",
-    "build": "next build",
+    "dev": "next dev ",
+    "build": "next build --debug",
     "start": "next start",
     "lint": "next lint",
     "reset": "supabase db reset --debug && npx tsx seed.mts",

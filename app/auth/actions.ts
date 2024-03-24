@@ -7,14 +7,13 @@ import { handleValidationError } from "@/utils/helpers"
 import { signUpSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/server"
 
-const supabase = createClient()
-
 export async function signIn(prevState: any, formData: FormData) {
   const result = signUpSchema.safeParse(Object.fromEntries(formData.entries()))
 
   if (!result.success) {
     return handleValidationError(result)
   }
+  const supabase = createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
     email: result.data.email,
@@ -44,6 +43,8 @@ export async function signUp(prevState: any, formData: FormData) {
   if (!result.success) {
     return handleValidationError(result)
   }
+
+  const supabase = createClient()
 
   const { error } = await supabase.auth.signUp({
     email,
