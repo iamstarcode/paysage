@@ -50,7 +50,7 @@ export default function Login() {
     handleToast(signUpFormState!)
   }, [signUpFormState])
 
-  console.log(getURL(), "tnhjthnyhjyj")
+  console.log(getURL(), "ff", process.env.NEXT_PUBLIC_VERCEL_URL)
   return (
     <Card className="mx-auto max-w-md">
       <CardHeader className="space-y-1">
