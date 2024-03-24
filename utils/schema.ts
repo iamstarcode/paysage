@@ -11,7 +11,7 @@ export const registerSchema = z.object({
     message: "Password should contain at least 6 character",
   }),
 })
-
+export const resetSchema = registerSchema.omit({ email: true })
 export const forgotSchema = registerSchema.omit({ password: true })
 
 export const TransferSchema = z.object({
