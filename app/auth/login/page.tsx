@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { registerSchema } from "@/utils/schema"
+import { FormState } from "@/types"
+import { signUpSchema } from "@/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AlertCircle, Check, Terminal } from "lucide-react"
 import { useFormState } from "react-dom"
@@ -33,8 +34,8 @@ export default function Login({
 }: {
   searchParams: { message: string; error: string }
 }) {
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -42,7 +43,7 @@ export default function Login({
     },
   })
 
-  const [_, signInAction] = useFormState(signIn, {} as any)
+  const [_, signInAction] = useFormState(signIn, {} as FormState)
   const [__, signUpAction] = useFormState(signUp, {} as any)
   return (
     <Card className="mx-auto max-w-md">

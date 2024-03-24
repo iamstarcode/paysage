@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { forgotSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertCircle, Check, Link } from "lucide-react"
+import { AlertCircle, Check, Loader2 } from "lucide-react"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -33,19 +34,23 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("")
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleResetPassword = async (e: any) => {
     e.preventDefault()
 
+    setLoading(true)
     const supabase = createClient()
     try {
       await supabase.auth.resetPasswordForEmail(form.getValues("email"), {
         redirectTo: `${window.location.origin}/auth/reset-password/`,
       })
-      // setSuccess(true)
+      setLoading(false)
     } catch (error) {
       console.error("Error sending reset password email:", error)
     }
+
+    setLoading(false)
   }
 
   const form = useForm<z.infer<typeof forgotSchema>>({
@@ -103,13 +108,16 @@ export default function ForgotPassword() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button disabled={loading} type="submit" className="w-full">
+                {loading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 Reset Password
               </Button>
 
               <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account?
-                <Link className="underline" href="#">
+                <Link className="underline" href="/auth/login">
                   Sign up
                 </Link>
               </div>

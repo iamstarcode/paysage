@@ -3,6 +3,7 @@
 import { FormState } from "@/types"
 import {
   generateTransactionReference,
+  handleValidationError,
   selectBalanceByCurrency,
 } from "@/utils/helpers"
 import { TransferSchema } from "@/utils/schema"
@@ -17,6 +18,7 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
   const result = TransferSchema.safeParse(
     Object.fromEntries(formData.entries())
   )
+
   if (!result.success) {
     let errorMsg: string[] = []
 

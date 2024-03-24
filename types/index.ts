@@ -1,7 +1,7 @@
 import { Tables } from "./g-supabase"
 
 export type FormState = {
-  message: string
+  message?: string
   errors?: any[]
   type?: "ValidationError" | "WarningError" | "Error" | "Success"
 }

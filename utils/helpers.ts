@@ -1,3 +1,5 @@
+import { FormState } from "@/types"
+
 const crypto = require("crypto")
 
 export const isCurrencyPresent = (wallets: any, id: any) => {
@@ -54,4 +56,18 @@ export function generateSignature(requestBody: any, apiSecret: any) {
     .digest("hex")
 
   return signature
+}
+
+export function handleValidationError(result: any) {
+  let errorMsg: string[] = []
+
+  result.error.issues.forEach((issue: any) => {
+    errorMsg.push(issue.path[0] + ": " + issue.message)
+  })
+
+  return {
+    errors: errorMsg,
+    message: "Error: Please Check Your Input!",
+    type: "ValidationError",
+  } as FormState
 }

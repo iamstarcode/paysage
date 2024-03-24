@@ -5,14 +5,14 @@ export const todoSchema = z.object({
   description: z.string().min(5),
 })
 
-export const registerSchema = z.object({
+export const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6, {
     message: "Password should contain at least 6 character",
   }),
 })
-export const resetSchema = registerSchema.omit({ email: true })
-export const forgotSchema = registerSchema.omit({ password: true })
+export const resetSchema = signUpSchema.omit({ email: true })
+export const forgotSchema = signUpSchema.omit({ password: true })
 
 export const TransferSchema = z.object({
   reciever: z.string().min(3),

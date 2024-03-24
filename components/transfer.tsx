@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CurrencyType } from "@/types"
+import { CurrencyType, FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
 import { TransferSchema } from "@/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -37,7 +37,7 @@ import {
 import { SubmitButton } from "@/components/SubmitButton"
 import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 
-const initialState = {
+const initialState: FormState = {
   message: "",
   errors: [],
 }
@@ -49,7 +49,7 @@ export default function Transfer() {
 
   const { mutate: mutateTransactions } = useTransactions()
 
-  const [state, formAction] = useFormState(transferFromWallet, initialState)
+  const [state, formAction] = useFormState(transferFromWallet, {} as FormState)
 
   const form = useForm<z.infer<typeof TransferSchema>>({
     resolver: zodResolver(TransferSchema),
@@ -77,7 +77,7 @@ export default function Transfer() {
     fetchData()
   }, [])
 
-  console.log(currencies)
+  //console.log(currencies)
   useEffect(() => {
     async function _mutate() {
       await mutateTransactions()

@@ -77,7 +77,7 @@ export default function ResetPassword({
   }
 
   return (
-    <Card className="mx-auto max-w-md">
+    <Card className="mx-auto min-w-96 max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Change Password</CardTitle>
         <CardDescription>Enter your new password</CardDescription>
