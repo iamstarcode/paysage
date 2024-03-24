@@ -12,6 +12,8 @@ export const registerSchema = z.object({
   }),
 })
 
+export const forgotSchema = registerSchema.omit({ password: true })
+
 export const TransferSchema = z.object({
   reciever: z.string().min(3),
   amount: z.coerce
