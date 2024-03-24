@@ -62,7 +62,7 @@ export const useRecentFiatTransactions = () => {
   return { data, isLoading, error, mutate }
 }
 
-export const useProfileById = (id: string) => {
+export const useProfileById = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase.from("profiles").select("*").eq("id", id).single()
   )
@@ -83,7 +83,7 @@ export const useUser = () => {
   return { user: data?.data.user, isUserLoading, userError }
 }
 
-export const useGetFiatTransfer = (id: number) => {
+export const useGetFiatTransfer = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase
       .from("transactions")
@@ -100,4 +100,4 @@ export const useGetFiatTransfer = (id: number) => {
   }
 }
 
-export type BalanceWithCurrency = Pick<ReturnType<typeof useWallet>, "data">
+//export type BalanceWithCurrency = Pick<ReturnType<typeof useWallet>, "data">

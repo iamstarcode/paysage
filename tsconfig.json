@@ -30,7 +30,8 @@
     ".next/types/**/*.ts",
     "components/icons",
     "app/dashboard/@transaction/default.js",
-    "app/dashboard/transactions/layout"
+    "app/dashboard/transactions/layout",
+    "hooks/supabase.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -102,7 +102,7 @@ function DropdownWithDialogItemsSolution2() {
         hidden={hasOpenDialog}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
-            focusRef.current?.focus()
+            //focusRef?.current?.focus()
             focusRef.current = null
             event.preventDefault()
           }
