@@ -8,7 +8,6 @@ export async function POST() {
       ? process.env.COINPAID_DEV_URL
       : process.env.COINPAID_URL
 
-  //console.log(apiURL, "ccnfcfncjn")
   const res = await fetch(`${apiURL}/currencies/list`, {
     method: "POST",
     body: requestBody,

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { getURL } from "next/dist/shared/lib/utils"
 import Link from "next/link"
 import { FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
@@ -49,6 +50,7 @@ export default function Login() {
     handleToast(signUpFormState!)
   }, [signUpFormState])
 
+  console.log(getURL(), "tnhjthnyhjyj")
   return (
     <Card className="mx-auto max-w-md">
       <CardHeader className="space-y-1">
