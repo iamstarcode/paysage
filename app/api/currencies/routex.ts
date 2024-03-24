@@ -1,10 +1,14 @@
+//import crypto from "crypto"
 import { generateSignature } from "@/utils/helpers"
 
 export async function POST() {
   const requestBody = JSON.stringify({ visible: true })
   const apiURL =
-    process.env.NODE_ENV == "development" ? process.env.COINPAID_DEV_URL : ""
+    process.env.NODE_ENV == "development"
+      ? process.env.COINPAID_DEV_URL
+      : process.env.COINPAID_URL
 
+  //console.log(apiURL, "ccnfcfncjn")
   const res = await fetch(`${apiURL}/currencies/list`, {
     method: "POST",
     body: requestBody,

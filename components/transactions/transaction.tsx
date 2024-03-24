@@ -13,7 +13,7 @@ export default function Transaction({
 }) {
   const router = useRouter()
   const { transfer } = useGetFiatTransfer(transaction_id!)
-  const { data: currencies } = useCurrencies()
+  //const { data: currencies } = useCurrencies()
   const { user } = useUser()
 
   function debitOrCredit() {
@@ -48,7 +48,7 @@ export default function Transaction({
                 <ArrowDown className="h-4 w-4 text-red-500" />
               )}
 
-              <span className="font-medium">
+              {/* <span className="font-medium">
                 {debitOrCredit() > 0 ? "+" : "-"}
                 {
                   currencies?.find(
@@ -56,7 +56,7 @@ export default function Transaction({
                   )?.currency_sign
                 }
                 {transfer?.amount}
-              </span>
+              </span> */}
             </div>
           </div>
           <div className="grid gap-2 text-sm">
