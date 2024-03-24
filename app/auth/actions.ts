@@ -53,8 +53,10 @@ export async function signUp(prevState: any, formData: FormData) {
   })
 
   if (error) {
-    console.log(error, "fefwfd")
-    return redirect("/auth/login?message=Could not authenticate user")
+    console.log(error.status, "fefwfd")
+    return redirect(
+      `/auth/login?message=${error.message}&error=${error.status}`
+    )
   }
 
   return redirect("/auth/login?message=Check email to continue sign in process")
