@@ -1,15 +1,15 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
 import { FormState } from "@/types"
+import { handleToast } from "@/utils/handle-toast"
 import { signUpSchema } from "@/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertCircle, Check, Terminal } from "lucide-react"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import {
   Card,
   CardContent,
@@ -29,11 +29,7 @@ import { Input } from "@/components/ui/input"
 import { SubmitButton } from "@/components/SubmitButton"
 import { signIn, signUp } from "@/app/auth/actions"
 
-export default function Login({
-  searchParams,
-}: {
-  searchParams: { message: string; error: string }
-}) {
+export default function Login() {
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     mode: "onBlur",
@@ -43,8 +39,16 @@ export default function Login({
     },
   })
 
-  const [_, signInAction] = useFormState(signIn, {} as FormState)
-  const [__, signUpAction] = useFormState(signUp, {} as any)
+  const [signInFormState, signInAction] = useFormState(signIn, {} as FormState)
+  const [signUpFormState, signUpAction] = useFormState(signUp, {} as FormState)
+
+  useEffect(() => {
+    handleToast(signInFormState!)
+  }, [signInFormState])
+  useEffect(() => {
+    handleToast(signUpFormState!)
+  }, [signUpFormState])
+
   return (
     <Card className="mx-auto max-w-md">
       <CardHeader className="space-y-1">
@@ -56,20 +60,6 @@ export default function Login({
       <CardContent>
         <Form {...form}>
           <form className="space-y-3">
-            {searchParams.message && (
-              <Alert variant={searchParams.error ? "destructive" : "default"}>
-                {searchParams.error ? (
-                  <AlertCircle className="h-4 w-4" />
-                ) : (
-                  <Check color="#33dd2d" />
-                )}
-                <AlertTitle>
-                  {searchParams.error ? "Error!" : "Success"}
-                </AlertTitle>
-                <AlertDescription>{searchParams.message}</AlertDescription>
-              </Alert>
-            )}
-
             <FormField
               control={form.control}
               name="email"

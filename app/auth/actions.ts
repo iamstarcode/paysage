@@ -10,33 +10,22 @@ import { createClient } from "@/utils/supabase/server"
 const supabase = createClient()
 
 export async function signIn(prevState: any, formData: FormData) {
-  const email = formData.get("email") as string
-  const password = formData.get("password") as string
+  const result = signUpSchema.safeParse(Object.fromEntries(formData.entries()))
 
-  const result = signUpSchema.safeParse({
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  })
-
-  // Return early if the form data is invalid
   if (!result.success) {
     return handleValidationError(result)
   }
-  /*   if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
-  } */
 
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
+    email: result.data.email,
+    password: result.data.password,
   })
 
   if (error) {
-    return redirect(
-      `/auth/login?message=${error.message}&error=${error.status}`
-    )
+    return {
+      message: error.message,
+      type: "Error",
+    } as FormState
   }
 
   return redirect("/dashboard")
@@ -65,12 +54,16 @@ export async function signUp(prevState: any, formData: FormData) {
   })
 
   if (error) {
-    return redirect(
-      `/auth/login?message=${error.message}&error=${error.status}`
-    )
+    return {
+      message: error.message,
+      type: "Error",
+    } as FormState
   }
 
-  return redirect("/auth/login?message=Check email to continue sign in process")
+  return {
+    message: "Check email to continue sign in process",
+    type: "Success",
+  } as FormState
 }
 
 export async function sendResetPasswordLink(
