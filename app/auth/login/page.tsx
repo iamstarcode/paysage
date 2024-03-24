@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect } from "react"
-import { getURL } from "next/dist/shared/lib/utils"
 import Link from "next/link"
 import { FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
+import { getURL } from "@/utils/helpers"
 import { signUpSchema } from "@/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFormState } from "react-dom"
