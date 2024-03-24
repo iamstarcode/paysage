@@ -1,14 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { FormState } from "@/types"
+import { handleToast } from "@/utils/handle-toast"
 import { resetSchema } from "@/utils/schema"
 import { createClient } from "@/utils/supabase/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { AlertCircle, Loader2 } from "lucide-react"
+import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -26,22 +30,25 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { SubmitButton } from "@/components/SubmitButton"
 
-///import { supabase } from "../utils/initSupabase"
+import { resetPassword } from "../actions"
 
 export default function ResetPassword({
   searchParams,
 }: {
-  searchParams: { code: string; message: string; error: string }
+  searchParams: {
+    code: string
+    message: string
+    error: string
+    error_description: string
+  }
 }) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const router = useRouter()
+  const [formState, formAction] = useFormState(resetPassword, {} as FormState)
 
-  const supabase = createClient()
-
-  const [success, setSuccess] = useState(false)
-  //const { access_token: accessToken } = router.query
+  useEffect(() => {
+    handleToast(formState!)
+  }, [formState])
 
   const form = useForm<z.infer<typeof resetSchema>>({
     resolver: zodResolver(resetSchema),
@@ -50,7 +57,7 @@ export default function ResetPassword({
       password: "",
     },
   })
-  const handleResetPassword = async (event: any) => {
+  /*   const handleResetPassword = async (event: any) => {
     event.preventDefault()
 
     //setLoading(true)
@@ -74,7 +81,7 @@ export default function ResetPassword({
     } finally {
       setLoading(false)
     }
-  }
+  } */
 
   return (
     <Card className="mx-auto min-w-96 max-w-md">
@@ -83,11 +90,23 @@ export default function ResetPassword({
         <CardDescription>Enter your new password</CardDescription>
       </CardHeader>
       <CardContent>
-        {success ? (
-          <p>Password changed succesfully redirecting now.</p>
+        {searchParams.error ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {searchParams?.error_description!}
+            </AlertDescription>
+          </Alert>
         ) : (
           <Form {...form}>
-            <form onSubmit={handleResetPassword} className="space-y-3">
+            <form className="space-y-3">
+              <input
+                type="text"
+                className="hidden"
+                name="code"
+                value={searchParams.code}
+              />
               <FormField
                 control={form.control}
                 name="password"
@@ -106,12 +125,13 @@ export default function ResetPassword({
                 )}
               />
 
-              <Button disabled={loading} type="submit" className="w-full">
-                {loading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Reset Password
-              </Button>
+              <SubmitButton
+                formAction={formAction}
+                type="submit"
+                className="w-full"
+                text="Reset Password"
+                pendingText="Reseting  Password..."
+              />
             </form>
           </Form>
         )}

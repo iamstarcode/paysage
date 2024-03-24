@@ -67,6 +67,12 @@ export async function signUp(prevState: any, formData: FormData) {
   } as FormState
 }
 
+export const signOut = async () => {
+  const supabase = createClient()
+  await supabase.auth.signOut()
+  return redirect("/auth/login")
+}
+
 export async function sendForgotPasswordResetLink(
   prevState: any,
   formData: FormData
@@ -101,8 +107,26 @@ export async function sendForgotPasswordResetLink(
   } as FormState
 }
 
-export const signOut = async () => {
-  const supabase = createClient()
-  await supabase.auth.signOut()
-  return redirect("/auth/login")
+export async function resetPassword(prevState: any, formData: FormData) {
+  const result = resetSchema.safeParse(Object.fromEntries(formData.entries()))
+
+  if (!result.success) {
+    return handleValidationError(result)
+  }
+
+  try {
+    const supabase = createClient()
+    await supabase.auth.exchangeCodeForSession(formData.get("code") as string)
+    await supabase.auth.updateUser({
+      password: result.data.password,
+    })
+  } catch (error) {
+    console.error("Error reseting password:", error)
+    return {
+      message: "Error reseting password",
+      type: "Error",
+    } as FormState
+  }
+
+  return redirect("/dashboard")
 }

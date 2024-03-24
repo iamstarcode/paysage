@@ -82,7 +82,7 @@ export default function ForgotPassword() {
               type="submit"
               className="w-full"
               text="Send Reset Email"
-              pendingText="Signing Reset Email..."
+              pendingText="Sending Reset Email..."
             />
 
             <div className="mt-4 text-center text-sm">
