@@ -1,9 +1,21 @@
-import { Suspense } from "react"
 import Image from "next/image"
 import { CurrencyType } from "@/types"
 import { getURL } from "@/utils/helpers"
 
-import CurrencySkeleton from "../skeletons/currency"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+import { Deposit } from "./deposit"
 
 export default async function Currencies() {
   const res = await fetch(getURL() + "/api/currencies", { method: "POST" })
@@ -34,6 +46,7 @@ export default async function Currencies() {
                   src={`/img/currencies/${currency.toLocaleLowerCase()}.svg`}
                 />
 
+                <Deposit />
                 <p className="text-sm leading-none text-gray-500 dark:text-gray-400">
                   {currency}
                 </p>

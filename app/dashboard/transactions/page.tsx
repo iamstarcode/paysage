@@ -43,6 +43,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col">
+      <Link href={`/dashboard/transactions/2`}>View details</Link>
       <Table>
         <TableHeader>
           <TableRow>

@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { createClient } from "@/utils/supabase/server"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
