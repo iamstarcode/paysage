@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { FormState } from "@/types"
 import {
   generateTransactionReference,
@@ -15,22 +16,12 @@ import {
 import { createClient } from "@/utils/supabase/server"
 
 export async function transferFromWallet(prevState: any, formData: FormData) {
-  const result = TransferSchema.safeParse(
+  /*   const result = TransferSchema.safeParse(
     Object.fromEntries(formData.entries())
   )
 
   if (!result.success) {
-    let errorMsg: string[] = []
-
-    result.error.issues.forEach((issue) => {
-      errorMsg.push(issue.path[0] + ": " + issue.message)
-    })
-
-    return {
-      errors: errorMsg,
-      message: "Error: Please Check Your Input!",
-      type: "ValidationError",
-    } as FormState
+    return handleValidationError(result)
   }
 
   const supabase = createClient()
@@ -133,41 +124,17 @@ export async function transferFromWallet(prevState: any, formData: FormData) {
         type: "Error",
       } as FormState
     }
-
-    /* 
-
-  
-
-    if (transactionError) {
-      throw new Error("Failed to deduct balance from source wallet")
-    }
-
-    
-
-    if (updateError) {
-      throw new Error("Failed to add balance to destination wallet")
-    }
-
-    // Record transaction
-    const { data: insertedTransaction, error: insertError } = await supabase
-      .from("transactions")
-      .insert({
-        from_wallet_id: fromWalletId,
-        to_wallet_id: toWalletId,
-        amount,
-        currency_id: fromWallet.currency_id,
-      })
-
-    if (insertError) {
-      throw new Error("Failed to record transaction")
-    } */
   } catch (error: any) {
     console.error(error.message)
-  }
-}
+  } */
 
-/* const { data, error } = await supabase.rpc('transfer_balance', {
-  sender_id: 'sender-user-id',
-  receiver_id: 'receiver-user-id',
-  amount: 100
-}); */
+  const supabase = createClient()
+  await supabase.from("wallets").update({ balance: 1200 }).eq("id", 1)
+
+  revalidatePath("dashboard/wallet")
+
+  return {
+    message: "Transfer Complete",
+    type: "Success",
+  } as FormState
+}

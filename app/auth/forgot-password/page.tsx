@@ -1,19 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
 import { FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
 import { forgotSchema } from "@/utils/schema"
-import { createClient } from "@/utils/supabase/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertCircle, Check, Loader2 } from "lucide-react"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,

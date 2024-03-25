@@ -1,19 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 import { FormState } from "@/types"
 import { handleToast } from "@/utils/handle-toast"
 import { resetSchema } from "@/utils/schema"
-import { createClient } from "@/utils/supabase/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertCircle, Loader2 } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 import { useFormState } from "react-dom"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -57,31 +54,6 @@ export default function ResetPassword({
       password: "",
     },
   })
-  /*   const handleResetPassword = async (event: any) => {
-    event.preventDefault()
-
-    //setLoading(true)
-    console.log(searchParams.code)
-
-    try {
-      //await supabase.auth.exchangeCodeForSession(searchParams.code)
-      const { error } = await supabase.auth.updateUser({
-        password: form.getValues("password"),
-      })
-
-      if (error) {
-        throw error
-      }
-
-      router.replace(`${window.location.origin}/dashboard`)
-      // router.push("/login")
-    } catch (error) {
-      console.error("Error resetting password:", error)
-      //setError(error.error_description || error.message)
-    } finally {
-      setLoading(false)
-    }
-  } */
 
   return (
     <Card className="mx-auto min-w-96 max-w-md">

@@ -1,7 +1,8 @@
-import { data } from "autoprefixer"
+import { Suspense } from "react"
+import { createClient } from "@/utils/supabase/server"
 
-import { Button } from "@/components/ui/button"
 import { DrawerDemo } from "@/components/add-currency"
+import BalanceSkeleton from "@/components/skeletons/balance"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
 import RecentTransactions from "@/components/wallet/recent-transactions"
@@ -15,7 +16,13 @@ export default async function Page() {
       </div>
       <div className="flex flex-col-reverse md:flex-row md:justify-between">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full md:min-w-24">
-          <Balance />
+          <Suspense
+            fallback={Array.from({ length: 4 }).map((_, index) => (
+              <BalanceSkeleton key={index} />
+            ))}
+          >
+            <Balance />
+          </Suspense>
         </div>
       </div>
 

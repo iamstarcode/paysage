@@ -158,7 +158,7 @@ export default function Transfer() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/*    <FormField
                 control={form.control}
                 name="currency"
                 render={({ field }) => (
@@ -174,8 +174,9 @@ export default function Transfer() {
                           <SelectValue placeholder="Select a wallet" />
                         </SelectTrigger>
                       </FormControl>
+                       
                       <SelectContent>
-                        {/* {wallets != null &&
+                        {wallets != null &&
                           wallets.map((wallet) => (
                             <SelectItem
                               key={wallet.currencies?.id}
@@ -184,13 +185,14 @@ export default function Transfer() {
                               {wallet.currencies?.currency_sign}
                               {wallet.balance}
                             </SelectItem>
-                          ))} */}
+                          ))} 
                       </SelectContent>
+                  
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </CardContent>
             <CardFooter>
               <SubmitButton

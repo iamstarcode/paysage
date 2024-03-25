@@ -1,25 +1,22 @@
-"use client"
-
-import { createClient } from "@/utils/supabase/client"
-import {
-  useInsertMutation,
-  useUpdateMutation,
-} from "@supabase-cache-helpers/postgrest-swr"
+import { createClient } from "@/utils/supabase/server"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
-import { useWallet } from "@/hooks/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 import { Button } from "../ui/button"
 
-function Balance() {
-  const { data } = useWallet()
+async function Balance() {
+  await new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 3000)
+  })
 
-  // console.log(data)
-
+  const supabase = createClient()
+  const { data: wallets } = await supabase.from("wallets").select("*")
   return (
     <>
-      {data?.map(({ balance, id }) => (
+      {wallets?.map(({ balance, id }) => (
         <Card key={id}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
