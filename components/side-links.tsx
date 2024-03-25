@@ -67,7 +67,7 @@ export default function SideLinks() {
 
     {
       title: "Deposit",
-      href: "/dashboard/deposit",
+      href: "/dashboard/deposits",
       icon: <Home className="h-4 w-4" />,
     },
     {

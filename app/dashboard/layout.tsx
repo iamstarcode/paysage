@@ -9,12 +9,12 @@ import UserAccount from "@/components/user-account"
 
 export default async function DashboardLayout({
   children, // will be a page or nested layout
-  //depositm,
-  //transaction,
+  deposit,
+  transaction,
 }: {
   children: React.ReactNode
-  //depositm: React.ReactNode
-  // transaction: React.ReactNode
+  deposit: React.ReactNode
+  transaction: React.ReactNode
 }) {
   const supabase = createClient()
 
@@ -67,8 +67,8 @@ export default async function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="border shadow-sm rounded-lg h-full">
             {children}
-            {/*  {depositm} */}
-            {/* {transaction} */}
+            {deposit}
+            {transaction}
           </div>
         </main>
       </div>

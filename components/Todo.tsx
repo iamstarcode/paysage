@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { createTodo } from "@/app/dumm/actions"
+import { createTodo } from "@/app/dummy/actions"
 
 import { SubmitButton } from "./SubmitButton"
 
