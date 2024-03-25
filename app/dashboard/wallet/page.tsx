@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server"
 
 import { DrawerDemo } from "@/components/add-currency"
 import BalanceSkeleton from "@/components/skeletons/balance"
+import CurrencySkeleton from "@/components/skeletons/currency"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
 import Currencies from "@/components/wallet/currencies"
@@ -31,7 +32,10 @@ export default async function Page() {
         <div className="h-2 flex-1 min-w-0" />
         <div className="text-xs shrink-0">30% of $5,000 spending limit</div>
       </div>
-      <Currencies />
+
+      <Suspense fallback={<CurrencySkeleton />}>
+        <Currencies />
+      </Suspense>
       <div className="grid md:grid-cols-2 md:gap-8">
         <Transfer />
         <RecentTransactions />
