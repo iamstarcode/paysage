@@ -51,6 +51,12 @@ interface Table_public_currencies {
   currency_sign: string;
   currency_type: Enum_public_currency_type;
 }
+interface Table_public_deposit_addresses {
+  id: number;
+  user_id: string;
+  currency: string | null;
+  address: string | null;
+}
 interface Table_public_fiat_transfers {
   id: number | null;
   user_id: string | null;
@@ -344,6 +350,7 @@ interface Schema_pgsodium_masks {
 interface Schema_public {
   crypto_transfers: Table_public_crypto_transfers;
   currencies: Table_public_currencies;
+  deposit_addresses: Table_public_deposit_addresses;
   fiat_transfers: Table_public_fiat_transfers;
   profiles: Table_public_profiles;
   transactions: Table_public_transactions;
@@ -398,6 +405,14 @@ interface Tables_relationships {
   "public.crypto_transfers": {
     parent: {
        crypto_transfers_id_fkey: "public.transactions";
+    };
+    children: {
+
+    };
+  };
+  "public.deposit_addresses": {
+    parent: {
+       deposit_addresses_user_id_fkey: "auth.users";
     };
     children: {
 
@@ -555,6 +570,7 @@ interface Tables_relationships {
        identities_user_id_fkey: "auth.identities";
        mfa_factors_user_id_fkey: "auth.mfa_factors";
        sessions_user_id_fkey: "auth.sessions";
+       deposit_addresses_user_id_fkey: "public.deposit_addresses";
        fiat_transfers_user_id_fkey: "public.fiat_transfers";
        profiles_id_fkey: "public.profiles";
        transactions_receiver_id_fkey: "public.transactions";

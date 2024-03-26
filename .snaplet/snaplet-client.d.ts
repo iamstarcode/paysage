@@ -71,6 +71,16 @@ type Override = {
       currency_type?: string;
     };
   }
+  deposit_addresses?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      currency?: string;
+      address?: string;
+      users?: string;
+    };
+  }
   fiat_transfers?: {
     name?: string;
     fields?: {
@@ -418,6 +428,7 @@ type Override = {
       identities?: string;
       mfa_factors?: string;
       sessions?: string;
+      deposit_addresses?: string;
       fiat_transfers?: string;
       profiles?: string;
       transactions_transactions_receiver_idTousers?: string;
@@ -480,6 +491,10 @@ export interface Fingerprint {
   }
   currencies?: {
     id?: FingerprintNumberField;
+  }
+  depositAddresses?: {
+    id?: FingerprintNumberField;
+    user?: FingerprintRelationField;
   }
   fiatTransfers?: {
     id?: FingerprintNumberField;
@@ -632,6 +647,7 @@ export interface Fingerprint {
     identities?: FingerprintRelationField;
     mfaFactors?: FingerprintRelationField;
     sessions?: FingerprintRelationField;
+    depositAddresses?: FingerprintRelationField;
     fiatTransfers?: FingerprintRelationField;
     profiles?: FingerprintRelationField;
     transactionsByReceiverId?: FingerprintRelationField;

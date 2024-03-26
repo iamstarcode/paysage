@@ -24,6 +24,13 @@ export const useWallet = () => {
   return { data, isLoading, error, mutate }
 }
 
+export const useDepositAdress = () => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabase.from("deposit_addresses").select("*")
+  )
+  return { data, isLoading, error, mutate }
+}
+
 export const useTransactions = () => {
   const { data, loadMore, isValidating, error, isLoading, mutate } =
     useOffsetInfiniteScrollQuery(

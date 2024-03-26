@@ -1,35 +1,29 @@
 import { createHmac, timingSafeEqual } from "crypto" // For signature verification (optional)
 
-const COINPAID_SECRET_KEY = process.env.COINPAID_SECRET_KEY! // Replace with your secret
-
 export async function POST(request: Request) {
-  const { headers, body } = request // Destructure incoming data
+  const { headers } = request
 
-  const {
-    "x-processing-key": publicKey,
-    "x-processing-signature": signature,
-  }: any = headers
+  const requestBody = await request.json()
+  const signature = headers.get("X-Processing-Signature")
+  const receivedPublicKey = headers.get("X-Processing-Key")
 
-  // Verify the signature
-  const expectedSignature = createHmac("sha512", COINPAID_SECRET_KEY)
-    .update(JSON.stringify(body))
-    .digest("hex")
-  const isSignatureValid = timingSafeEqual(
-    Buffer.from(expectedSignature, "hex"),
-    Buffer.from(signature, "hex")
-  )
-
-  if (!isSignatureValid) {
-    return Response.json({ error: "Invalid signature" }, { status: 401 })
+  if (receivedPublicKey !== process.env.COINPAID_KEY) {
+    console.log("Badd key")
+    return Response.json({ message: "Invalid Signature" }, { status: 403 })
   }
 
-  // Process the callback payload
-  console.log("CoinsPaid callback received:", body)
-  // Process CoinPayments notification data (e.g., transaction status, etc.)
-  // console.log("CoinPayments notification:", data)
+  const hmac = createHmac("sha512", process.env.COINPAID_SECRET_KEY!)
+  const expectedSignature = hmac
+    .update(JSON.stringify(requestBody))
+    .digest("hex")
 
-  // Handle the notification data as needed in your application logic
-  // (e.g., update order status, send email notifications, etc.)
+  if (signature === expectedSignature) {
+    console.log(signature, expectedSignature)
 
-  return Response.json({ message: "OK" })
+    return Response.json({ message: "OK" }, { status: 200 })
+  } else {
+    // Signature is invalid, reject the request
+    console.log(signature, expectedSignature)
+    return Response.json({ message: "Invalid Signature" }, { status: 403 })
+  }
 }

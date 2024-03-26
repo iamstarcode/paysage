@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { Deposit } from "./deposit"
+import { Deposit } from "../deposit/depositn"
 
 export default async function Currencies() {
   const res = await fetch(getURL() + "/api/currencies", { method: "POST" })
