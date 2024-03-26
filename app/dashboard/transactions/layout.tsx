@@ -1,18 +1,17 @@
 import { ReactNode } from "react"
 
-function WalletLayout({
+export default function TransactionsLayout({
   children,
-  transaction,
+  /*   transaction,
+   */
 }: {
-  children: ReactNode
-  transaction: ReactNode
+  children: React.ReactNode
+  /* transaction: React.ReactNode */
 }) {
   return (
     <>
       {children}
-      {transaction}
+      {/*       {transaction */}
     </>
   )
 }
-
-export default WalletLayout

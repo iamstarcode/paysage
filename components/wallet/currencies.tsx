@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { Deposit } from "../deposit/depositn"
+//import { Deposit } from "../deposit/deposit"
 
 export default async function Currencies() {
   const res = await fetch(getURL() + "/api/currencies", { method: "POST" })
@@ -46,7 +46,7 @@ export default async function Currencies() {
                   src={`/img/currencies/${currency.toLocaleLowerCase()}.svg`}
                 />
 
-                <Deposit />
+                {/* <Deposit /> */}
                 <p className="text-sm leading-none text-gray-500 dark:text-gray-400">
                   {currency}
                 </p>

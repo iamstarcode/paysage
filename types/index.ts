@@ -6,7 +6,7 @@ export type FormState = {
   type?: "ValidationError" | "WarningError" | "Error" | "Success"
 }
 
-//export type Transaction = Tables<"transactions">
+export type Transaction = Tables<"transactions">
 
 export type CurrencyType = {
   currency: string
@@ -18,7 +18,7 @@ export type CurrencyType = {
   withdrawal_fee_percent: string
 }
 
-interface Transaction {
+interface TransactionX {
   id: number
   currency: string
   transaction_type: "deposit" | "withdrawal" | "invoice"
