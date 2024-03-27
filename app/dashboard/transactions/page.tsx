@@ -66,8 +66,8 @@ export default function Page() {
               transaction_type,
               sender_description,
               receiver_description,
-              transaction_date,
-              status,
+              created_at,
+              transaction_status,
             }: Transaction) => (
               <TableRow
                 className="cursor-pointer"
@@ -83,7 +83,7 @@ export default function Page() {
                   {transaction_type}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {transaction_date}
+                  {created_at}
                 </TableCell>
                 <TableCell className="text-right">
                   {user?.id === sender_id ? "-" : null}
