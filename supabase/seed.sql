@@ -116,7 +116,14 @@ grant execute on function public.transfer_funds(text, text, numeric, bigint) to 
 
 CREATE TYPE transaction_type AS ENUM (
   'FIAT',
-  'AIRTIME'
+  'AIRTIME',
+  'CRYPTO'
+);
+
+CREATE TYPE transaction_status AS ENUM (
+  'PENDING',
+  'COMFIRMED',
+  'FAIL'
 );
 
 CREATE TABLE public.transactions (
@@ -129,11 +136,10 @@ CREATE TABLE public.transactions (
     currency VARCHAR(10),
     sender_description VARCHAR(255),
     receiver_description VARCHAR(255),
-    status VARCHAR(20) DEFAULT 'Pending'
+    status transaction_status NOT NULL
 );
 -- currency, should probably become currency_id
 alter table public.transactions enable row level security;
-
 create policy "Only auth Users to create new trx."
     on public.transactions for insert
     to authenticated 
@@ -146,9 +152,20 @@ create policy "Users can update their own trx."
     on public.transactions for update
     to authenticated                    
     using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
+
+CREATE TABLE public.crypto_transactions (
+    id bigint references transactions NOT NULL,
+    user_id uuid references auth.users NOT NULL,
+    amount DECIMAL(18, 6), -- +ve || -ve
+    currency VARCHAR(10) NOT NULL, 
+    fee NUMERIC(18, 8),
+    status transaction_status NOT NULL,
+    foriend_id bigint NOT NULL
+);
+
 CREATE TABLE public.fiat_transfers (
-    id bigint references transactions,
-    user_id uuid references auth.users,
+    id bigint references transactions NOT NULL,
+    user_id uuid references auth.users NOT NULL,
     amount DECIMAL(18, 6),
     sender_name VARCHAR(100),
     receiver_name VARCHAR(100),

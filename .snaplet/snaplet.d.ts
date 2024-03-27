@@ -10,7 +10,8 @@ type Enum_net_request_status = 'ERROR' | 'PENDING' | 'SUCCESS';
 type Enum_pgsodium_key_status = 'default' | 'expired' | 'invalid' | 'valid';
 type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' | 'hmacsha256' | 'hmacsha512' | 'kdf' | 'secretbox' | 'secretstream' | 'shorthash' | 'stream_xchacha20';
 type Enum_public_currency_type = 'CRYPTO' | 'FIAT';
-type Enum_public_transaction_type = 'AIRTIME' | 'FIAT';
+type Enum_public_transaction_status = 'COMFIRMED' | 'FAIL' | 'PENDING';
+type Enum_public_transaction_type = 'AIRTIME' | 'CRYPTO' | 'FIAT';
 interface Table_net_http_response {
   id: number | null;
   status_code: number | null;
@@ -40,6 +41,15 @@ interface Table_storage_buckets {
   allowed_mime_types: string[] | null;
   owner_id: string | null;
 }
+interface Table_public_crypto_transactions {
+  id: number;
+  user_id: string;
+  amount: number | null;
+  currency: string;
+  fee: number | null;
+  status: Enum_public_transaction_status;
+  foriend_id: number;
+}
 interface Table_public_crypto_transfers {
   id: number | null;
   transaction_hash: string | null;
@@ -58,8 +68,8 @@ interface Table_public_deposit_addresses {
   address: string | null;
 }
 interface Table_public_fiat_transfers {
-  id: number | null;
-  user_id: string | null;
+  id: number;
+  user_id: string;
   amount: number | null;
   sender_name: string | null;
   receiver_name: string | null;
@@ -262,7 +272,7 @@ interface Table_public_transactions {
   currency: string | null;
   sender_description: string | null;
   receiver_description: string | null;
-  status: string | null;
+  status: Enum_public_transaction_status;
 }
 interface Table_auth_users {
   instance_id: string | null;
@@ -348,6 +358,7 @@ interface Schema_pgsodium_masks {
 
 }
 interface Schema_public {
+  crypto_transactions: Table_public_crypto_transactions;
   crypto_transfers: Table_public_crypto_transfers;
   currencies: Table_public_currencies;
   deposit_addresses: Table_public_deposit_addresses;
@@ -400,6 +411,15 @@ interface Tables_relationships {
     };
     children: {
        objects_bucketId_fkey: "storage.objects";
+    };
+  };
+  "public.crypto_transactions": {
+    parent: {
+       crypto_transactions_user_id_fkey: "auth.users";
+       crypto_transactions_id_fkey: "public.transactions";
+    };
+    children: {
+
     };
   };
   "public.crypto_transfers": {
@@ -558,6 +578,7 @@ interface Tables_relationships {
        transactions_sender_id_fkey: "auth.users";
     };
     children: {
+       crypto_transactions_id_fkey: "public.crypto_transactions";
        crypto_transfers_id_fkey: "public.crypto_transfers";
        fiat_transfers_id_fkey: "public.fiat_transfers";
     };
@@ -570,6 +591,7 @@ interface Tables_relationships {
        identities_user_id_fkey: "auth.identities";
        mfa_factors_user_id_fkey: "auth.mfa_factors";
        sessions_user_id_fkey: "auth.sessions";
+       crypto_transactions_user_id_fkey: "public.crypto_transactions";
        deposit_addresses_user_id_fkey: "public.deposit_addresses";
        fiat_transfers_user_id_fkey: "public.fiat_transfers";
        profiles_id_fkey: "public.profiles";

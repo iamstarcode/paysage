@@ -53,6 +53,20 @@ type Override = {
       objects?: string;
     };
   }
+  crypto_transactions?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      amount?: string;
+      currency?: string;
+      fee?: string;
+      status?: string;
+      foriend_id?: string;
+      users?: string;
+      transactions?: string;
+    };
+  }
   crypto_transfers?: {
     name?: string;
     fields?: {
@@ -384,6 +398,7 @@ type Override = {
       status?: string;
       users_transactions_receiver_idTousers?: string;
       users_transactions_sender_idTousers?: string;
+      crypto_transactions?: string;
       crypto_transfers?: string;
       fiat_transfers?: string;
     };
@@ -428,6 +443,7 @@ type Override = {
       identities?: string;
       mfa_factors?: string;
       sessions?: string;
+      crypto_transactions?: string;
       deposit_addresses?: string;
       fiat_transfers?: string;
       profiles?: string;
@@ -484,6 +500,14 @@ export interface Fingerprint {
     updatedAt?: FingerprintDateField;
     fileSizeLimit?: FingerprintNumberField;
     objects?: FingerprintRelationField;
+  }
+  cryptoTransactions?: {
+    id?: FingerprintNumberField;
+    amount?: FingerprintNumberField;
+    fee?: FingerprintNumberField;
+    foriendId?: FingerprintNumberField;
+    user?: FingerprintRelationField;
+    i?: FingerprintRelationField;
   }
   cryptoTransfers?: {
     id?: FingerprintNumberField;
@@ -623,6 +647,7 @@ export interface Fingerprint {
     amount?: FingerprintNumberField;
     receiver?: FingerprintRelationField;
     sender?: FingerprintRelationField;
+    cryptoTransactions?: FingerprintRelationField;
     cryptoTransfers?: FingerprintRelationField;
     fiatTransfers?: FingerprintRelationField;
   }
@@ -647,6 +672,7 @@ export interface Fingerprint {
     identities?: FingerprintRelationField;
     mfaFactors?: FingerprintRelationField;
     sessions?: FingerprintRelationField;
+    cryptoTransactions?: FingerprintRelationField;
     depositAddresses?: FingerprintRelationField;
     fiatTransfers?: FingerprintRelationField;
     profiles?: FingerprintRelationField;

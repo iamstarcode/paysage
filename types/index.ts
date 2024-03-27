@@ -18,20 +18,20 @@ export type CurrencyType = {
   withdrawal_fee_percent: string
 }
 
-interface TransactionX {
+interface CallbackTransaction {
   id: number
   currency: string
-  transaction_type: "deposit" | "withdrawal" | "invoice"
+  transaction_type: string
   type: string
   address: string
   tag: string | null
   amount: string
   txid: string
-  riskscore: string
-  confirmations: number
+  riskscore: string | null
+  confirmations: number | string
 }
 
-interface CryptoAddress {
+interface CallbackCryptoAddress {
   id: number
   currency: string
   address: string
@@ -39,26 +39,26 @@ interface CryptoAddress {
   tag: string | null
 }
 
-interface Currency {
+interface CallbackCurrency {
   currency: string
   amount: string
   amount_minus_fee?: string
 }
 
-interface Fee {
+interface CallbckFee {
   type: string
   currency: string
   amount: string
 }
 
-interface DepositData {
+export type CallbackData = {
   id: number
-  type: string
-  crypto_address: CryptoAddress
-  currency_sent: Currency
-  currency_received: Currency
-  transactions: Transaction[]
-  fees: Fee[]
+  type: "deposit" | "withdrawal" | "invioce"
+  crypto_address: CallbackCryptoAddress
+  currency_sent: CallbackCurrency
+  currency_received: CallbackCurrency
+  transactions: CallbackTransaction[]
+  fees: CallbckFee[]
   error: string
   status: string
 }

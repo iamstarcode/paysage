@@ -34,6 +34,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      crypto_transactions: {
+        Row: {
+          amount: number | null
+          currency: string
+          fee: number | null
+          foriend_id: number
+          id: number
+          status: Database["public"]["Enums"]["transaction_status"]
+          user_id: string
+        }
+        Insert: {
+          amount?: number | null
+          currency: string
+          fee?: number | null
+          foriend_id: number
+          id: number
+          status: Database["public"]["Enums"]["transaction_status"]
+          user_id: string
+        }
+        Update: {
+          amount?: number | null
+          currency?: string
+          fee?: number | null
+          foriend_id?: number
+          id?: number
+          status?: Database["public"]["Enums"]["transaction_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crypto_transactions_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crypto_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crypto_transfers: {
         Row: {
           id: number | null
@@ -114,35 +159,35 @@ export type Database = {
         Row: {
           _provider: string | null
           amount: number | null
-          id: number | null
+          id: number
           receiver_account: string | null
           receiver_name: string | null
           sender_account: string | null
           sender_name: string | null
           transaction_id: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           _provider?: string | null
           amount?: number | null
-          id?: number | null
+          id: number
           receiver_account?: string | null
           receiver_name?: string | null
           sender_account?: string | null
           sender_name?: string | null
           transaction_id?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           _provider?: string | null
           amount?: number | null
-          id?: number | null
+          id?: number
           receiver_account?: string | null
           receiver_name?: string | null
           sender_account?: string | null
           sender_name?: string | null
           transaction_id?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -199,7 +244,7 @@ export type Database = {
           receiver_id: string | null
           sender_description: string | null
           sender_id: string | null
-          status: string | null
+          status: Database["public"]["Enums"]["transaction_status"]
           transaction_date: string | null
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
@@ -211,7 +256,7 @@ export type Database = {
           receiver_id?: string | null
           sender_description?: string | null
           sender_id?: string | null
-          status?: string | null
+          status: Database["public"]["Enums"]["transaction_status"]
           transaction_date?: string | null
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
@@ -223,7 +268,7 @@ export type Database = {
           receiver_id?: string | null
           sender_description?: string | null
           sender_id?: string | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["transaction_status"]
           transaction_date?: string | null
           transaction_type?: Database["public"]["Enums"]["transaction_type"]
         }
@@ -290,7 +335,8 @@ export type Database = {
     }
     Enums: {
       currency_type: "CRYPTO" | "FIAT"
-      transaction_type: "FIAT" | "AIRTIME"
+      transaction_status: "PENDING" | "COMFIRMED" | "FAIL"
+      transaction_type: "FIAT" | "AIRTIME" | "CRYPTO"
     }
     CompositeTypes: {
       [_ in never]: never

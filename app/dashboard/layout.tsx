@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/server"
 
 import { Input } from "@/components/ui/input"
+import Realtime from "@/components/replications/transactions"
 import SideLinks from "@/components/side-links"
 import UserAccount from "@/components/user-account"
 
@@ -69,6 +70,7 @@ export default async function DashboardLayout({
             {children}
             {deposit}
             {transaction}
+            <Realtime />
           </div>
         </main>
       </div>
