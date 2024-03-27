@@ -16,7 +16,9 @@ function Realtime() {
     payload: RealtimePostgresChangesPayload<any>
   ) => {
     const user = await supabase.auth.getUser()
-    console.log("Change received!", payload, user)
+
+    //TODO, maybe to handle only to have the notifaction if the user is for this person
+
     if (payload.eventType == "INSERT") {
       toast.info("Pending")
     } else if (payload.eventType == "UPDATE") {

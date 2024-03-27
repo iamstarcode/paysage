@@ -60,5 +60,5 @@ export type CallbackData = {
   transactions: CallbackTransaction[]
   fees: CallbckFee[]
   error: string
-  status: string
+  status: "processing" | "confirmed" | "fialed" | undefined
 }

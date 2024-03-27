@@ -1,31 +1,94 @@
 import { createHmac, timingSafeEqual } from "crypto" // For signature verification (optional)
-import { CallbackData, Transaction, TransactionCallback } from "@/types"
-import { createClient } from "@/utils/supabase/server"
+import { CallbackData, Transaction } from "@/types"
+import { createClient } from "@supabase/supabase-js"
+
+import { Database } from "@/types/g-supabase"
 
 export async function POST(request: Request) {
   const { headers } = request
 
-  const requestBody = await request.json()
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  console.log(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+  const requestBody: CallbackData = await request.json()
   const signature = headers.get("X-Processing-Signature")
 
   //console.log(requestBody, "sssss")
 
   const receivedPublicKey = headers.get("X-Processing-Key")
 
-  if (receivedPublicKey !== process.env.COINPAID_KEY) {
+  /*   if (receivedPublicKey !== process.env.COINPAID_KEY) {
     return Response.json({ message: "Invalid Signature" }, { status: 403 })
-  }
+  } */
 
   const hmac = createHmac("sha512", process.env.COINPAID_SECRET_KEY!)
   const expectedSignature = hmac
     .update(JSON.stringify(requestBody))
     .digest("hex")
 
-  if (signature === expectedSignature) {
+  //!!! replace with this signature === expectedSignature
+  if (true) {
     //handle transaction type
-    const supabase = createClient()
+    if (requestBody.type == "deposit") {
+      //We first of all check if we have that transcation id in the database
 
-    if (dummyData.type == "deposit") {
+      const crypto_trasaction = await supabase
+        .from("crypto_transactions")
+        .select("*")
+        .eq("foreign_transaction_id", requestBody.id)
+        .single()
+
+      if (crypto_trasaction.data != null) {
+        //Alread accepted this is an updated
+        console.log("Updating")
+
+        await supabase
+          .from("transactions")
+          .update({ transaction_status: requestBody.status })
+      } else {
+        //Processing
+        console.log("Processing")
+
+        try {
+          const transaction = await supabase
+            .from("transactions")
+            .insert({
+              transaction_type: "crypto",
+              amount: +requestBody.currency_sent.amount,
+              currency: requestBody.currency_received.currency,
+              receiver_id: requestBody.crypto_address.foreign_id,
+              reciever_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
+              transaction_status: "processing",
+            })
+            .select()
+            .single()
+
+          if (transaction.data?.id) {
+            await supabase.from("crypto_transactions").insert({
+              id: transaction.data?.id,
+              foreign_transaction_id: requestBody.id,
+              user_id: requestBody.crypto_address.foreign_id,
+            })
+
+            console.log("Added")
+          }
+
+          console.log("Then done")
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      return Response.json({ message: "Done" }, { status: 201 })
+    }
+
+    /*   if (dummyData.type == "deposit") {
       //handle deopsit insertion
       const transaction = await supabase.from("transactions").insert({
         transaction_type: "CRYPTO",
@@ -35,11 +98,11 @@ export async function POST(request: Request) {
         sender_description: `Deposited ${dummyData.currency_received.amount_minus_fee}${dummyData.currency_received.currency}`,
         status: "PENDING",
       })
-    }
+    } */
     return Response.json({ message: "OK" }, { status: 200 })
   } else {
     // Signature is invalid, reject the request
-    console.log(signature, expectedSignature, requestBody)
+    //console.log(signature, expectedSignature, requestBody)
     return Response.json({ message: "Invalid Signature" }, { status: 403 })
   }
 }

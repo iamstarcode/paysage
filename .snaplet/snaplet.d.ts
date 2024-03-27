@@ -9,9 +9,11 @@ type Enum_auth_factor_type = 'totp' | 'webauthn';
 type Enum_net_request_status = 'ERROR' | 'PENDING' | 'SUCCESS';
 type Enum_pgsodium_key_status = 'default' | 'expired' | 'invalid' | 'valid';
 type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' | 'hmacsha256' | 'hmacsha512' | 'kdf' | 'secretbox' | 'secretstream' | 'shorthash' | 'stream_xchacha20';
-type Enum_public_currency_type = 'CRYPTO' | 'FIAT';
-type Enum_public_transaction_status = 'COMFIRMED' | 'FAIL' | 'PENDING';
-type Enum_public_transaction_type = 'AIRTIME' | 'CRYPTO' | 'FIAT';
+type Enum_public_currency_type = 'crypto' | 'fiat';
+type Enum_public_transaction_status = 'confirmed' | 'fialed' | 'processing';
+type Enum_public_transaction_type = 'airtime' | 'crypto' | 'fiat';
+type Enum_realtime_action = 'DELETE' | 'ERROR' | 'INSERT' | 'TRUNCATE' | 'UPDATE';
+type Enum_realtime_equality_op = 'eq' | 'gt' | 'gte' | 'in' | 'lt' | 'lte' | 'neq';
 interface Table_net_http_response {
   id: number | null;
   status_code: number | null;
@@ -41,14 +43,17 @@ interface Table_storage_buckets {
   allowed_mime_types: string[] | null;
   owner_id: string | null;
 }
+interface Table_realtime_channels {
+  id: number;
+  name: string;
+  inserted_at: string;
+  updated_at: string;
+  check: boolean | null;
+}
 interface Table_public_crypto_transactions {
   id: number;
   user_id: string;
-  amount: number | null;
-  currency: string;
-  fee: number | null;
-  status: Enum_public_transaction_status;
-  foriend_id: number;
+  foreign_transaction_id: number;
 }
 interface Table_public_crypto_transfers {
   id: number | null;
@@ -226,6 +231,10 @@ interface Table_auth_saml_relay_states {
 interface Table_auth_schema_migrations {
   version: string;
 }
+interface Table_realtime_schema_migrations {
+  version: number;
+  inserted_at: string | null;
+}
 interface Table_vault_secrets {
   id: string;
   name: string | null;
@@ -262,17 +271,45 @@ interface Table_auth_sso_providers {
   created_at: string | null;
   updated_at: string | null;
 }
+interface Table_realtime_subscription {
+  id: number;
+  subscription_id: string;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  entity: unknown;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  filters: unknown[];
+  claims: Json;
+  created_at: string;
+}
 interface Table_public_transactions {
   id: number;
   transaction_type: Enum_public_transaction_type;
-  transaction_date: string | null;
+  created_at: string | null;
   amount: number | null;
   sender_id: string | null;
   receiver_id: string | null;
   currency: string | null;
   sender_description: string | null;
   receiver_description: string | null;
-  status: Enum_public_transaction_status;
+  transaction_status: Enum_public_transaction_status;
 }
 interface Table_auth_users {
   instance_id: string | null;
@@ -368,7 +405,9 @@ interface Schema_public {
   wallets: Table_public_wallets;
 }
 interface Schema_realtime {
-
+  channels: Table_realtime_channels;
+  schema_migrations: Table_realtime_schema_migrations;
+  subscription: Table_realtime_subscription;
 }
 interface Schema_storage {
   buckets: Table_storage_buckets;

@@ -79,33 +79,6 @@ const profileStore = await seed.profiles((x) => [
   },
 ])
 
-/* const currencyStore = await seed.currencies([
-  {
-    currencyName: "Naira",
-    currencyCode: "NGN",
-    currencySign: "₦",
-    currencyType: "FIAT",
-  },
-  {
-    currencyName: "Dollar",
-    currencyCode: "USD",
-    currencySign: "$",
-    currencyType: "FIAT",
-  },
-  {
-    currencyName: "Euro",
-    currencyCode: "EUR",
-    currencySign: "€",
-    currencyType: "FIAT",
-  },
-  {
-    currencyName: "Bitcoin",
-    currencyCode: "BTC",
-    currencySign: "₿",
-    currencyType: "CRYPTO",
-  },
-]) */
-
 const walletSrore = await seed.wallets((x) => [
   {
     balance: 5000,
@@ -130,5 +103,9 @@ const walletSrore = await seed.wallets((x) => [
     currencyId: 37,
   },
 ])
+
+/* const transactions = await seed.transactions(()=>[{
+  
+}]) */
 
 //await seed.transactions((x) => x(3))

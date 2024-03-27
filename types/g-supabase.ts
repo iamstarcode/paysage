@@ -36,30 +36,18 @@ export type Database = {
     Tables: {
       crypto_transactions: {
         Row: {
-          amount: number | null
-          currency: string
-          fee: number | null
-          foriend_id: number
+          foreign_transaction_id: number
           id: number
-          status: Database["public"]["Enums"]["transaction_status"]
           user_id: string
         }
         Insert: {
-          amount?: number | null
-          currency: string
-          fee?: number | null
-          foriend_id: number
+          foreign_transaction_id: number
           id: number
-          status: Database["public"]["Enums"]["transaction_status"]
           user_id: string
         }
         Update: {
-          amount?: number | null
-          currency?: string
-          fee?: number | null
-          foriend_id?: number
+          foreign_transaction_id?: number
           id?: number
-          status?: Database["public"]["Enums"]["transaction_status"]
           user_id?: string
         }
         Relationships: [
@@ -238,38 +226,38 @@ export type Database = {
       transactions: {
         Row: {
           amount: number | null
+          created_at: string | null
           currency: string | null
           id: number
           receiver_description: string | null
           receiver_id: string | null
           sender_description: string | null
           sender_id: string | null
-          status: Database["public"]["Enums"]["transaction_status"]
-          transaction_date: string | null
+          transaction_status: Database["public"]["Enums"]["transaction_status"]
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Insert: {
           amount?: number | null
+          created_at?: string | null
           currency?: string | null
           id?: number
           receiver_description?: string | null
           receiver_id?: string | null
           sender_description?: string | null
           sender_id?: string | null
-          status: Database["public"]["Enums"]["transaction_status"]
-          transaction_date?: string | null
+          transaction_status: Database["public"]["Enums"]["transaction_status"]
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Update: {
           amount?: number | null
+          created_at?: string | null
           currency?: string | null
           id?: number
           receiver_description?: string | null
           receiver_id?: string | null
           sender_description?: string | null
           sender_id?: string | null
-          status?: Database["public"]["Enums"]["transaction_status"]
-          transaction_date?: string | null
+          transaction_status?: Database["public"]["Enums"]["transaction_status"]
           transaction_type?: Database["public"]["Enums"]["transaction_type"]
         }
         Relationships: [
@@ -334,9 +322,9 @@ export type Database = {
       }
     }
     Enums: {
-      currency_type: "CRYPTO" | "FIAT"
-      transaction_status: "PENDING" | "COMFIRMED" | "FAIL"
-      transaction_type: "FIAT" | "AIRTIME" | "CRYPTO"
+      currency_type: "crypto" | "fiat"
+      transaction_status: "processing" | "confirmed" | "fialed"
+      transaction_type: "fiat" | "airtime" | "crypto"
     }
     CompositeTypes: {
       [_ in never]: never
