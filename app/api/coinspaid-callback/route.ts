@@ -9,7 +9,14 @@ export async function POST(request: Request) {
 
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        persistSession: false,
+      },
+    }
   )
 
   console.log(
@@ -66,7 +73,7 @@ export async function POST(request: Request) {
               reciever_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
               transaction_status: "processing",
             })
-            .select()
+            .select("*")
             .single()
 
           if (transaction.data?.id) {
