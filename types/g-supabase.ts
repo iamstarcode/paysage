@@ -42,7 +42,7 @@ export type Database = {
         }
         Insert: {
           foreign_transaction_id: number
-          id: number
+          id?: number
           user_id: string
         }
         Update: {
@@ -54,7 +54,7 @@ export type Database = {
           {
             foreignKeyName: "crypto_transactions_id_fkey"
             columns: ["id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
@@ -63,29 +63,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      crypto_transfers: {
-        Row: {
-          id: number | null
-          transaction_hash: string | null
-        }
-        Insert: {
-          id?: number | null
-          transaction_hash?: string | null
-        }
-        Update: {
-          id?: number | null
-          transaction_hash?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "crypto_transfers_id_fkey"
-            columns: ["id"]
-            isOneToOne: false
-            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -143,7 +120,7 @@ export type Database = {
           },
         ]
       }
-      fiat_transfers: {
+      fiat_transactions: {
         Row: {
           _provider: string | null
           amount: number | null
@@ -179,14 +156,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fiat_transfers_id_fkey"
+            foreignKeyName: "fiat_transactions_id_fkey"
             columns: ["id"]
             isOneToOne: false
             referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fiat_transfers_user_id_fkey"
+            foreignKeyName: "fiat_transactions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"

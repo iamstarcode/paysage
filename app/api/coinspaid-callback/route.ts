@@ -1,4 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto" // For signature verification (optional)
+
+import { revalidatePath } from "next/cache"
 import { CallbackData, Transaction } from "@/types"
 import { createClient } from "@supabase/supabase-js"
 
@@ -9,14 +11,7 @@ export async function POST(request: Request) {
 
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-        persistSession: false,
-      },
-    }
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
   console.log(
@@ -45,22 +40,29 @@ export async function POST(request: Request) {
     if (requestBody.type == "deposit") {
       //We first of all check if we have that transcation id in the database
 
-      const crypto_trasaction = await supabase
+      const { data: crypto_trasaction, error } = await supabase
         .from("crypto_transactions")
-        .select("*")
+        .select("*, transactions!inner(*)")
         .eq("foreign_transaction_id", requestBody.id)
         .single()
 
-      if (crypto_trasaction.data != null) {
+      if (error) {
+        console.log(error)
+      }
+      if (crypto_trasaction != null) {
         //Alread accepted this is an updated
-        console.log("Updating")
 
-        await supabase
+        const { error } = await supabase
           .from("transactions")
           .update({ transaction_status: requestBody.status })
+          .eq("id", crypto_trasaction.transactions?.id!)
+
+        console.log("updating")
+        if (error) {
+          console.log(error)
+        }
       } else {
         //Processing
-        console.log("Processing")
 
         try {
           const transaction = await supabase
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
               amount: +requestBody.currency_sent.amount,
               currency: requestBody.currency_received.currency,
               receiver_id: requestBody.crypto_address.foreign_id,
-              reciever_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
+              receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
               transaction_status: "processing",
             })
             .select("*")
@@ -92,6 +94,7 @@ export async function POST(request: Request) {
         }
       }
 
+      revalidatePath("/dasboard", "layout")
       return Response.json({ message: "Done" }, { status: 201 })
     }
 

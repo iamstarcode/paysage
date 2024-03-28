@@ -73,14 +73,6 @@ type Override = {
       transactions?: string;
     };
   }
-  crypto_transfers?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      transaction_hash?: string;
-      transactions?: string;
-    };
-  }
   currencies?: {
     name?: string;
     fields?: {
@@ -101,7 +93,7 @@ type Override = {
       users?: string;
     };
   }
-  fiat_transfers?: {
+  fiat_transactions?: {
     name?: string;
     fields?: {
       id?: string;
@@ -424,8 +416,7 @@ type Override = {
       users_transactions_receiver_idTousers?: string;
       users_transactions_sender_idTousers?: string;
       crypto_transactions?: string;
-      crypto_transfers?: string;
-      fiat_transfers?: string;
+      fiat_transactions?: string;
     };
   }
   users?: {
@@ -470,7 +461,7 @@ type Override = {
       sessions?: string;
       crypto_transactions?: string;
       deposit_addresses?: string;
-      fiat_transfers?: string;
+      fiat_transactions?: string;
       profiles?: string;
       transactions_transactions_receiver_idTousers?: string;
       transactions_transactions_sender_idTousers?: string;
@@ -537,10 +528,6 @@ export interface Fingerprint {
     user?: FingerprintRelationField;
     i?: FingerprintRelationField;
   }
-  cryptoTransfers?: {
-    id?: FingerprintNumberField;
-    i?: FingerprintRelationField;
-  }
   currencies?: {
     id?: FingerprintNumberField;
   }
@@ -548,7 +535,7 @@ export interface Fingerprint {
     id?: FingerprintNumberField;
     user?: FingerprintRelationField;
   }
-  fiatTransfers?: {
+  fiatTransactions?: {
     id?: FingerprintNumberField;
     amount?: FingerprintNumberField;
     user?: FingerprintRelationField;
@@ -685,8 +672,7 @@ export interface Fingerprint {
     receiver?: FingerprintRelationField;
     sender?: FingerprintRelationField;
     cryptoTransactions?: FingerprintRelationField;
-    cryptoTransfers?: FingerprintRelationField;
-    fiatTransfers?: FingerprintRelationField;
+    fiatTransactions?: FingerprintRelationField;
   }
   users?: {
     emailConfirmedAt?: FingerprintDateField;
@@ -711,7 +697,7 @@ export interface Fingerprint {
     sessions?: FingerprintRelationField;
     cryptoTransactions?: FingerprintRelationField;
     depositAddresses?: FingerprintRelationField;
-    fiatTransfers?: FingerprintRelationField;
+    fiatTransactions?: FingerprintRelationField;
     profiles?: FingerprintRelationField;
     transactionsByReceiverId?: FingerprintRelationField;
     transactionsBySenderId?: FingerprintRelationField;

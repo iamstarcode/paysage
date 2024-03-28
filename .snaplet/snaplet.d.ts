@@ -55,10 +55,6 @@ interface Table_public_crypto_transactions {
   user_id: string;
   foreign_transaction_id: number;
 }
-interface Table_public_crypto_transfers {
-  id: number | null;
-  transaction_hash: string | null;
-}
 interface Table_public_currencies {
   id: number;
   currency_name: string;
@@ -72,7 +68,7 @@ interface Table_public_deposit_addresses {
   currency: string | null;
   address: string | null;
 }
-interface Table_public_fiat_transfers {
+interface Table_public_fiat_transactions {
   id: number;
   user_id: string;
   amount: number | null;
@@ -396,10 +392,9 @@ interface Schema_pgsodium_masks {
 }
 interface Schema_public {
   crypto_transactions: Table_public_crypto_transactions;
-  crypto_transfers: Table_public_crypto_transfers;
   currencies: Table_public_currencies;
   deposit_addresses: Table_public_deposit_addresses;
-  fiat_transfers: Table_public_fiat_transfers;
+  fiat_transactions: Table_public_fiat_transactions;
   profiles: Table_public_profiles;
   transactions: Table_public_transactions;
   wallets: Table_public_wallets;
@@ -461,14 +456,6 @@ interface Tables_relationships {
 
     };
   };
-  "public.crypto_transfers": {
-    parent: {
-       crypto_transfers_id_fkey: "public.transactions";
-    };
-    children: {
-
-    };
-  };
   "public.deposit_addresses": {
     parent: {
        deposit_addresses_user_id_fkey: "auth.users";
@@ -477,10 +464,10 @@ interface Tables_relationships {
 
     };
   };
-  "public.fiat_transfers": {
+  "public.fiat_transactions": {
     parent: {
-       fiat_transfers_user_id_fkey: "auth.users";
-       fiat_transfers_id_fkey: "public.transactions";
+       fiat_transactions_user_id_fkey: "auth.users";
+       fiat_transactions_id_fkey: "public.transactions";
     };
     children: {
 
@@ -618,8 +605,7 @@ interface Tables_relationships {
     };
     children: {
        crypto_transactions_id_fkey: "public.crypto_transactions";
-       crypto_transfers_id_fkey: "public.crypto_transfers";
-       fiat_transfers_id_fkey: "public.fiat_transfers";
+       fiat_transactions_id_fkey: "public.fiat_transactions";
     };
   };
   "auth.users": {
@@ -632,7 +618,7 @@ interface Tables_relationships {
        sessions_user_id_fkey: "auth.sessions";
        crypto_transactions_user_id_fkey: "public.crypto_transactions";
        deposit_addresses_user_id_fkey: "public.deposit_addresses";
-       fiat_transfers_user_id_fkey: "public.fiat_transfers";
+       fiat_transactions_user_id_fkey: "public.fiat_transactions";
        profiles_id_fkey: "public.profiles";
        transactions_receiver_id_fkey: "public.transactions";
        transactions_sender_id_fkey: "public.transactions";

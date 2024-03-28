@@ -93,7 +93,9 @@ export default function Page() {
                   }
                   {amount}
                 </TableCell>
-                <TableCell className="hidden sm:table-cell">{status}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {transaction_status}
+                </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

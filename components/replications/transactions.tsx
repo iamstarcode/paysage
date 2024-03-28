@@ -1,43 +1,68 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { useCallback, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client"
-import {
-  RealtimePostgresChangesPayload,
-  RealtimePostgresInsertPayload,
-} from "@supabase/supabase-js"
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
 import { toast } from "sonner"
 
 function Realtime() {
   const supabase = createClient()
+  const [state, setState] = useState({})
 
+  useEffect(() => {
+    console.log(state)
+  }, [state])
   const handleUpdates = async (
     payload: RealtimePostgresChangesPayload<any>
   ) => {
-    const user = await supabase.auth.getUser()
-
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     //TODO, maybe to handle only to have the notifaction if the user is for this person
+    if (!user) return
+
+    if (payload?.new?.receiver_id! == user?.id) {
+      console.log("you the reciever")
+    } else {
+      console.log("you the sender")
+    }
 
     if (payload.eventType == "INSERT") {
       toast.info("Pending")
     } else if (payload.eventType == "UPDATE") {
-      toast.success("Sucess")
+      toast.success(`${user?.id}`)
     }
   }
   useEffect(() => {
     async function fetcTransaction() {
-      const user = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
       const subscription = supabase
-        .channel(`user:${user.data.user?.id}`)
+        .channel("transactions")
         .on(
           "postgres_changes",
-          { event: "*", schema: "public", table: "currencies" },
-          handleUpdates
+          {
+            event: "*",
+            schema: "public",
+            table: "transactions",
+            filter: `receiver_id=eq.${user?.id}`,
+          },
+          (payload) => handleUpdates(payload)
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "transactions",
+            filter: `sender_id=eq.${user?.id}`,
+          },
+          (payload) => handleUpdates(payload)
         )
         .subscribe()
 
-      // Clean up subscription on unmount
       return () => {
         subscription.unsubscribe()
       }

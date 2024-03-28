@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans"
 import "./globals.css"
 
 import { Toaster } from "@/components/ui/sonner"
+import Realtime from "@/components/replications/transactions"
 
 import { Providers } from "./providers"
 
@@ -29,6 +30,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster richColors />
+          <Realtime />
         </Providers>
       </body>
     </html>
