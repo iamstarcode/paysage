@@ -1,13 +1,8 @@
 import { Suspense } from "react"
-import Link from "next/link"
-import { createClient } from "@/utils/supabase/server"
 
-import { DrawerDemo } from "@/components/add-currency"
 import BalanceSkeleton from "@/components/skeletons/balance"
-import CurrencySkeleton from "@/components/skeletons/currency"
 import Transfer from "@/components/transfer"
 import Balance from "@/components/wallet/balance"
-import Currencies from "@/components/wallet/currencies"
 import RecentTransactions from "@/components/wallet/recent-transactions"
 
 export default async function Page() {

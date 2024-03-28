@@ -38,6 +38,7 @@ export default function Page() {
 
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
+  console.log(transactions, "gfgdg")
   if (transactionsError) <div>An error occured</div>
   if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
 

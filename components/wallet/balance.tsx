@@ -4,15 +4,17 @@ import { PlusCircle } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
+export const revalidate = 0
 async function Balance() {
-  /*   await new Promise<void>((resolve) => {
+  /*  await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
-    }, 3000)
+    }, 10000)
   }) */
 
   const supabase = createClient()
   const { data: wallets } = await supabase.from("wallets").select("*")
+
   return (
     <>
       {wallets?.map(({ balance, id, currency_id }) => (
@@ -51,6 +53,7 @@ async function Balance() {
           </CardContent>
         </Card>
       ))}
+      {wallets?.length == 0 && <p>Make your first deposit</p>}
     </>
   )
 }

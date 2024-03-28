@@ -79,7 +79,7 @@ const profileStore = await seed.profiles((x) => [
   },
 ])
 
-const walletSrore = await seed.wallets((x) => [
+/* const walletSrore = await seed.wallets((x) => [
   {
     balance: 5000,
     userId: usersStore.users[0].id,
@@ -102,7 +102,7 @@ const walletSrore = await seed.wallets((x) => [
     userId: usersStore.users[1].id,
     currencyId: 37,
   },
-])
+]) */
 
 /* const transactions = await seed.transactions(()=>[{
   

@@ -2,13 +2,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { revalidatePath } from "next/cache"
 import { createClient } from "@/utils/supabase/client"
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
 import { toast } from "sonner"
 
+import { useTransactions } from "@/hooks/supabase"
+
 function Realtime() {
   const supabase = createClient()
   const [state, setState] = useState({})
+  const { mutate } = useTransactions()
 
   useEffect(() => {
     console.log(state)
@@ -33,6 +37,9 @@ function Realtime() {
     } else if (payload.eventType == "UPDATE") {
       toast.success(`${user?.id}`)
     }
+
+    mutate()
+    revalidatePath("/dasborad/wallet")
   }
   useEffect(() => {
     async function fetcTransaction() {
