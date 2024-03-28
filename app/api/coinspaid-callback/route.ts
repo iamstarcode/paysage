@@ -21,8 +21,6 @@ export async function POST(request: Request) {
   const requestBody: CallbackData = await request.json()
   const signature = headers.get("X-Processing-Signature")
 
-  //console.log(requestBody, "sssss")
-
   const receivedPublicKey = headers.get("X-Processing-Key")
 
   /*   if (receivedPublicKey !== process.env.COINPAID_KEY) {
@@ -38,7 +36,8 @@ export async function POST(request: Request) {
   if (true) {
     //handle transaction type
     if (requestBody.type == "deposit") {
-      //We first of all check if we have that transcation id in the database
+      //We first of all check if we have that foreign transcation id in the database
+      //
 
       const { data: crypto_trasaction, error } = await supabase
         .from("crypto_transactions")
@@ -50,52 +49,43 @@ export async function POST(request: Request) {
         console.log(error)
       }
       if (crypto_trasaction != null) {
-        //Alread accepted this is an updated
-
+        //Updating!!!
+        //If we have that transaction we are gonna update
         const { error } = await supabase
           .from("transactions")
           .update({ transaction_status: requestBody.status })
           .eq("id", crypto_trasaction.transactions?.id!)
 
-        console.log("updating")
         if (error) {
           console.log(error)
         }
       } else {
+        //This a new txn, so this is a processing status
         //Processing
 
-        try {
-          const transaction = await supabase
-            .from("transactions")
-            .insert({
-              transaction_type: "crypto",
-              amount: +requestBody.currency_sent.amount,
-              currency: requestBody.currency_received.currency,
-              receiver_id: requestBody.crypto_address.foreign_id,
-              receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
-              transaction_status: "processing",
-            })
-            .select("*")
-            .single()
+        const { data: transaction, error } = await supabase
+          .from("transactions")
+          .insert({
+            transaction_type: "crypto",
+            amount: +requestBody.currency_sent.amount,
+            currency: requestBody.currency_received.currency,
+            receiver_id: requestBody.crypto_address.foreign_id,
+            receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
+            transaction_status: "processing",
+          })
+          .select()
+          .single()
 
-          if (transaction.data?.id) {
-            await supabase.from("crypto_transactions").insert({
-              id: transaction.data?.id,
-              foreign_transaction_id: requestBody.id,
-              user_id: requestBody.crypto_address.foreign_id,
-            })
-
-            console.log("Added")
-          }
-
-          console.log("Then done")
-        } catch (error) {
-          console.log(error)
+        if (transaction?.id) {
+          await supabase.from("crypto_transactions").insert({
+            id: transaction?.id,
+            foreign_transaction_id: requestBody.id,
+            user_id: requestBody.crypto_address.foreign_id,
+          })
         }
       }
 
-      revalidatePath("/dasboard", "layout")
-      return Response.json({ message: "Done" }, { status: 201 })
+      return Response.json({ message: "Callback done" }, { status: 201 })
     }
 
     /*   if (dummyData.type == "deposit") {
