@@ -53,6 +53,52 @@ type Override = {
       objects?: string;
     };
   }
+  crypto_transactions?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      foreign_transaction_id?: string;
+      users?: string;
+      transactions?: string;
+    };
+  }
+  currencies?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      currency_name?: string;
+      currency_code?: string;
+      currency_sign?: string;
+      currency_type?: string;
+    };
+  }
+  deposit_addresses?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      currency?: string;
+      address?: string;
+      users?: string;
+    };
+  }
+  fiat_transactions?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      amount?: string;
+      sender_name?: string;
+      receiver_name?: string;
+      sender_account?: string;
+      receiver_account?: string;
+      _provider?: string;
+      transaction_id?: string;
+      users?: string;
+      transactions?: string;
+    };
+  }
   flow_state?: {
     name?: string;
     fields?: {
@@ -208,6 +254,16 @@ type Override = {
       buckets?: string;
     };
   }
+  profiles?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+      users?: string;
+    };
+  }
   refresh_tokens?: {
     name?: string;
     fields?: {
@@ -315,6 +371,25 @@ type Override = {
       sso_domains?: string;
     };
   }
+  transactions?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      transaction_type?: string;
+      created_at?: string;
+      amount?: string;
+      sender_id?: string;
+      receiver_id?: string;
+      currency?: string;
+      sender_description?: string;
+      receiver_description?: string;
+      transaction_status?: string;
+      users_transactions_receiver_idTousers?: string;
+      users_transactions_sender_idTousers?: string;
+      crypto_transactions?: string;
+      fiat_transactions?: string;
+    };
+  }
   users?: {
     name?: string;
     fields?: {
@@ -355,6 +430,23 @@ type Override = {
       identities?: string;
       mfa_factors?: string;
       sessions?: string;
+      crypto_transactions?: string;
+      deposit_addresses?: string;
+      fiat_transactions?: string;
+      profiles?: string;
+      transactions_transactions_receiver_idTousers?: string;
+      transactions_transactions_sender_idTousers?: string;
+      wallets?: string;
+    };
+  }
+  wallets?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      user_id?: string;
+      balance?: string;
+      currency?: string;
+      users?: string;
     };
   }}
 export type Alias = {
@@ -395,6 +487,25 @@ export interface Fingerprint {
     updatedAt?: FingerprintDateField;
     fileSizeLimit?: FingerprintNumberField;
     objects?: FingerprintRelationField;
+  }
+  cryptoTransactions?: {
+    id?: FingerprintNumberField;
+    foreignTransactionId?: FingerprintNumberField;
+    user?: FingerprintRelationField;
+    i?: FingerprintRelationField;
+  }
+  currencies?: {
+    id?: FingerprintNumberField;
+  }
+  depositAddresses?: {
+    id?: FingerprintNumberField;
+    user?: FingerprintRelationField;
+  }
+  fiatTransactions?: {
+    id?: FingerprintNumberField;
+    amount?: FingerprintNumberField;
+    user?: FingerprintRelationField;
+    i?: FingerprintRelationField;
   }
   flowStates?: {
     createdAt?: FingerprintDateField;
@@ -461,6 +572,9 @@ export interface Fingerprint {
     metadata?: FingerprintJsonField;
     bucket?: FingerprintRelationField;
   }
+  profiles?: {
+    i?: FingerprintRelationField;
+  }
   refreshTokens?: {
     id?: FingerprintNumberField;
     createdAt?: FingerprintDateField;
@@ -508,6 +622,15 @@ export interface Fingerprint {
     samlRelayStates?: FingerprintRelationField;
     ssoDomains?: FingerprintRelationField;
   }
+  transactions?: {
+    id?: FingerprintNumberField;
+    createdAt?: FingerprintDateField;
+    amount?: FingerprintNumberField;
+    receiver?: FingerprintRelationField;
+    sender?: FingerprintRelationField;
+    cryptoTransactions?: FingerprintRelationField;
+    fiatTransactions?: FingerprintRelationField;
+  }
   users?: {
     emailConfirmedAt?: FingerprintDateField;
     invitedAt?: FingerprintDateField;
@@ -529,4 +652,16 @@ export interface Fingerprint {
     identities?: FingerprintRelationField;
     mfaFactors?: FingerprintRelationField;
     sessions?: FingerprintRelationField;
+    cryptoTransactions?: FingerprintRelationField;
+    depositAddresses?: FingerprintRelationField;
+    fiatTransactions?: FingerprintRelationField;
+    profiles?: FingerprintRelationField;
+    transactionsByReceiverId?: FingerprintRelationField;
+    transactionsBySenderId?: FingerprintRelationField;
+    wallets?: FingerprintRelationField;
+  }
+  wallets?: {
+    id?: FingerprintNumberField;
+    balance?: FingerprintNumberField;
+    user?: FingerprintRelationField;
   }}

@@ -48,6 +48,7 @@ export async function POST(request: Request) {
       if (error) {
         console.log(error)
       }
+
       if (crypto_trasaction != null) {
         //Updating!!!
         //If we have that transaction we are gonna update
@@ -58,6 +59,20 @@ export async function POST(request: Request) {
 
         if (error) {
           console.log(error)
+        }
+
+        if (
+          requestBody.status == "confirmed" &&
+          crypto_trasaction.transactions?.transaction_status !== "confirmed"
+        ) {
+          //set it to cionfirmed
+          await supabase.rpc("upsert_wallet_balance", {
+            p_user_id: crypto_trasaction.user_id,
+            p_amount: +requestBody.currency_received.amount_minus_fee!,
+            p_currency: crypto_trasaction.transactions?.currency!,
+          })
+
+          //and if it failed nko, handle too
         }
       } else {
         //This a new txn, so this is a processing status

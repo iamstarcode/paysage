@@ -39,7 +39,7 @@ function Realtime() {
     }
 
     mutate()
-    revalidatePath("/dasborad/wallet")
+    //revalidatePath("/dashboard/wallet")
   }
   useEffect(() => {
     async function fetcTransaction() {

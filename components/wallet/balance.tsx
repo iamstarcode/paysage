@@ -17,17 +17,17 @@ async function Balance() {
 
   return (
     <>
-      {wallets?.map(({ balance, id, currency_id }) => (
+      {wallets?.map(({ balance, id, currency }) => (
         <Card key={id}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
               <PlusCircle />
             </CardTitle>
-            {" Account Balance/CODE"}
+            {`${balance} ${currency}`}
           </CardHeader>
           <CardContent>
             <div className="bg-black p-4 rounded-lg text-white w-full flex flex-row justify-between items-center mt-5">
-              <Link href={`/dashboard/wallet/${id}/${currency_id}/deposit`}>
+              <Link href={`/dashboard/wallet/${id}/${currency}/deposit`}>
                 <div className="flex flex-col justify-center items-center">
                   <PlusCircle />
                   <p className="text-sm">Recieve</p>

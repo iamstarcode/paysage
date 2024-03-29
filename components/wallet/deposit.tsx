@@ -6,9 +6,9 @@ import { Image, Loader2, User2 } from "lucide-react"
 
 import { useDepositAdress, useWallet } from "@/hooks/supabase"
 
-function Deposit({ id, currencyId }: { id: number; currencyId: number }) {
+function Deposit({ id, currency }: { id: number; currency: string }) {
   //const [currencies, setCurrencies] = useState<CurrencyType[] | null>()
-  const [currency, setCurrency] = useState<CurrencyType>()
+  const [_currency, setCurrency] = useState<CurrencyType>()
   const { data: wallets } = useWallet()
   const { data: depositAdresses } = useDepositAdress()
 
@@ -16,9 +16,8 @@ function Deposit({ id, currencyId }: { id: number; currencyId: number }) {
     const fetchData = async () => {
       const response = await fetch("/api/currencies", { method: "POST" })
       const data = await response.json()
-      const _c = data.data.find(
-        (item: { id: number }) => item.id === +currencyId
-      )
+
+      const _c = data.data.find((item: { id: number }) => item.id === +currency)
 
       setCurrency(_c)
     }
@@ -37,7 +36,7 @@ function Deposit({ id, currencyId }: { id: number; currencyId: number }) {
   return (
     <div className="flex flex-col space-y-4 items-center justify-center">
       <User2 className="h-8 w-8" />
-      <p>Your {currency.currency} address </p>
+      <p>Your {currency} address </p>
     </div>
   )
 }

@@ -4,11 +4,11 @@ import Deposit from "@/components/wallet/deposit"
 export default function Page({
   params,
 }: {
-  params: { id: number; c_id: number }
+  params: { id: number; currency: string }
 }) {
   return (
     <RouteModal>
-      <Deposit id={params.id} currencyId={params.c_id} />
+      <Deposit id={params.id} currency={params.currency} />
     </RouteModal>
   )
 }

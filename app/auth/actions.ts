@@ -21,6 +21,7 @@ export async function signIn(prevState: any, formData: FormData) {
   })
 
   if (error) {
+    console.log(error)
     return {
       message: error.message,
       type: "Error",
@@ -55,6 +56,7 @@ export async function signUp(prevState: any, formData: FormData) {
   })
 
   if (error) {
+    console.log(error)
     return {
       message: error.message,
       type: "Error",

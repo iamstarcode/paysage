@@ -7,26 +7,35 @@ CREATE TABLE public.profiles (
     primary key (id)
 );
 -- CREATE INDEX idx_profile_user_id ON public.profiles(user_id);
-alter table public.profiles enable row level security;
+ALTER TABLE public.profiles enable row level security;
 create policy "Public profiles are viewable only by authenticated users"
     on public.profiles for select
     to authenticated
     using ( true );
-create policy "Users can update own profile."
+CREATE POLICY "Users can update own profile."
     on public.profiles for update
     using ( auth.uid() = id );
-create function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer set search_path = public
+
+CREATE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY definer SET search_path = public
 as $$
 begin
-  insert into public.profiles (id)
-  values (new.id);
-
-  return new;
+   -- Check if the action is an INSERT on the users table
+    IF NEW.id IS NOT NULL THEN
+        -- Insert a corresponding entry into the profiles table
+        INSERT INTO profiles (user_id)
+        VALUES (NEW.id);
+    END IF;
+    RETURN NULL; -- Returning NULL because this is an "AFTER INSERT" trigger
 end;
 $$;
+--To maually insert profile
+/* CREATE TRIGGER create_profile_trigger
+AFTER INSERT ON auth.users
+FOR EACH ROW
+EXECUTE FUNCTION handle_new_user(); */
 
 
 CREATE TYPE currency_type AS ENUM (
@@ -48,7 +57,7 @@ CREATE TABLE public.wallets (
     user_id uuid references auth.users on delete cascade not null, -- Reference to the user who owns the wallet
     balance NUMERIC(20, 8) DEFAULT 0, -- Balance of the currency in the wallet
     currency VARCHAR(3),
-    UNIQUE(user_id, currency_id) -- Ensure each user has only one wallet per currency
+    UNIQUE(user_id, currency) -- Ensure each user has only one wallet per currency
 );
 alter table public.wallets enable row level security;
 create policy "Only Users to create new wallet."
@@ -192,23 +201,33 @@ create policy "Users can update their own wallet fiat."
 );
  */
 
- -- Functions
-CREATE OR REPLACE FUNCTION upsert_wallet_balance(
+CREATE OR REPLACE FUNCTION public.upsert_wallet_balance(
     IN p_user_id UUID,
     IN p_currency VARCHAR(3),
     IN p_amount NUMERIC(20, 8)
 )
-RETURNS VOID AS
+RETURNS VOID 
 security definer set search_path = public
-$$
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    INSERT INTO wallets (user_id, balance, currency)
-    VALUES (p_user_id, p_amount, p_currency)
-    ON CONFLICT (user_id, currency)
-    DO UPDATE SET balance = wallets.balance + EXCLUDED.balance;
+     -- Check if a record already exists for the given user_id and currency
+    IF EXISTS (
+        SELECT 1
+        FROM wallets
+        WHERE user_id = p_user_id AND currency = p_currency
+    ) THEN
+        -- Update the balance if a record already exists
+        UPDATE wallets
+        SET balance = balance + p_amount
+        WHERE user_id = p_user_id AND currency = p_currency;
+    ELSE
+        -- Insert a new record if no record exists
+        INSERT INTO wallets (user_id, balance, currency)
+        VALUES (p_user_id, p_amount, p_currency);
+    END IF;
 END;
-$$
-LANGUAGE plpgsql;
+$$;
 
 
 
