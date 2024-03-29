@@ -1,7 +1,9 @@
 import { generateSignature } from "@/utils/helpers"
 
-export async function POST() {
-  const requestBody = JSON.stringify({ visible: true })
+export async function POST(req: Request) {
+  const data = await req.json()
+
+  const requestBody = JSON.stringify(data)
   const apiURL =
     process.env.NODE_ENV == "development"
       ? process.env.COINPAID_DEV_URL
@@ -20,5 +22,6 @@ export async function POST() {
     },
   })
   const currencies = await res.json()
-  return Response.json({ data: currencies.data })
+  //console.log(currencies, "curr")
+  return Response.json(currencies)
 }

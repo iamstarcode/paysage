@@ -1,12 +1,8 @@
-import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import {
-  useInfiniteOffsetPaginationQuery,
-  useInsertMutation,
   useOffsetInfiniteScrollQuery,
   useQuery,
 } from "@supabase-cache-helpers/postgrest-swr"
-import useSWR from "swr"
 
 const supabase = createClient()
 
@@ -17,18 +13,44 @@ export const useCurrencies = () => {
   return { data, isLoading, error, mutate }
 }
 
-export const useWallet = () => {
+export const useWallets = () => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase.from("wallets").select("*")
   )
-  return { data, isLoading, error, mutate }
+  return {
+    wallets: data,
+    isWalletsLoad: isLoading,
+    walletsError: error,
+    mutateWallets: mutate,
+  }
 }
 
-export const useDepositAdress = () => {
+export const useWalletByCurreny = (currency) => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabase.from("deposit_addresses").select("*")
+    supabase.from("wallets").select("*").eq("currency", currency).single()
   )
-  return { data, isLoading, error, mutate }
+  return {
+    wallet: data,
+    isWalletLoading: isLoading,
+    walletError: error,
+    mutateWallet: mutate,
+  }
+}
+
+export const useDepositAdress = (currency) => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabase
+      .from("deposit_addresses")
+      .select("*")
+      .eq("currency", currency)
+      .single()
+  )
+  return {
+    depositAdress: data,
+    isDepositAdressLoading: isLoading,
+    depositAddressError: error,
+    mutateDepositAddress: mutate,
+  }
 }
 
 export const useTransactions = () => {
@@ -86,21 +108,21 @@ export const useUser = () => {
     data,
     isLoading: isUserLoading,
     error: userError,
-  } = useSWR("user", () => supabase.auth.getUser())
-  return { user: data?.data.user, isUserLoading, userError }
+  } = useQuery(supabase.auth.getUser())
+  return { user: data.user, isUserLoading, userError }
 }
 
 export const useGetFiatTransfer = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase
       .from("transactions")
-      .select("*, fiat_transfers!inner(*)")
+      .select("*, fiat_transactions!inner(*)")
       .eq("id", id)
       .single()
   )
 
   return {
-    transfer: data,
+    fiatTransactions: data,
     isTransferLoading: isLoading,
     transferError: error,
     mutate,
