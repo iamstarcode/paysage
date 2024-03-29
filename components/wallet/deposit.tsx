@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { CurrencyType } from "@/types"
+import { createClient } from "@/utils/supabase/client"
 import { Copy, Loader2, User2 } from "lucide-react"
 
 import { useCurrencies } from "@/hooks/api"
 import { useDepositAdress, useWalletByCurreny } from "@/hooks/supabase"
 
+import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 
 function Deposit({ id, currency }: { id: number; currency: string }) {
+  const supabase = createClient()
   const [generateWallet, setGenerateWallet] = useState(false)
   const { currencies, isCurrenciesLoading, currencyError } = useCurrencies({
     method: "POST",
@@ -31,8 +34,7 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
       </div>
     )
 
-  if (currencyError) return <p>An Error occured</p>
-  //console.log(currencies, "jbhfbhrbh")
+  if (currencyError) return <p>An Error Occured</p>
 
   const currencyAvailable = currencies?.find(
     (item: { currency: string }) => item.currency == currency
@@ -41,12 +43,24 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
   if (!currencyAvailable)
     return <p>Currently not accepting {currency} deposits</p>
 
-  console.log(depositAdress)
+  //console.log(depositAdress)
 
-  //if (!curr) return <p>Something went wrong</p>
-  // const wallet = wallets.find((item: { id: number }) => item.id === +id)
+  //TODO if its fiat, we provide options with deposite using more than ne crypto type
+  //if cryto, just one address is enough
+  //exmple ETH to EUR, BTC to Euro
+  async function addresseTake() {
+    if (wallet) {
+      //genrate wallet with this currency
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      const address = fetch("/generate-wallet", {
+        method: "POST",
+        body: JSON.stringify({ currency, foreign_id: user?.id }),
+      })
+    }
+  }
 
-  // console.log(curr, depositAdresses)
   return (
     <div className="flex flex-col space-y-4 items-center justify-center">
       <User2 className="h-8 w-8" />
@@ -57,7 +71,7 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
       </p>
 
       {generateWallet ? (
-        <p>genrate walet</p>
+        <Button>Generate Wallet</Button>
       ) : (
         <div>
           <div className="relative w-full">

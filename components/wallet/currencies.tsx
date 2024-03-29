@@ -18,7 +18,10 @@ import { Label } from "@/components/ui/label"
 //import { Deposit } from "../deposit/deposit"
 
 export default async function Currencies() {
-  const res = await fetch(getURL() + "/api/currencies", { method: "POST" })
+  const res = await fetch(getURL() + "/api/currencies", {
+    method: "POST",
+    body: JSON.stringify({ visible: true }),
+  })
   const { data: data }: { data: CurrencyType[] } = await res.json()
 
   return (

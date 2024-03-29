@@ -34,8 +34,8 @@ export default async function Page() {
         <Currencies />
       </Suspense> */}
       <div className="grid md:grid-cols-2 md:gap-8">
-        <Transfer />
-        <RecentTransactions />
+        {/*  <Transfer />
+        <RecentTransactions /> */}
       </div>
     </div>
   )

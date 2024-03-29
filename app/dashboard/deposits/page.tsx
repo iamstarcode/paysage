@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Link from "next/link"
 import { CurrencyType } from "@/types"
 import { getURL } from "@/utils/helpers"
 import { createClient } from "@/utils/supabase/server"
@@ -17,39 +18,37 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default async function Deposit() {
-  const supabase = createClient()
-  let currencies
-  try {
-    const res = await fetch(getURL() + "/api/currencies", { method: "POST" })
-
-    currencies = await res.json()
-  } catch (error) {
-    console.log(error)
-  }
-  const allCurrency: CurrencyType[] = currencies?.data
-  const crypto = allCurrency?.filter((currency) => currency.type == "crypto")
-  const fiat = allCurrency?.filter((currency) => currency.type == "fiat")
-
-  const { data: wallets } = await supabase.from("wallets").select("*")
-
-  const mapped = wallets?.map((wallet) => {
-    const a = allCurrency?.find(
-      (currency: CurrencyType) => wallet.currency == currency.currency
-    )
-
-    return {
-      ...a,
-      wallet,
-    }
-  })
-
-  console.log(mapped, "cdcdc")
-
-  /*   await new Promise<void>((resolve) => {
+  /*  await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
     }, 10000)
-  }) */
+  })
+ */
+  const supabase = createClient()
+  const res = await fetch(getURL() + "/api/currencies", {
+    method: "POST",
+    body: JSON.stringify({ visible: true }),
+  })
+
+  const currencies = await res.json()
+
+  const allCurrency: CurrencyType[] = currencies?.data
+
+  const { data: wallets } = await supabase.from("wallets").select("*")
+
+  const mapped = allCurrency?.map((currency) => {
+    const a = wallets?.find((wallet) => wallet.currency == currency.currency)
+
+    return {
+      wallet: a,
+      currency,
+    }
+  })
+
+  //console.log(mapped, "cdcdc")
+
+  const crypto = mapped?.filter((item) => item.currency.type == "crypto")
+  const fiat = mapped?.filter((item) => item.currency.type == "fiat")
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -67,24 +66,32 @@ export default async function Deposit() {
             <CardContent className="space-y-2">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Suspense fallback={<Skeleton />}>
-                  {allCurrency?.map((currency: CurrencyType) => (
-                    <Card key={currency.id} className="p-4">
-                      <CardContent className="p-0">
-                        <div className="flex justify-between">
-                          <div className="flex items-center">
-                            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-                            <p className="ml-4 text-sm">USD</p>
+                  {mapped?.map((item) => (
+                    <Card key={item.currency.id} className="p-4">
+                      <Link
+                        href={`/dashboard/deposits/${item.currency.currency}/`}
+                      >
+                        <CardContent className="p-0">
+                          <div className="flex justify-between">
+                            <div className="flex items-center">
+                              <div className="w-12 h-12 rounded-full bg-slate-500"></div>
+                              <p className="ml-4 text-sm">
+                                {item.currency.currency}
+                              </p>
+                            </div>
+                            <div className="rounded-lg">
+                              <span className="text-right block text-ellipsis text-sm font-semibold">
+                                {item.wallet != undefined
+                                  ? item.wallet.balance
+                                  : 0}
+                              </span>
+                              <p className="text-right text-xs text-gray-300">
+                                240.8 USD rate in usd
+                              </p>
+                            </div>
                           </div>
-                          <div className="rounded-lg">
-                            <span className="text-right block text-ellipsis text-sm font-semibold">
-                              240.76544987
-                            </span>
-                            <p className="text-right text-xs text-gray-300">
-                              240.8 USD
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
+                        </CardContent>
+                      </Link>
                     </Card>
                   ))}
                 </Suspense>
