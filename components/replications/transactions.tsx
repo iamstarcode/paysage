@@ -15,7 +15,7 @@ function Realtime() {
   const { mutate } = useTransactions()
 
   useEffect(() => {
-    console.log(state)
+    //console.log(state)
   }, [state])
   const handleUpdates = async (
     payload: RealtimePostgresChangesPayload<any>

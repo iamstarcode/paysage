@@ -93,21 +93,21 @@ export type Database = {
       }
       deposit_addresses: {
         Row: {
-          address: string | null
+          address: string
           convert_to: string | null
           currency: string
           id: number
           user_id: string
         }
         Insert: {
-          address?: string | null
+          address: string
           convert_to?: string | null
           currency: string
           id?: number
           user_id: string
         }
         Update: {
-          address?: string | null
+          address?: string
           convert_to?: string | null
           currency?: string
           id?: number

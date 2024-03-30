@@ -78,9 +78,9 @@ CREATE TABLE public.deposit_addresses(
     user_id uuid references auth.users on delete cascade not null,
     currency VARCHAR(3) NOT NULL,
     convert_to VARCHAR(3),
-    address  VARCHAR(200),
-    UNIQUE(currency, convert_to)
-);
+    address  VARCHAR(200) NOT NULL,
+    CONSTRAINT uq_currency_null UNIQUE NULLS NOT DISTINCT(currency, convert_to)
+ );
 alter table public.deposit_addresses enable row level security;
 create policy "Only Users can create deposit address."
     on public.deposit_addresses for insert
