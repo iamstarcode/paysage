@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import { CurrencyType } from "@/types"
+import { createClient } from "@/utils/supabase/client"
 import {
   Check,
   CheckCheck,
@@ -30,7 +31,11 @@ import {
 } from "@/components/ui/select"
 
 const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
+  const supabase = createClient()
+
   const [step, setStep] = useState(1)
+  const [address, setAddress] = useState<string | undefined>()
+
   type Option = "BTC" | "ETH" | null
   const [selectedOption, setSelectedOption] = useState<Option>(null)
 
@@ -38,11 +43,44 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
     setSelectedOption(option)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedOption) {
       setStep(2) // Move to the next step if an option is selected
-    } else {
-      alert("Please select an option.")
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      //console.log(selectedOption)
+      const { data: depositAddress } = await supabase
+        .from("deposit_addresses")
+        .select("*")
+        .eq("currency", selectedOption)
+        .eq("convert_to", currency.currency!)
+        .single()
+
+      if (depositAddress) {
+        setAddress(depositAddress.address)
+        return
+      } else {
+        const res = await fetch("/api/address-take", {
+          method: "POST",
+          body: JSON.stringify({
+            currency: currency.currency,
+            foreign_id: user?.id,
+            convert_to: currency.currency,
+          }),
+        })
+
+        const takenAddress = await res.json()
+
+        await supabase.from("deposit_addresses").insert({
+          currency: selectedOption,
+          user_id: user?.id!,
+          address: takenAddress.data.address,
+          convert_to: currency.currency!,
+        })
+        setAddress(takenAddress.data.address)
+      }
     }
   }
 
