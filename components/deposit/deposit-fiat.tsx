@@ -2,7 +2,13 @@
 
 import React, { useState } from "react"
 import { CurrencyType } from "@/types"
-import { Check } from "lucide-react"
+import {
+  Check,
+  CheckCheck,
+  CheckCheckIcon,
+  CheckCircle,
+  CheckCircle2,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -25,9 +31,10 @@ import {
 
 const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
   const [step, setStep] = useState(1)
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  type Option = "BTC" | "ETH" | null
+  const [selectedOption, setSelectedOption] = useState<Option>(null)
 
-  const handleOptionSelect = (option: React.SetStateAction<string | null>) => {
+  const handleOptionSelect = (option: Option) => {
     setSelectedOption(option)
   }
 
@@ -46,40 +53,51 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
 
   return (
     <div>
-      {step === 1 && (
-        <div>
-          <h2>Step 1: Select an Option</h2>
-          <ul>
-            <li>
-              <button onClick={() => handleOptionSelect("Option 1")}>
-                Option 1{selectedOption === "Option 1 x" && <Check />}{" "}
-                {/* Render the check icon if Option 1 is selected */}
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleOptionSelect("Option 2")}>
-                Option 2{selectedOption === "Option 2" && <Check />}{" "}
-                {/* Render the check icon if Option 2 is selected */}
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleOptionSelect("Option 3")}>
-                Option 3{selectedOption === "Option 3" && <Check />}{" "}
-                {/* Render the check icon if Option 3 is selected */}
-              </button>
-            </li>
-          </ul>
-          <button onClick={handleNext}>Next</button> {/* Next button */}
-        </div>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Up your {currency.currency}</CardTitle>
+          <CardDescription>Top Up your Cash Account Balance.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Choose a crypto currency</p>
+          {step === 1 && (
+            <div>
+              <div className="flex flex-col mt-5 space-y-2">
+                <div
+                  onClick={() => handleOptionSelect("BTC")}
+                  className="flex items-center justify-between px-2 py-2 border rounded-lg border-slate-300"
+                >
+                  <div className="inline-flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-black rounded-full"></div>
+                    <h2 className="font-bold">BTC</h2>
+                  </div>
+                  {selectedOption === "BTC" && <CheckCircle2 />}
+                </div>
+              </div>
+            </div>
+          )}
 
-      {step === 2 && (
-        <div>
-          <h2>Step 2: Selected Option</h2>
-          <p>You selected: {selectedOption}</p>
-          <button onClick={handleGoBack}>Go Back</button>
-        </div>
-      )}
+          {step === 2 && (
+            <div>
+              <h2>Step 2:</h2>
+              <p>You selected: {selectedOption}</p>
+              <p>display selected addres and all</p>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          {step == 2 && (
+            <Button onClick={handleGoBack} variant="outline">
+              Back
+            </Button>
+          )}
+          {step == 1 && (
+            <Button disabled={!selectedOption} onClick={handleNext}>
+              Next
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
     </div>
   )
 }
@@ -95,7 +113,7 @@ export function CardWithForm() {
       </CardHeader>
       <CardContent>
         <form>
-          <div className="grid w-full items-center gap-4">
+          <div className="grid items-center w-full gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
               <Input id="name" placeholder="Name of your project" />
