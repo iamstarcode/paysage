@@ -62,8 +62,8 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
   }
 
   return (
-    <div className="flex flex-col space-y-4 items-center justify-center">
-      <User2 className="h-8 w-8" />
+    <div className="flex flex-col space-y-4 justify-center">
+      <User2 className="h-8 w-8 mx-auto" />
       <p className="text-3xl text-center font-bold">Your {currency} address </p>
       <p className="text-sm text-slate-400 text-center">
         You can use this address in order to accept deposits from both external
@@ -71,7 +71,7 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
       </p>
 
       {foundCurrency.type == "crypto" ? (
-        <DepositFiat />
+        <DepositFiat currency={foundCurrency} />
       ) : (
         <div>
           <p>in the workss</p>
