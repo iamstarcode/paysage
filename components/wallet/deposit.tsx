@@ -7,7 +7,7 @@ import { useCurrencies } from "@/hooks/api"
 import { useDepositAdress } from "@/hooks/supabase"
 
 import DepositCrypto from "../deposit/deposit-crypto"
-import { DepositFiat } from "../deposit/deposit-fiat"
+import DepositFiat from "../deposit/deposit-fiat"
 
 function Deposit({ currency }: { id: number; currency: string }) {
   const { currencies, isCurrenciesLoading, currencyError } = useCurrencies({
@@ -15,15 +15,13 @@ function Deposit({ currency }: { id: number; currency: string }) {
     body: JSON.stringify({ visible: true }),
   })
 
-  //const { wallet, isWalletLoading, walletError } = useWalletByCurreny(currency)
+  // const { depositAdress, isDepositAdressLoading } = useDepositAdress(currency)
 
-  const { depositAdress, isDepositAdressLoading } = useDepositAdress(currency)
-
-  useEffect(() => {
+  /*   useEffect(() => {
     // if (!depositAdress) setGenerateWallet(true)
-  }, [depositAdress])
+  }, [depositAdress]) */
 
-  if (isDepositAdressLoading || isCurrenciesLoading)
+  if (isCurrenciesLoading)
     return (
       <div className="flex justify-center">
         <Loader2 className="w-12 h-12 animate-spin" />
@@ -57,20 +55,13 @@ function Deposit({ currency }: { id: number; currency: string }) {
   } */
 
   return (
-    <div className="flex flex-col space-y-4 justify-center">
-      <User2 className="h-8 w-8 mx-auto" />
-      <p className="text-3xl text-center font-bold">Your {currency} address </p>
-      <p className="text-sm text-slate-400 text-center">
-        You can use this address in order to accept deposits from both external
-        and internal addresses.
-      </p>
-
+    <>
       {foundCurrency.type == "crypto" ? (
-        <DepositCrypto currency={foundCurrency} /* wallet={wallet} */ />
+        <DepositCrypto currency={foundCurrency} />
       ) : (
-        <DepositFiat />
+        <DepositFiat currency={foundCurrency} />
       )}
-    </div>
+    </>
   )
 }
 

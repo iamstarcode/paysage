@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { CurrencyType } from "@/types"
 import { createClient } from "@/utils/supabase/client"
-import { Copy } from "lucide-react"
+import { Copy, User2 } from "lucide-react"
 
 import { Tables } from "@/types/g-supabase"
 import { useWalletByCurreny } from "@/hooks/supabase"
@@ -11,10 +11,8 @@ import { Label } from "../ui/label"
 
 export default function DepositCrypto({
   currency,
-  //wallet,
 }: {
   currency: CurrencyType
-  wallet?: Tables<"wallets"> | null | undefined
 }) {
   const supabase = createClient()
   const [address, setAddress] = useState<string | undefined>()
@@ -65,16 +63,27 @@ export default function DepositCrypto({
 
   return (
     <div>
-      <Label>{`Your ${currency.currency} deposit Address`}</Label>
-      <div className="relative w-full">
-        <Input
-          disabled
-          className="w-full border-[1px] border-gray-300 px-4 py-6"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
-        <div className="absolute inset-y-0 right-0 mr-3  flex items-center  pointer-events-none">
-          <Copy className="" />
+      <div className="flex flex-col space-y-4 justify-center">
+        <User2 className="h-8 w-8 mx-auto" />
+        <p className="text-3xl text-center font-bold">
+          Your {currency.currency} address{" "}
+        </p>
+        <p className="text-sm text-slate-400 text-center">
+          You can use this address in order to accept deposits from both
+          external and internal addresses.
+        </p>
+
+        <Label>{`Your ${currency.currency} deposit Address`}</Label>
+        <div className="relative w-full">
+          <Input
+            disabled
+            className="w-full border-[1px] border-gray-300 px-4 py-6"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <div className="absolute inset-y-0 right-0 mr-3  flex items-center  pointer-events-none">
+            <Copy className="" />
+          </div>
         </div>
       </div>
     </div>
