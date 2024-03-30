@@ -56,7 +56,8 @@ interface Table_public_currencies {
 interface Table_public_deposit_addresses {
   id: number;
   user_id: string;
-  currency: string | null;
+  currency: string;
+  convert_to: string | null;
   address: string | null;
 }
 interface Table_public_fiat_transactions {

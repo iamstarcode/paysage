@@ -79,6 +79,7 @@ type Override = {
       id?: string;
       user_id?: string;
       currency?: string;
+      convert_to?: string;
       address?: string;
       users?: string;
     };

@@ -8,6 +8,7 @@ import { Copy, Loader2, User2 } from "lucide-react"
 import { useCurrencies } from "@/hooks/api"
 import { useDepositAdress, useWalletByCurreny } from "@/hooks/supabase"
 
+import DepositFiat from "../deposit/deposit-crypto"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 
@@ -36,16 +37,15 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
 
   if (currencyError) return <p>An Error Occured</p>
 
-  const currencyAvailable = currencies?.find(
+  const foundCurrency = currencies?.find(
     (item: { currency: string }) => item.currency == currency
   )
 
-  if (!currencyAvailable)
-    return <p>Currently not accepting {currency} deposits</p>
+  if (!foundCurrency) return <p>Currently not accepting {currency} deposits</p>
 
-  //console.log(depositAdress)
+  console.log(foundCurrency)
 
-  //TODO if its fiat, we provide options with deposite using more than ne crypto type
+  //TODO if its fiat, we provide options with deposite using more than one crypto type
   //if cryto, just one address is enough
   //exmple ETH to EUR, BTC to Euro
   async function addresseTake() {
@@ -70,19 +70,11 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
         and internal addresses.
       </p>
 
-      {generateWallet ? (
-        <Button>Generate Wallet</Button>
+      {foundCurrency.type == "crypto" ? (
+        <DepositFiat />
       ) : (
         <div>
-          <div className="relative w-full">
-            <Input
-              disabled
-              className="border-[1px] border-gray-300 px-4 py-6"
-            />
-            <div className="absolute inset-y-0 right-0 mr-3  flex items-center  pointer-events-none">
-              <Copy className="" />
-            </div>
-          </div>
+          <p>in the workss</p>
         </div>
       )}
     </div>
