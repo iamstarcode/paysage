@@ -1,31 +1,26 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { CurrencyType } from "@/types"
-import { createClient } from "@/utils/supabase/client"
-import { Copy, Loader2, User2 } from "lucide-react"
+import { useEffect } from "react"
+import { Loader2, User2 } from "lucide-react"
 
 import { useCurrencies } from "@/hooks/api"
-import { useDepositAdress, useWalletByCurreny } from "@/hooks/supabase"
+import { useDepositAdress } from "@/hooks/supabase"
 
-import DepositFiat from "../deposit/deposit-crypto"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
+import DepositCrypto from "../deposit/deposit-crypto"
+import { DepositFiat } from "../deposit/deposit-fiat"
 
-function Deposit({ id, currency }: { id: number; currency: string }) {
-  const supabase = createClient()
-  const [generateWallet, setGenerateWallet] = useState(false)
+function Deposit({ currency }: { id: number; currency: string }) {
   const { currencies, isCurrenciesLoading, currencyError } = useCurrencies({
     method: "POST",
     body: JSON.stringify({ visible: true }),
   })
+
   //const { wallet, isWalletLoading, walletError } = useWalletByCurreny(currency)
 
-  const { depositAdress, depositAddressError, isDepositAdressLoading } =
-    useDepositAdress(currency)
+  const { depositAdress, isDepositAdressLoading } = useDepositAdress(currency)
 
   useEffect(() => {
-    if (!depositAdress) setGenerateWallet(true)
+    // if (!depositAdress) setGenerateWallet(true)
   }, [depositAdress])
 
   if (isDepositAdressLoading || isCurrenciesLoading)
@@ -71,11 +66,9 @@ function Deposit({ id, currency }: { id: number; currency: string }) {
       </p>
 
       {foundCurrency.type == "crypto" ? (
-        <DepositFiat currency={foundCurrency} /* wallet={wallet} */ />
+        <DepositCrypto currency={foundCurrency} /* wallet={wallet} */ />
       ) : (
-        <div>
-          <p>in the workss</p>
-        </div>
+        <DepositFiat />
       )}
     </div>
   )

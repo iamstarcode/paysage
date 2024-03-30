@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 
 import { Label } from "../ui/label"
 
-export default function DepositFiat({
+export default function DepositCrypto({
   currency,
   //wallet,
 }: {
@@ -19,71 +19,49 @@ export default function DepositFiat({
   const supabase = createClient()
   const [address, setAddress] = useState<string | undefined>()
 
-  const { wallet, isWalletLoading, walletError, mutateWallet } =
-    useWalletByCurreny(currency)
-
-  /*  useEffect(() => {
-    async function generateWallet() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (wallet == null || wallet == undefined) {
-        //we generate address here
-        console.log("we generate")
-        await supabase.from("deposit_addresses").insert({
-          currency: currency.currency!,
-          user_id: user?.id!,
-          address: "generated-address",
-          convert_to: null,
-        })
-      } else {
-        console.log("We have an address")
-        const { data } = await supabase
-          .from("deposit_addresses")
-          .select("address")
-          .eq("user_id", user?.id!)
-          .single()
-        setAddress(data?.address!)
-      }
-    }
-
-    generateWallet()
-  }, [address, currency.currency, supabase, wallet]) */
-
   useEffect(() => {
     async function generateWallet() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
 
-      if (!wallet) {
-        const { data } = await supabase
-          .from("deposit_addresses")
-          .insert({
-            currency: currency.currency!,
-            user_id: user?.id!,
-            address: "generated-address",
-            convert_to: null,
-          })
-          .select("address")
-          .single()
-        setAddress(data?.address!)
-        //await mutateWallet()
+      const { data: depositAddress } = await supabase
+        .from("deposit_addresses")
+        .select("*")
+        .eq("currency", currency.currency)
+        .is("convert_to", null)
+        .single()
+
+      if (depositAddress) {
+        setAddress(depositAddress.address)
+
+        return
       } else {
-        console.log("already have an address")
-        const { data } = await supabase
-          .from("deposit_addresses")
-          .select("address")
-          .eq("user_id", user?.id!)
-          //.eq("convert_to")
-          .single()
-        setAddress(data?.address!)
+        console.log("dont here")
+        const res = await fetch("/api/address-take", {
+          method: "POST",
+          body: JSON.stringify({
+            currency: currency.currency,
+            foreign_id: user?.id,
+          }),
+        })
+
+        const takenAddress = await res.json()
+
+        await supabase.from("deposit_addresses").insert({
+          currency: currency.currency!,
+          user_id: user?.id!,
+          address: takenAddress.data.address,
+          convert_to: null,
+        })
+        setAddress(takenAddress.data.address)
       }
     }
 
     generateWallet()
-  }, [currency.currency, supabase, wallet])
-  if (isWalletLoading) return <p>Generating wallet</p>
+  }, [currency.currency, supabase])
+
+  // if (isWalletLoading) return <p>Generating wallet</p>
 
   return (
     <div>
@@ -93,6 +71,7 @@ export default function DepositFiat({
           disabled
           className="w-full border-[1px] border-gray-300 px-4 py-6"
           value={address}
+          onChange={(e) => setAddress(e.target.value)}
         />
         <div className="absolute inset-y-0 right-0 mr-3  flex items-center  pointer-events-none">
           <Copy className="" />
