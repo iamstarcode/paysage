@@ -12,6 +12,8 @@ type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' 
 type Enum_public_currency_type = 'crypto' | 'fiat';
 type Enum_public_transaction_status = 'confirmed' | 'fialed' | 'processing';
 type Enum_public_transaction_type = 'airtime' | 'crypto' | 'fiat';
+type Enum_realtime_action = 'DELETE' | 'ERROR' | 'INSERT' | 'TRUNCATE' | 'UPDATE';
+type Enum_realtime_equality_op = 'eq' | 'gt' | 'gte' | 'in' | 'lt' | 'lte' | 'neq';
 interface Table_net_http_response {
   id: number | null;
   status_code: number | null;
@@ -41,17 +43,17 @@ interface Table_storage_buckets {
   allowed_mime_types: string[] | null;
   owner_id: string | null;
 }
+interface Table_realtime_channels {
+  id: number;
+  name: string;
+  inserted_at: string;
+  updated_at: string;
+  check: boolean | null;
+}
 interface Table_public_crypto_transactions {
   id: number;
   user_id: string;
   foreign_transaction_id: number;
-}
-interface Table_public_currencies {
-  id: number;
-  currency_name: string;
-  currency_code: string;
-  currency_sign: string;
-  currency_type: Enum_public_currency_type;
 }
 interface Table_public_deposit_addresses {
   id: number;
@@ -219,6 +221,10 @@ interface Table_auth_saml_relay_states {
 interface Table_auth_schema_migrations {
   version: string;
 }
+interface Table_realtime_schema_migrations {
+  version: number;
+  inserted_at: string | null;
+}
 interface Table_vault_secrets {
   id: string;
   name: string | null;
@@ -254,6 +260,34 @@ interface Table_auth_sso_providers {
   resource_id: string | null;
   created_at: string | null;
   updated_at: string | null;
+}
+interface Table_realtime_subscription {
+  id: number;
+  subscription_id: string;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  entity: unknown;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  filters: unknown[];
+  claims: Json;
+  created_at: string;
 }
 interface Table_public_transactions {
   id: number;
@@ -352,7 +386,6 @@ interface Schema_pgsodium_masks {
 }
 interface Schema_public {
   crypto_transactions: Table_public_crypto_transactions;
-  currencies: Table_public_currencies;
   deposit_addresses: Table_public_deposit_addresses;
   fiat_transactions: Table_public_fiat_transactions;
   profiles: Table_public_profiles;
@@ -360,7 +393,9 @@ interface Schema_public {
   wallets: Table_public_wallets;
 }
 interface Schema_realtime {
-
+  channels: Table_realtime_channels;
+  schema_migrations: Table_realtime_schema_migrations;
+  subscription: Table_realtime_subscription;
 }
 interface Schema_storage {
   buckets: Table_storage_buckets;
