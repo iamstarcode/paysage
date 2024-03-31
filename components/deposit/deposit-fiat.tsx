@@ -4,13 +4,16 @@ import React, { useState } from "react"
 import { CurrencyType } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import {
+  AlertCircle,
   Check,
   CheckCheck,
   CheckCheckIcon,
   CheckCircle,
   CheckCircle2,
+  Copy,
 } from "lucide-react"
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -35,6 +38,7 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
 
   const [step, setStep] = useState(1)
   const [address, setAddress] = useState<string | undefined>()
+  const [loading, setIsLoading] = useState(false)
 
   type Option = "BTC" | "ETH" | null
   const [selectedOption, setSelectedOption] = useState<Option>(null)
@@ -60,6 +64,7 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
 
       if (depositAddress) {
         setAddress(depositAddress.address)
+        console.log("addres exist")
         return
       } else {
         const res = await fetch("/api/address-take", {
@@ -79,6 +84,8 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
           address: takenAddress.data.address,
           convert_to: currency.currency!,
         })
+
+        //console.log("generated address")
         setAddress(takenAddress.data.address)
       }
     }
@@ -87,6 +94,7 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
   const handleGoBack = () => {
     setSelectedOption(null) // Reset selected option
     setStep(1) // Go back to the previous step
+    setAddress(undefined)
   }
 
   return (
@@ -99,27 +107,46 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
         <CardContent>
           <p>Choose a crypto currency</p>
           {step === 1 && (
-            <div>
-              <div className="flex flex-col mt-5 space-y-2">
-                <div
-                  onClick={() => handleOptionSelect("BTC")}
-                  className="flex items-center justify-between px-2 py-2 border rounded-lg border-slate-300"
-                >
-                  <div className="inline-flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-black rounded-full"></div>
-                    <h2 className="font-bold">BTC</h2>
-                  </div>
-                  {selectedOption === "BTC" && <CheckCircle2 />}
+            <div className="flex flex-col mt-5 space-y-2">
+              <div
+                onClick={() => handleOptionSelect("BTC")}
+                className="flex items-center justify-between px-2 py-2 border rounded-lg border-slate-300"
+              >
+                <div className="inline-flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-black rounded-full"></div>
+                  <h2 className="font-bold">BTC</h2>
                 </div>
+                {selectedOption === "BTC" && <CheckCircle2 />}
               </div>
             </div>
           )}
 
           {step === 2 && (
-            <div>
-              <h2>Step 2:</h2>
-              <p>You selected: {selectedOption}</p>
-              <p>display selected addres and all</p>
+            <div className="flex flex-col space-y-4">
+              <Alert variant="destructive">
+                <AlertCircle className="w-4 h-4" />
+
+                <AlertDescription>
+                  All the funds received on this address will be automatically
+                  converted into {currency.currency}.
+                </AlertDescription>
+              </Alert>
+              <div className="relative w-full">
+                <Input
+                  disabled
+                  className="w-full border-[1px] border-gray-300 px-4 py-6"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
+                  <Copy className="" />
+                </div>
+              </div>
+
+              <p className="text-sm">
+                Please send only BTC to this address. Sending any other currency
+                may result in the funds lost.
+              </p>
             </div>
           )}
         </CardContent>
@@ -178,5 +205,17 @@ export function CardWithForm() {
         <Button>Deploy</Button>
       </CardFooter>
     </Card>
+  )
+}
+
+export function AlertDestructive() {
+  return (
+    <Alert variant="destructive">
+      <AlertCircle className="w-4 h-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>
+        Your session has expired. Please log in again.
+      </AlertDescription>
+    </Alert>
   )
 }
