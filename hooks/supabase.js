@@ -112,7 +112,7 @@ export const useUser = () => {
   return { user: data.user, isUserLoading, userError }
 }
 
-export const useGetFiatTransfer = (id) => {
+export const useGetFiatTransaction = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase
       .from("transactions")
@@ -122,7 +122,7 @@ export const useGetFiatTransfer = (id) => {
   )
 
   return {
-    fiatTransactions: data,
+    fiatTransaction: data,
     isTransferLoading: isLoading,
     transferError: error,
     mutate,

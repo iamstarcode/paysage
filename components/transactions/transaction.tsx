@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { ArrowDown, ArrowUp, X } from "lucide-react"
 
-import { useCurrencies, useGetFiatTransfer, useUser } from "@/hooks/supabase"
+import { useCurrencies, useGetFiatTransaction, useUser } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 
 export default function Transaction({
@@ -12,12 +12,12 @@ export default function Transaction({
   transaction_id?: number
 }) {
   const router = useRouter()
-  const { transfer } = useGetFiatTransfer(transaction_id!)
+  const { fiatTransaction } = useGetFiatTransaction(transaction_id!)
   //const { data: currencies } = useCurrencies()
   const { user } = useUser()
 
   function debitOrCredit() {
-    if (transfer?.fiat_transfers[0].amount! > 0) {
+    if (fiatTransaction?.fiat_transactions[0].amount! > 0) {
       return 1
       //credit
     }
@@ -25,7 +25,6 @@ export default function Transaction({
     return -1
   }
 
-  console.log(transfer)
   return (
     <div className="flex items-center z-50">
       <div className="mx-4 md:mx-auto bg-gray-100 border rounded-lg border-gray-200 w-full md:max-w-lg md:mt-auto shadow-lg dark:border-gray-800 dark:bg-gray-950">

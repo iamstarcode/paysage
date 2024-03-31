@@ -79,6 +79,32 @@ const profileStore = await seed.profiles((x) => [
   },
 ])
 
+const depositAddressStore = await seed.depositAddresses((x) => [
+  {
+    userId: usersStore.users[0].id,
+    address: "2N8rrDMrcySyhdVkx7UebnGzT45czmNQ3uJ",
+    currency: "BTC",
+    convertTo: "EUR",
+  },
+  {
+    userId: usersStore.users[0].id,
+    address: "0x6D94a9301B042fB5FCaae650171F4C2B101c8d9F",
+    currency: "ETH",
+    convertTo: "EUR",
+  },
+  {
+    userId: usersStore.users[0].id,
+    address: "2N7tjZgyJWMkDZMyx4Ffm4W7igVXSG6DiL8",
+    currency: "BTC",
+    convertTo: null,
+  },
+  {
+    userId: usersStore.users[0].id,
+    address: "0xA64B45063BD8C41538E817E43FEDdf8754B85cDd",
+    currency: "ETH",
+    convertTo: null,
+  },
+])
 /* const walletSrore = await seed.wallets((x) => [
   {
     balance: 5000,

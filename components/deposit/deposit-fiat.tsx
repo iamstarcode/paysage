@@ -70,7 +70,7 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
         const res = await fetch("/api/address-take", {
           method: "POST",
           body: JSON.stringify({
-            currency: currency.currency,
+            currency: selectedOption,
             foreign_id: user?.id,
             convert_to: currency.currency,
           }),
@@ -85,7 +85,7 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
           convert_to: currency.currency!,
         })
 
-        //console.log("generated address")
+        console.log("generated address")
         setAddress(takenAddress.data.address)
       }
     }
@@ -117,6 +117,17 @@ const DepositFiat = ({ currency }: { currency: CurrencyType }) => {
                   <h2 className="font-bold">BTC</h2>
                 </div>
                 {selectedOption === "BTC" && <CheckCircle2 />}
+              </div>
+
+              <div
+                onClick={() => handleOptionSelect("ETH")}
+                className="flex items-center justify-between px-2 py-2 border rounded-lg border-slate-300"
+              >
+                <div className="inline-flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-black rounded-full"></div>
+                  <h2 className="font-bold">ETH</h2>
+                </div>
+                {selectedOption === "ETH" && <CheckCircle2 />}
               </div>
             </div>
           )}
