@@ -4,7 +4,7 @@ const seed = await createSeedClient()
 
 const usersStore = await seed.users((x) => [
   {
-    id: "0f5d546a-dd80-5406-a005-a4f3061b9fb4",
+    id: "200dd8c7-2014-45e6-a13a-8b890e58ae91",
     instanceId: "00000000-0000-0000-0000-000000000000",
     aud: "authenticated",
     role: "authenticated",
@@ -82,29 +82,30 @@ const profileStore = await seed.profiles((x) => [
 const depositAddressStore = await seed.depositAddresses((x) => [
   {
     userId: usersStore.users[0].id,
-    address: "2N8rrDMrcySyhdVkx7UebnGzT45czmNQ3uJ",
+    address: "2NAAfTFfVAkurdT415XXXBNrMruxDtckjyQ",
     currency: "BTC",
     convertTo: "EUR",
   },
   {
     userId: usersStore.users[0].id,
-    address: "0x6D94a9301B042fB5FCaae650171F4C2B101c8d9F",
+    address: "0x8EB254Fe50beF737FdA0F564d58Be8648F66e709",
     currency: "ETH",
     convertTo: "EUR",
   },
   {
     userId: usersStore.users[0].id,
-    address: "2N7tjZgyJWMkDZMyx4Ffm4W7igVXSG6DiL8",
+    address: "2N8bKiCeLhTMp38QYo1VvMKizdx92gMu3r5",
     currency: "BTC",
     convertTo: null,
   },
   {
     userId: usersStore.users[0].id,
-    address: "0xA64B45063BD8C41538E817E43FEDdf8754B85cDd",
+    address: "0x372410adEA242C93007a662006584e04959aA2B9",
     currency: "ETH",
     convertTo: null,
   },
 ])
+
 /* const walletSrore = await seed.wallets((x) => [
   {
     balance: 5000,
