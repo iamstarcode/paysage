@@ -70,6 +70,7 @@ export default async function DashboardLayout({
             {children}
             {deposit}
             {transaction}
+            <Realtime />
           </div>
         </main>
       </div>

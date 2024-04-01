@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { toast } from "@/components/ui/use-toast"
 import { TransactionSkeleton } from "@/components/skeletons/transactions"
 
 export default function Page() {
@@ -54,13 +55,23 @@ export default function Page() {
   //const
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
-  console.log(transactions, "gfgdg")
+  //console.log(transactions, "gfgdg")
   if (transactionsError) <div>An error occured</div>
   if (isCurrenciesLoading) return <TransactionSkeleton />
 
   return (
     <div className="flex flex-col">
       <Link href={`/dashboard/transactions/2`}>View details</Link>
+      <Button
+        onClick={() => {
+          toast({
+            title: "Depositi Transaction",
+            description: <p className="text-2xl">This is a sssis</p>,
+          })
+        }}
+      >
+        Show Toast
+      </Button>
       <Table>
         <TableHeader>
           <TableRow>

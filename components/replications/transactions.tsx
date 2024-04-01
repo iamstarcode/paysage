@@ -5,17 +5,20 @@ import { useEffect, useState } from "react"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/utils/supabase/client"
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
-import { toast } from "sonner"
 
 import { useTransactions } from "@/hooks/supabase"
+import { useToast } from "@/components/ui/use-toast"
 
 function Realtime() {
   const supabase = createClient()
   const [state, setState] = useState({})
   const { mutate } = useTransactions()
+  const { toast } = useToast()
 
   useEffect(() => {
     //console.log(state)
+    //toast({ title: "Notifiactio", description: "We have a descriptyio" })
+    console.log("mounted")
   }, [state])
   const handleUpdates = async (
     payload: RealtimePostgresChangesPayload<any>
@@ -32,13 +35,16 @@ function Realtime() {
       console.log("you the sender")
     }
 
+    console.log(payload.eventType)
     if (payload.eventType == "INSERT") {
-      toast.info("Pending")
+      // toast.info("Pending")
+      toast({ title: "Pending Transaction", description: "something" })
     } else if (payload.eventType == "UPDATE") {
-      toast.success(`${user?.id}`)
+      // toast.success(`${user?.id}`)
     }
 
     mutate()
+    console.log("mutated")
     //revalidatePath("/dashboard/wallet")
   }
   useEffect(() => {

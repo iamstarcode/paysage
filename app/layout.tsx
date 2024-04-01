@@ -1,8 +1,9 @@
 import { GeistSans } from "geist/font/sans"
 
+import { Toaster } from "@/components/ui/toaster"
+
 import "./globals.css"
 
-import { Toaster } from "@/components/ui/sonner"
 import Realtime from "@/components/replications/transactions"
 
 import { Providers } from "./providers"
@@ -29,8 +30,7 @@ export default function RootLayout({
           <main className="min-h-screen flex flex-col items-center">
             {children}
           </main>
-          <Toaster richColors />
-          <Realtime />
+          <Toaster />
         </Providers>
       </body>
     </html>
