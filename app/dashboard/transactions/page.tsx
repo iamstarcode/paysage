@@ -1,12 +1,14 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Transaction } from "@/types"
 import { createClient } from "@/utils/supabase/client"
+import { User } from "@supabase/supabase-js"
 import { LoaderIcon, MoreHorizontal } from "lucide-react"
 
-import { useCurrencies, useTransactions, useUser } from "@/hooks/supabase"
+import { useCurrencies, useTransactions } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -26,6 +28,7 @@ import { TransactionSkeleton } from "@/components/skeletons/transactions"
 
 export default function Page() {
   const router = useRouter()
+  const supabase = createClient()
   const {
     transactions,
     isTranasctionsLoading,
@@ -34,13 +37,26 @@ export default function Page() {
     transactionsError,
   } = useTransactions()
 
-  const { user, isUserLoading } = useUser()
+  const [user, setUser] = useState<User | null>(null)
 
+  useEffect(() => {
+    async function getUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      setUser(user)
+    }
+
+    getUser()
+  }, [supabase])
+
+  //const
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
   console.log(transactions, "gfgdg")
   if (transactionsError) <div>An error occured</div>
-  if (isUserLoading || isCurrenciesLoading) return <TransactionSkeleton />
+  if (isCurrenciesLoading) return <TransactionSkeleton />
 
   return (
     <div className="flex flex-col">

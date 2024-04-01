@@ -108,6 +108,12 @@ CREATE TABLE public.crypto_transactions (
     foreign_transaction_id bigint NOT NULL,
     UNIQUE(foreign_transaction_id)
 );
+alter table public.crypto_transactions enable row level security;
+create policy "Only auth Users can view own crypto txn."
+    on public.crypto_transactions for select
+    to authenticated 
+    using ( auth.uid() = user_id );
+
 
 CREATE TABLE public.fiat_transactions (
     id bigint references transactions NOT NULL,
