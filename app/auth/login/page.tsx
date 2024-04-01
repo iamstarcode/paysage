@@ -47,10 +47,10 @@ export default function Login() {
 
   useEffect(() => {
     handleToast(toast, signInFormState!)
-  }, [signInFormState])
+  }, [signInFormState, toast])
   useEffect(() => {
     handleToast(toast, signUpFormState!)
-  }, [signUpFormState])
+  }, [signUpFormState, toast])
 
   //console.log(getURL(), "ff", process.env.NEXT_PUBLIC_VERCEL_URL)
   return (
