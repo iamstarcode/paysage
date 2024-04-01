@@ -14,11 +14,6 @@ export async function POST(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  /*   console.log(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  ) */
-
   const body = await request.json()
   const signature = headers.get("X-Processing-Signature")
 
@@ -43,21 +38,7 @@ export async function POST(request: Request) {
       //console.log(body, "dcdcdcdcdcdcd")
       return await handeleDeposit(body, supabase)
     }
-
-    /*   if (dummyData.type == "deposit") {
-      //handle deopsit insertion
-      const transaction = await supabase.from("transactions").insert({
-        transaction_type: "CRYPTO",
-        amount: dummyData.currency_sent.amount,
-        currency: dummyData.currency_received.currency,
-        sender_id_id: dummyData.crypto_address.foreign_id,
-        sender_description: `Deposited ${dummyData.currency_received.amount_minus_fee}${dummyData.currency_received.currency}`,
-        status: "PENDING",
-      })
-    } */
   } else {
-    // Signature is invalid, reject the request
-    //console.log(signature, expectedSignature, requestBody)
     return Response.json({ message: "Invalid Signature" }, { status: 403 })
   }
 }
@@ -116,6 +97,13 @@ const handeleDeposit = async (body: any, supabase: SupabaseClient) => {
       crypto_trasaction.transactions?.transaction_status !== "confirmed"
     ) {
       //set it to cionfirmed
+      await supabase
+        .from("transactions")
+        .update({
+          receiver_description: `Confirmed deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
+        })
+        .eq("id", crypto_trasaction.transactions?.id)
+
       await supabase.rpc("upsert_wallet_balance", {
         p_user_id: crypto_trasaction.user_id,
         p_amount: +requestBody.currency_received.amount_minus_fee!,

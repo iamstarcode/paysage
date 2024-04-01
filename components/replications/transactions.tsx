@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react"
 import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
 
@@ -11,36 +12,51 @@ import { useToast } from "@/components/ui/use-toast"
 
 function Realtime() {
   const supabase = createClient()
-  const [state, setState] = useState({})
   const { mutate } = useTransactions()
   const { toast } = useToast()
 
-  useEffect(() => {
-    //console.log(state)
-    //toast({ title: "Notifiactio", description: "We have a descriptyio" })
-    console.log("mounted")
-  }, [state])
   const handleUpdates = async (
     payload: RealtimePostgresChangesPayload<any>
   ) => {
     const {
       data: { user },
     } = await supabase.auth.getUser()
-    //TODO, maybe to handle only to have the notifaction if the user is for this person
-    if (!user) return
 
-    if (payload?.new?.receiver_id! == user?.id) {
-      console.log("you the reciever")
-    } else {
-      console.log("you the sender")
+    //TODO, maybe to handle only to have the notifaction if the user is for this person
+    if (!user) {
+      return redirect("/auth/login")
     }
 
-    console.log(payload.eventType)
+    let message = ""
+    if (payload?.new?.receiver_id! == user?.id) {
+      message = payload.new.receiver_description
+      console.log("you the reciever")
+    } else {
+      message = payload.new.sender_description
+      console.log("you the sender")
+    }
     if (payload.eventType == "INSERT") {
-      // toast.info("Pending")
-      toast({ title: "Pending Transaction", description: "something" })
+      toast({
+        description: (
+          <div className="flex flex-col">
+            <div className="inline-flex items-center">
+              <div className="h-8 w-8 bg-black rounded-full"></div>
+              <p className="ml-4">{message}</p>
+            </div>
+          </div>
+        ),
+      })
     } else if (payload.eventType == "UPDATE") {
-      // toast.success(`${user?.id}`)
+      toast({
+        description: (
+          <div className="flex flex-col">
+            <div className="inline-flex items-center">
+              <div className="h-8 w-8 bg-black rounded-full"></div>
+              <p className="ml-4">{message}</p>
+            </div>
+          </div>
+        ),
+      })
     }
 
     mutate()

@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/client"
 import { User } from "@supabase/supabase-js"
 import { LoaderIcon, MoreHorizontal } from "lucide-react"
 
+import { Tables } from "@/types/g-supabase"
 import { useCurrencies, useTransactions } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 import {
@@ -48,7 +49,6 @@ export default function Page() {
 
       setUser(user)
     }
-
     getUser()
   }, [supabase])
 
@@ -59,19 +59,14 @@ export default function Page() {
   if (transactionsError) <div>An error occured</div>
   if (isCurrenciesLoading) return <TransactionSkeleton />
 
+  const generateDescription = (transaction: Tables<"transactions">) => {
+    return "jijij"
+  }
+
   return (
     <div className="flex flex-col">
       <Link href={`/dashboard/transactions/2`}>View details</Link>
-      <Button
-        onClick={() => {
-          toast({
-            title: "Depositi Transaction",
-            description: <p className="text-2xl">This is a sssis</p>,
-          })
-        }}
-      >
-        Show Toast
-      </Button>
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -84,67 +79,46 @@ export default function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions?.map(
-            ({
-              id,
-              sender_id,
-              receiver_id,
-              amount,
-              currency,
-              transaction_type,
-              sender_description,
-              receiver_description,
-              created_at,
-              transaction_status,
-            }: Transaction) => (
-              <TableRow
-                className="cursor-pointer"
-                key={id}
-                onClick={() => router.push(`/dashboard/transactions/${id}`)}
-              >
-                <TableCell>
-                  {user?.id == sender_id
-                    ? sender_description
-                    : receiver_description}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {transaction_type}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {created_at}
-                </TableCell>
-                <TableCell className="text-right">
-                  {user?.id === sender_id ? "-" : null}
-                  {
-                    currencies?.find((c) => c.id === parseInt(currency!))
-                      ?.currency_sign
-                  }
-                  {amount}
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                  {transaction_status}
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost">
-                        <MoreHorizontal className="w-4 h-4" color="#5c5757" />
+          {transactions?.map((transaction: Transaction) => (
+            <TableRow
+              className="cursor-pointer"
+              key={transaction.id}
+              onClick={() => router.push(`/dashboard/transactions/${id}`)}
+            >
+              <TableCell>{generateDescription(transaction)}</TableCell>
+              <TableCell className="hidden md:table-cell">
+                {transaction.transaction_type}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {transaction.created_at}
+              </TableCell>
+              <TableCell className="text-right">
+                {transaction.amount}
+                {transaction.currency}
+              </TableCell>
+              <TableCell className="hidden sm:table-cell">
+                {transaction.transaction_status}
+              </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="icon" variant="ghost">
+                      <MoreHorizontal className="w-4 h-4" color="#5c5757" />
 
-                        <span className="sr-only">Actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Link href={`/dashboard/transactions/${id}`}>
-                          View details
-                        </Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            )
-          )}
+                      <span className="sr-only">Actions</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Link href={`/dashboard/transactions/${transaction.id}`}>
+                        View details
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       <Button

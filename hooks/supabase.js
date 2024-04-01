@@ -103,15 +103,6 @@ export const useProfileById = (id) => {
   }
 }
 
-/* export const useUser = () => {
-  const {
-    data,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useQuery(supabase.auth.getUser())
-  return { user: data.user, isUserLoading, userError }
-} */
-
 export const useGetFiatTransaction = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase

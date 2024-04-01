@@ -1,14 +1,18 @@
 "use client"
 
+import { title } from "process"
 import * as React from "react"
 import { FormState } from "@/types"
-import { toast } from "sonner"
 
-export const handleToast = (state?: FormState) => {
+import { ToastProps } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
+
+export const handleToast = (toast: any, state?: FormState) => {
   if (!state) return // Handle potential undefined state
 
   if (state.type === "ValidationError" && state.errors?.length! > 0) {
-    toast.error(state.message, {
+    toast({
+      title: state.message,
       description: (
         <>
           {state?.errors!.map((error, i) => (
@@ -20,11 +24,11 @@ export const handleToast = (state?: FormState) => {
       ),
     })
   } else if (state.type === "WarningError") {
-    toast.warning(state.message)
+    toast({ title: state.message })
   } else if (state.type === "Success") {
-    toast.success(state.message)
+    toast({ title: state.message })
   } else if (state.type === "Error") {
-    toast.error(state.message)
+    toast({ title: state.message })
   }
 }
 

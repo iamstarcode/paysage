@@ -27,10 +27,12 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/components/ui/use-toast"
 import { SubmitButton } from "@/components/SubmitButton"
 import { signIn, signUp } from "@/app/auth/actions"
 
 export default function Login() {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     mode: "onBlur",
@@ -44,10 +46,10 @@ export default function Login() {
   const [signUpFormState, signUpAction] = useFormState(signUp, {} as FormState)
 
   useEffect(() => {
-    handleToast(signInFormState!)
+    handleToast(toast, signInFormState!)
   }, [signInFormState])
   useEffect(() => {
-    handleToast(signUpFormState!)
+    handleToast(toast, signUpFormState!)
   }, [signUpFormState])
 
   //console.log(getURL(), "ff", process.env.NEXT_PUBLIC_VERCEL_URL)

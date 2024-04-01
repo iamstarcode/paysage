@@ -67,30 +67,6 @@ export type Database = {
           },
         ]
       }
-      currencies: {
-        Row: {
-          currency_code: string
-          currency_name: string
-          currency_sign: string
-          currency_type: Database["public"]["Enums"]["currency_type"]
-          id: number
-        }
-        Insert: {
-          currency_code: string
-          currency_name: string
-          currency_sign: string
-          currency_type: Database["public"]["Enums"]["currency_type"]
-          id?: number
-        }
-        Update: {
-          currency_code?: string
-          currency_name?: string
-          currency_sign?: string
-          currency_type?: Database["public"]["Enums"]["currency_type"]
-          id?: number
-        }
-        Relationships: []
-      }
       deposit_addresses: {
         Row: {
           address: string
@@ -206,36 +182,36 @@ export type Database = {
       transactions: {
         Row: {
           amount: number | null
+          child_id: number
           created_at: string | null
           currency: string | null
           id: number
-          receiver_description: string | null
+          name: string | null
           receiver_id: string | null
-          sender_description: string | null
           sender_id: string | null
           transaction_status: Database["public"]["Enums"]["transaction_status"]
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Insert: {
           amount?: number | null
+          child_id: number
           created_at?: string | null
           currency?: string | null
           id?: number
-          receiver_description?: string | null
+          name?: string | null
           receiver_id?: string | null
-          sender_description?: string | null
           sender_id?: string | null
           transaction_status: Database["public"]["Enums"]["transaction_status"]
           transaction_type: Database["public"]["Enums"]["transaction_type"]
         }
         Update: {
           amount?: number | null
+          child_id?: number
           created_at?: string | null
           currency?: string | null
           id?: number
-          receiver_description?: string | null
+          name?: string | null
           receiver_id?: string | null
-          sender_description?: string | null
           sender_id?: string | null
           transaction_status?: Database["public"]["Enums"]["transaction_status"]
           transaction_type?: Database["public"]["Enums"]["transaction_type"]

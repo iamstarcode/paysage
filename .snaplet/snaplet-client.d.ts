@@ -53,16 +53,6 @@ type Override = {
       objects?: string;
     };
   }
-  channels?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      name?: string;
-      inserted_at?: string;
-      updated_at?: string;
-      check?: string;
-    };
-  }
   crypto_transactions?: {
     name?: string;
     fields?: {
@@ -310,17 +300,10 @@ type Override = {
       sso_providers?: string;
     };
   }
-  auth_schema_migrations?: {
+  schema_migrations?: {
     name?: string;
     fields?: {
       version?: string;
-    };
-  }
-  realtime_schema_migrations?: {
-    name?: string;
-    fields?: {
-      version?: string;
-      inserted_at?: string;
     };
   }
   secrets?: {
@@ -379,30 +362,18 @@ type Override = {
       sso_domains?: string;
     };
   }
-  subscription?: {
-    name?: string;
-    fields?: {
-      id?: string;
-      subscription_id?: string;
-      entity?: string;
-      filters?: string;
-      claims?: string;
-      claims_role?: string;
-      created_at?: string;
-    };
-  }
   transactions?: {
     name?: string;
     fields?: {
       id?: string;
-      transaction_type?: string;
-      created_at?: string;
-      amount?: string;
+      child_id?: string;
       sender_id?: string;
       receiver_id?: string;
+      amount?: string;
       currency?: string;
-      sender_description?: string;
-      receiver_description?: string;
+      name?: string;
+      created_at?: string;
+      transaction_type?: string;
       transaction_status?: string;
       users_transactions_receiver_idTousers?: string;
       users_transactions_sender_idTousers?: string;
@@ -508,11 +479,6 @@ export interface Fingerprint {
     fileSizeLimit?: FingerprintNumberField;
     objects?: FingerprintRelationField;
   }
-  channels?: {
-    id?: FingerprintNumberField;
-    insertedAt?: FingerprintDateField;
-    updatedAt?: FingerprintDateField;
-  }
   cryptoTransactions?: {
     id?: FingerprintNumberField;
     foreignTransactionId?: FingerprintNumberField;
@@ -615,12 +581,8 @@ export interface Fingerprint {
     flowState?: FingerprintRelationField;
     ssoProvider?: FingerprintRelationField;
   }
-  authSchemaMigrations?: {
+  schemaMigrations?: {
 
-  }
-  realtimeSchemaMigrations?: {
-    version?: FingerprintNumberField;
-    insertedAt?: FingerprintDateField;
   }
   secrets?: {
     createdAt?: FingerprintDateField;
@@ -648,15 +610,11 @@ export interface Fingerprint {
     samlRelayStates?: FingerprintRelationField;
     ssoDomains?: FingerprintRelationField;
   }
-  subscriptions?: {
-    id?: FingerprintNumberField;
-    claims?: FingerprintJsonField;
-    createdAt?: FingerprintDateField;
-  }
   transactions?: {
     id?: FingerprintNumberField;
-    createdAt?: FingerprintDateField;
+    childId?: FingerprintNumberField;
     amount?: FingerprintNumberField;
+    createdAt?: FingerprintDateField;
     receiver?: FingerprintRelationField;
     sender?: FingerprintRelationField;
     cryptoTransactions?: FingerprintRelationField;

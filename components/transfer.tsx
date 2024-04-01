@@ -37,6 +37,8 @@ import {
 import { SubmitButton } from "@/components/SubmitButton"
 import { transferFromWallet } from "@/app/dashboard/wallet/actions"
 
+import { useToast } from "./ui/use-toast"
+
 const initialState: FormState = {
   message: "",
   errors: [],
@@ -44,6 +46,7 @@ const initialState: FormState = {
 export default function Transfer() {
   //const [wallets, setWallet] = useState<BalanceWithCurrency | null>()
 
+  const { toast } = useToast()
   const [currencies, setCurrencies] = useState<CurrencyType[] | null>()
   const { wallets, mutateWallets } = useWallets()
 
@@ -88,7 +91,7 @@ export default function Transfer() {
       form.reset()
       //window.location.reload()
     }
-    handleToast(state!)
+    handleToast(toast, state!)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
