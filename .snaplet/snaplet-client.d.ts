@@ -366,7 +366,6 @@ type Override = {
     name?: string;
     fields?: {
       id?: string;
-      child_id?: string;
       sender_id?: string;
       receiver_id?: string;
       amount?: string;
@@ -612,7 +611,6 @@ export interface Fingerprint {
   }
   transactions?: {
     id?: FingerprintNumberField;
-    childId?: FingerprintNumberField;
     amount?: FingerprintNumberField;
     createdAt?: FingerprintDateField;
     receiver?: FingerprintRelationField;

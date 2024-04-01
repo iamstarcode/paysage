@@ -182,7 +182,6 @@ export type Database = {
       transactions: {
         Row: {
           amount: number | null
-          child_id: number
           created_at: string | null
           currency: string | null
           id: number
@@ -194,7 +193,6 @@ export type Database = {
         }
         Insert: {
           amount?: number | null
-          child_id: number
           created_at?: string | null
           currency?: string | null
           id?: number
@@ -206,7 +204,6 @@ export type Database = {
         }
         Update: {
           amount?: number | null
-          child_id?: number
           created_at?: string | null
           currency?: string | null
           id?: number

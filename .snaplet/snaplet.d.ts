@@ -250,7 +250,6 @@ interface Table_auth_sso_providers {
 }
 interface Table_public_transactions {
   id: number;
-  child_id: number;
   sender_id: string | null;
   receiver_id: string | null;
   amount: number | null;

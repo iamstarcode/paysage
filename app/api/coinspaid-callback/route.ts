@@ -67,11 +67,15 @@ const handeleDeposit = async (body: any, supabase: SupabaseClient) => {
         amount: +requestBody.currency_sent.amount,
         currency: requestBody.currency_received.currency,
         receiver_id: requestBody.crypto_address.foreign_id,
-        receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
+        //receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
         transaction_status: "processing",
       })
       .select()
       .single()
+
+    if (error) {
+      console.log(error)
+    }
 
     if (transaction?.id) {
       await supabase.from("crypto_transactions").insert({
