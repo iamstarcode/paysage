@@ -25,8 +25,6 @@ export default function Transaction({
 
   const supabase = createClient()
 
-  //console.log(transaction)
-
   /*   useEffect(() => {
     async function test() {
       const { data } = await supabase
@@ -124,7 +122,27 @@ function CrptionTransaction({ id }: { id: number }) {
   const { cryptoTransaction, isCryptoTransactionLoading } =
     useCryptoTransaction(id)
 
-  //console.log(cryptoTransaction, "ddddd")
+  const [txn, setTxn] = useState({})
+
+  useEffect(() => {
+    async function getTxn() {
+      const res = await fetch(`/api/transaction-info`, {
+        method: "POST",
+        body: JSON.stringify({
+          //id: cryptoTransaction?.crypto_transactions?.foreign_transaction_id!,
+          id: "131001223",
+        }),
+      })
+
+      const data = await res.json()
+      console.log(data, "wskwksmwkmk")
+      //setTxn(data)
+    }
+
+    getTxn()
+  }, [cryptoTransaction?.crypto_transactions?.foreign_transaction_id])
+  console.log(txn, "ddddd")
+
   function debitOrCredit() {}
   return (
     <div>

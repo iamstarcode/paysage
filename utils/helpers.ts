@@ -83,4 +83,46 @@ export const getURL = () => {
   return url
 }
 
-export function apiPost(req: Request, urlSegment: string) {}
+export async function apiRouteHandler({
+  req,
+  urlSegment,
+  method,
+}: {
+  req: Request
+  urlSegment: string
+  method: string
+}) {
+  const data = await req.json()
+
+  //const requestBody = JSON.stringify(data)
+  const apiURL =
+    process.env.NODE_ENV == "development"
+      ? process.env.COINPAID_DEV_URL
+      : process.env.COINPAID_URL
+
+  /*   const res = await fetch(`${apiURL}${urlSegment}`, {
+    method,
+    body: requestBody,
+    headers: {
+      "Content-Type": "application/json",
+      "X-Processing-Key": process.env.COINPAID_KEY!,
+      "X-Processing-Signature": generateSignature(
+        requestBody,
+        process.env.COINPAID_SECRET_KEY!
+      ),
+    },
+  })
+
+  const json = await res.json()
+  if (res.ok) {
+    return Response.json(json)
+  } else {
+    console.log(json)
+    return Response.json(
+      { message: "An unknown error occured", json },
+      { status: 400 }
+    )
+  } */
+
+  return Response.json({ message: "An unknown error occured" }, { status: 400 })
+}

@@ -239,6 +239,24 @@ const TransactionBody = ({
     }
   }
 
+  useEffect(() => {
+    async function getTxn() {
+      const res = await fetch(`/api/transaction-info`, {
+        method: "POST",
+        body: JSON.stringify({
+          //id: cryptoTransaction?.crypto_transactions?.foreign_transaction_id!,
+          id: "131001223",
+        }),
+      })
+
+      const data = await res.json()
+      console.log(data, "wskwksmwkmk")
+      //setTxn(data)
+    }
+
+    getTxn()
+  }, [])
+
   return (
     <TableRow
       className="cursor-pointer"
