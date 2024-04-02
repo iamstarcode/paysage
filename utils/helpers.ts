@@ -82,3 +82,5 @@ export const getURL = () => {
   url = url.charAt(url.length - 1) === "/" ? url : `${url}/`
   return url
 }
+
+export function apiPost(urlSegment: string) {}

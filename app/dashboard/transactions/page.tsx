@@ -233,11 +233,21 @@ const TransactionBody = ({
     }
   }
 
+  function generateParams(transaction: Tables<"transactions">) {
+    if (transaction.transaction_type.startsWith("crypto")) {
+      return `?type=crypto_transactions`
+    }
+  }
+
   return (
     <TableRow
       className="cursor-pointer"
       key={transaction.id}
-      onClick={() => router.push(`/dashboard/transactions/${transaction.id}`)}
+      onClick={() =>
+        router.push(
+          `/dashboard/transactions/${transaction.id}${generateParams(transaction)}`
+        )
+      }
     >
       <TableCell>{generateDescription(transaction)}</TableCell>
       <TableCell className="hidden md:table-cell">

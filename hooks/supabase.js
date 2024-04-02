@@ -103,6 +103,29 @@ export const useProfileById = (id) => {
   }
 }
 
+export const useTransaction = (id, table) => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabase
+      .from("transactions")
+      .select(`*, ${table}!inner(*)`)
+      .eq("id", id)
+      .single()
+  )
+
+  return { transaction: data, isTranasctionLoading: isLoading }
+}
+
+export const useCryptoTransaction = (id) => {
+  const { data, isLoading, error, mutate } = useQuery(
+    supabase
+      .from("transactions")
+      .select(`*, crypto_transactions!inner(*)`)
+      .eq("id", id)
+      .single()
+  )
+
+  return { cryptoTransaction: data, isCryptoTransactionLoading: isLoading }
+}
 export const useGetFiatTransaction = (id) => {
   const { data, isLoading, error, mutate } = useQuery(
     supabase
