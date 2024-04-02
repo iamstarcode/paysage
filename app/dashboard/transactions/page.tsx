@@ -60,7 +60,9 @@ export default function Page() {
   if (isCurrenciesLoading) return <TransactionSkeleton />
 
   const generateDescription = (transaction: Tables<"transactions">) => {
-    return "jijij"
+    if(transaction.transaction_type == "crypto"){
+      if()
+    }
   }
 
   return (

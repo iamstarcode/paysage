@@ -184,6 +184,7 @@ export type Database = {
           amount: number | null
           created_at: string | null
           currency: string | null
+          form: string | null
           id: number
           name: string | null
           receiver_id: string | null
@@ -195,6 +196,7 @@ export type Database = {
           amount?: number | null
           created_at?: string | null
           currency?: string | null
+          form?: string | null
           id?: number
           name?: string | null
           receiver_id?: string | null
@@ -206,6 +208,7 @@ export type Database = {
           amount?: number | null
           created_at?: string | null
           currency?: string | null
+          form?: string | null
           id?: number
           name?: string | null
           receiver_id?: string | null

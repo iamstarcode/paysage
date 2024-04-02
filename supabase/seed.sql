@@ -69,7 +69,7 @@ create policy "Users can update their own deposit address.."
 CREATE TYPE transaction_type AS ENUM (
   'fiat',
   'airtime',
-  'crypto'
+  'crypto-deposit'
 );
 CREATE TYPE transaction_status AS ENUM (
   'processing',
@@ -83,7 +83,7 @@ CREATE TABLE public.transactions (
     receiver_id uuid references auth.users,
     amount DECIMAL(18, 6),
     currency VARCHAR(10),
-    name VARCHAR(255),
+    name VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_type transaction_type NOT NULL,
     transaction_status transaction_status NOT NULL
