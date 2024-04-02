@@ -43,7 +43,10 @@ export async function POST(request: Request) {
   }
 }
 
-const handeleDeposit = async (body: any, supabase: SupabaseClient) => {
+const handeleDeposit = async (
+  body: any,
+  supabase: SupabaseClient<Database>
+) => {
   //We first of all check if we have that foreign transcation id our the database
   //And inner join on parent transaction row
   const requestBody: CallbackData = body
@@ -63,7 +66,7 @@ const handeleDeposit = async (body: any, supabase: SupabaseClient) => {
     const { data: transaction, error } = await supabase
       .from("transactions")
       .insert({
-        transaction_type: "crypto",
+        transaction_type: "crypto-deposit",
         amount: +requestBody.currency_sent.amount,
         currency: requestBody.currency_received.currency,
         receiver_id: requestBody.crypto_address.foreign_id,
@@ -100,20 +103,13 @@ const handeleDeposit = async (body: any, supabase: SupabaseClient) => {
       requestBody.status == "confirmed" &&
       crypto_trasaction.transactions?.transaction_status !== "confirmed"
     ) {
-      //set it to cionfirmed
-      await supabase
-        .from("transactions")
-        .update({
-          receiver_description: `Confirmed deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
-        })
-        .eq("id", crypto_trasaction.transactions?.id)
-
       await supabase.rpc("upsert_wallet_balance", {
         p_user_id: crypto_trasaction.user_id,
         p_amount: +requestBody.currency_received.amount_minus_fee!,
         p_currency: crypto_trasaction.transactions?.currency!,
       })
 
+      //Maybe to send a mail or something
       //and if it failed nko, handle too
     }
   }

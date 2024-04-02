@@ -184,7 +184,6 @@ export type Database = {
           amount: number | null
           created_at: string | null
           currency: string | null
-          form: string | null
           id: number
           name: string | null
           receiver_id: string | null
@@ -196,7 +195,6 @@ export type Database = {
           amount?: number | null
           created_at?: string | null
           currency?: string | null
-          form?: string | null
           id?: number
           name?: string | null
           receiver_id?: string | null
@@ -208,7 +206,6 @@ export type Database = {
           amount?: number | null
           created_at?: string | null
           currency?: string | null
-          form?: string | null
           id?: number
           name?: string | null
           receiver_id?: string | null
@@ -288,7 +285,7 @@ export type Database = {
     Enums: {
       currency_type: "crypto" | "fiat"
       transaction_status: "processing" | "confirmed" | "fialed"
-      transaction_type: "fiat" | "airtime" | "crypto"
+      transaction_type: "fiat" | "airtime" | "crypto-deposit"
     }
     CompositeTypes: {
       [_ in never]: never
