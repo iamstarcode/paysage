@@ -9,7 +9,11 @@ import { User } from "@supabase/supabase-js"
 import { LoaderIcon, MoreHorizontal } from "lucide-react"
 
 import { Tables } from "@/types/g-supabase"
-import { useCurrencies, useTransactions } from "@/hooks/supabase"
+import {
+  useCurrencies,
+  useProfileById,
+  useTransactions,
+} from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -60,8 +64,13 @@ export default function Page() {
   if (isCurrenciesLoading) return <TransactionSkeleton />
 
   const generateDescription = (transaction: Tables<"transactions">) => {
-    if(transaction.transaction_type == "crypto"){
-      if()
+    if (transaction.transaction_type == "crypto-deposit") {
+      if (transaction.transaction_status == "processing") {
+        return `Processing deposit of ${transaction.amount}${transaction.currency}`
+      }
+      if (transaction.transaction_status == "confirmed") {
+        return `Confirmed deposit of ${transaction.amount}${transaction.currency}`
+      }
     }
   }
 
@@ -81,11 +90,16 @@ export default function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions?.map((transaction: Transaction) => (
+          {transactions?.map((transaction: Transaction, i) => (
+            <TransactionBody key={i} user={user} transaction={transaction} />
+          ))}
+          {/*    {transactions?.map((transaction: Transaction) => (
             <TableRow
               className="cursor-pointer"
               key={transaction.id}
-              onClick={() => router.push(`/dashboard/transactions/${id}`)}
+              onClick={() =>
+                router.push(`/dashboard/transactions/${transaction.id}`)
+              }
             >
               <TableCell>{generateDescription(transaction)}</TableCell>
               <TableCell className="hidden md:table-cell">
@@ -120,7 +134,7 @@ export default function Page() {
                 </DropdownMenu>
               </TableCell>
             </TableRow>
-          ))}
+          ))} */}
         </TableBody>
       </Table>
       <Button
@@ -138,5 +152,125 @@ export default function Page() {
             : "Load More"}
       </Button>
     </div>
+  )
+}
+
+const TransactionBody = ({
+  user,
+  transaction,
+}: {
+  user: User | null
+  transaction: Tables<"transactions">
+}) => {
+  const router = useRouter()
+  const supabase = createClient()
+  const id = ""
+
+  const [senderName, setSenderName] = useState("")
+  const [receiverName, setReceiverName] = useState("")
+
+  useEffect(() => {
+    async function fetchSenderName() {
+      if (transaction.sender_id) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("first_name,last_name")
+          .eq("id", transaction.sender_id)
+          .single()
+
+        if (error) {
+          console.error("Error fetching sender name:", error.message)
+          return
+        }
+        console.log(data, "ssss")
+
+        if (data) {
+          setSenderName(`${data.first_name} ${data.last_name}`)
+        }
+      }
+    }
+
+    async function fetchReceiverName() {
+      if (transaction.receiver_id) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("first_name,last_name")
+          .eq("id", transaction.receiver_id)
+          .single()
+
+        if (error) {
+          console.error("Error fetching sender name:", error.message)
+          return
+        }
+
+        if (data) {
+          setReceiverName(`${data.first_name} ${data.last_name}`)
+        }
+      }
+    }
+
+    fetchSenderName()
+    fetchReceiverName()
+  }, [transaction.sender_id, transaction.receiver_id, supabase])
+
+  if (transaction.sender_id && transaction.receiver_id) {
+  }
+
+  const generateDescription = (transaction: Tables<"transactions">) => {
+    if (!transaction.sender_id || !transaction.receiver_id) {
+      //one party transaction
+      if (transaction.transaction_type == "crypto-deposit") {
+        if (transaction.transaction_status == "processing") {
+          return `Processing deposit of ${transaction.amount}${transaction.currency}`
+        }
+        if (transaction.transaction_status == "confirmed") {
+          return `Confirmed deposit of ${transaction.amount}${transaction.currency}`
+        }
+      }
+    } else {
+      //two party
+      return `${senderName} ${receiverName}`
+    }
+  }
+
+  return (
+    <TableRow
+      className="cursor-pointer"
+      key={transaction.id}
+      onClick={() => router.push(`/dashboard/transactions/${transaction.id}`)}
+    >
+      <TableCell>{generateDescription(transaction)}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {transaction.transaction_type}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {transaction.created_at}
+      </TableCell>
+      <TableCell className="text-right">
+        {transaction.amount}
+        {transaction.currency}
+      </TableCell>
+      <TableCell className="hidden sm:table-cell">
+        {transaction.transaction_status}
+      </TableCell>
+      <TableCell className="text-right">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="ghost">
+              <MoreHorizontal className="w-4 h-4" color="#5c5757" />
+
+              <span className="sr-only">Actions</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              <Link href={`/dashboard/transactions/${transaction.id}`}>
+                View details
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
   )
 }
