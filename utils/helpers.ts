@@ -83,4 +83,4 @@ export const getURL = () => {
   return url
 }
 
-export function apiPost(urlSegment: string) {}
+export function apiPost(req: Request, urlSegment: string) {}
