@@ -4,6 +4,8 @@ import { ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { X } from "lucide-react"
 
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 function RouteModal({
   children,
   title,

@@ -126,3 +126,16 @@ export async function apiRouteHandler({
 
   return Response.json({ message: "An unknown error occured" }, { status: 400 })
 }
+
+export function shortenAddress(
+  address: string,
+  prefixLength: number = 4,
+  suffixLength: number = 3
+): string {
+  if (address.length < prefixLength + suffixLength + 2) {
+    return address
+  }
+  const prefix: string = address.substring(0, prefixLength + 2)
+  const suffix: string = address.substring(address.length - suffixLength)
+  return `${prefix}...${suffix}`
+}

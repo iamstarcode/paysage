@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react"
+import { CryptoDepositType } from "@/types"
+import { shortenAddress } from "@/utils/helpers"
+import { Copy } from "lucide-react"
 
 import { useCryptoTransaction } from "@/hooks/supabase"
 
@@ -10,12 +13,13 @@ import {
   CardTitle,
 } from "../ui/card"
 import DebitCredit from "./debit-credit"
+import KeyValuePair from "./key-value-pair"
 
 export default function CrptionTransaction({ id }: { id: number }) {
   const { cryptoTransaction, isCryptoTransactionLoading } =
     useCryptoTransaction(id)
 
-  const [txn, setTxn] = useState({})
+  const [txn, setTxn] = useState<CryptoDepositType | null>()
 
   useEffect(() => {
     async function getTxn() {
@@ -28,38 +32,85 @@ export default function CrptionTransaction({ id }: { id: number }) {
       })
 
       const data = await res.json()
-      console.log(data, "wskwksmwkmk")
+      //console.log(data, "wskwksmwkmk")
       setTxn(data)
     }
 
     getTxn()
   }, [cryptoTransaction?.crypto_transactions?.foreign_transaction_id])
-  console.log(txn, "ddddd")
+  console.log(txn!, "ddddd")
 
+  if (isCryptoTransactionLoading) return
   return (
-    <div>
-      <DebitCredit
-        amount={cryptoTransaction?.amount!}
-        currecny={cryptoTransaction?.currency!}
-      />
-      <Card>
-        <CardHeader>
-          <CardTitle>Account</CardTitle>
-          <CardDescription>Your account details</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div>Address</div>
-            <div className="text-right">0x4be...a5f</div>
-            <div>Balance</div>
-            <div className="text-right">12.3456 ETH</div>
-            <div>Transactions</div>
-            <div className="text-right">5</div>
-            <div>Nonce</div>
-            <div className="text-right">2</div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      {txn && (
+        <div className="grid gap-1 md:gap-2">
+          <DebitCredit
+            amount={cryptoTransaction?.amount!}
+            currecny={cryptoTransaction?.currency!}
+          />
+          <Card>
+            <CardHeader>
+              <CardDescription>Crypto Address</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-2 text-md">
+                <div className="flex items-center">
+                  <div className="font-medium">Address</div>
+                  <div className="ml-auto inline-flex items-center text-gray-500 dark:text-gray-400">
+                    <h2 className="mr-2">
+                      {shortenAddress(txn?.crypto_address.address!)}
+                    </h2>
+                    <Copy className="w-4 h-4" />
+                  </div>
+                </div>
+                <KeyValuePair
+                  kee="Currency"
+                  value={txn.crypto_address.currency!}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardDescription>Currency Recieved</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-2 text-md">
+                <KeyValuePair
+                  kee="Amount"
+                  value={txn.currency_received.amount!}
+                />
+                <KeyValuePair
+                  kee="Amount Minus Fee"
+                  value={txn.currency_received.amount_minus_fee!}
+                />
+                <KeyValuePair
+                  kee="Currency"
+                  value={txn.currency_received.currency!}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardDescription>Currency Sent</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-2 text-md">
+                <KeyValuePair kee="Amount" value={txn.currency_sent.amount!} />
+
+                <KeyValuePair
+                  kee="Currency"
+                  value={txn.currency_sent.currency!}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </>
   )
 }

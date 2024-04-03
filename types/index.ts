@@ -6,7 +6,7 @@ export type FormState = {
   type?: "ValidationError" | "WarningError" | "Error" | "Success"
 }
 
-export type Transaction = Tables<"transactions">
+//export type Transaction = Tables<"transactions">
 
 export type CurrencyType = {
   currency: string
@@ -61,4 +61,49 @@ export type CallbackData = {
   fees: CallbckFee[]
   error: string
   status: "processing" | "confirmed" | "fialed" | undefined
+}
+
+type CryptoAddress = {
+  id: number
+  currency: string
+  address: string
+  tag: string | null
+  foreign_id: string
+}
+
+type Currency = {
+  currency: string
+  amount: string
+  amount_minus_fee?: string // Optional field
+}
+
+type Transaction = {
+  id: number
+  currency: string
+  transaction_type: string
+  type: string
+  address: string
+  tag: string | null
+  amount: string
+  txid: string
+  riskscore: number | null
+  confirmations: string
+}
+
+type Fee = {
+  type: string
+  currency: string
+  amount: string
+}
+
+export type CryptoDepositType = {
+  id: number
+  type: string
+  crypto_address: CryptoAddress
+  currency_sent: Currency
+  currency_received: Currency
+  transactions: Transaction[]
+  fees: Fee[]
+  error: string
+  status: string
 }

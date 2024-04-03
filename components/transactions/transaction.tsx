@@ -73,6 +73,8 @@ export default function Transaction({
   /* if (searchParams.type == "crypto_transactions") {
     if(transaction.)
   } */
+  if (searchParams.type == "crypto_transactions")
+    return <CrptionTransaction id={transaction_id!} />
   return (
     <div className="grid gap-4">
       {/* Debit Or Credit */}
@@ -124,15 +126,6 @@ export default function Transaction({
         </div>
       </div>
       <Button>Raise A Dispute</Button>
-    </div>
-  )
-}
-
-function KeyValuePair({ key, value }: { key: any; value: any }) {
-  return (
-    <div className="flex items-center">
-      <div className="font-medium">{key}</div>
-      <div className="ml-auto text-gray-500 dark:text-gray-400">{value}</div>
     </div>
   )
 }
