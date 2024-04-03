@@ -4,7 +4,6 @@ CREATE TABLE public.profiles (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     username VARCHAR(50),
-
     primary key (id)
 );
 -- CREATE INDEX idx_profile_user_id ON public.profiles(user_id);

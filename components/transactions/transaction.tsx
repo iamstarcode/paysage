@@ -9,6 +9,15 @@ import { ArrowDown, ArrowUp } from "lucide-react"
 import { useCryptoTransaction, useTransaction } from "@/hooks/supabase"
 import { Button } from "@/components/ui/button"
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card"
+import CrptionTransaction from "./crypto-transaction"
+
 export default function Transaction({
   transaction_id,
   searchParams,
@@ -65,7 +74,7 @@ export default function Transaction({
     if(transaction.)
   } */
   return (
-    <div className="grid gap-4 p-6">
+    <div className="grid gap-4">
       {/* Debit Or Credit */}
       <CrptionTransaction id={transaction_id!} />
       <div className="grid gap-1.5 text-sm">
@@ -87,6 +96,7 @@ export default function Transaction({
               </span> */}
         </div>
       </div>
+
       <div className="grid gap-2 text-sm">
         <div className="flex items-center">
           <div className="font-medium">Sender</div>
@@ -118,77 +128,11 @@ export default function Transaction({
   )
 }
 
-function CrptionTransaction({ id }: { id: number }) {
-  const { cryptoTransaction, isCryptoTransactionLoading } =
-    useCryptoTransaction(id)
-
-  const [txn, setTxn] = useState({})
-
-  useEffect(() => {
-    async function getTxn() {
-      const res = await fetch(`/api/transaction-info`, {
-        method: "POST",
-        body: JSON.stringify({
-          //id: cryptoTransaction?.crypto_transactions?.foreign_transaction_id!,
-          id: "131001223",
-        }),
-      })
-
-      const data = await res.json()
-      console.log(data, "wskwksmwkmk")
-      //setTxn(data)
-    }
-
-    getTxn()
-  }, [cryptoTransaction?.crypto_transactions?.foreign_transaction_id])
-  console.log(txn, "ddddd")
-
-  function debitOrCredit() {}
-  return (
-    <div>
-      <DebitCredit
-        amount={cryptoTransaction?.amount!}
-        currecny={cryptoTransaction?.currency!}
-      />
-    </div>
-  )
-}
-
 function KeyValuePair({ key, value }: { key: any; value: any }) {
   return (
     <div className="flex items-center">
       <div className="font-medium">{key}</div>
       <div className="ml-auto text-gray-500 dark:text-gray-400">{value}</div>
-    </div>
-  )
-}
-
-function DebitCredit({
-  amount,
-  currecny,
-}: {
-  amount: number
-  currecny: string
-}) {
-  // console.log(amount, "amm")
-  return (
-    <div className="grid gap-1.5 text-sm">
-      <div className="flex items-center gap-1.5">
-        {amount > 0 ? (
-          <ArrowUp className="h-4 w-4 text-green-500" />
-        ) : (
-          <ArrowDown className="h-4 w-4 text-red-500" />
-        )}
-
-        {
-          <span className="font-medium">
-            {amount > 0 ? "+" : "-"}
-
-            {amount}
-            {currecny}
-          </span>
-        }
-      </div>
     </div>
   )
 }

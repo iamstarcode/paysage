@@ -47,6 +47,7 @@ const handeleDeposit = async (
   body: any,
   supabase: SupabaseClient<Database>
 ) => {
+  //TODO, check if wè have ID befor running this.
   //We first of all check if we have that foreign transcation id our the database
   //And inner join on parent transaction row
   const requestBody: CallbackData = body
