@@ -212,6 +212,11 @@ interface Table_auth_saml_relay_states {
 interface Table_auth_schema_migrations {
   version: string;
 }
+interface Table_supabase_migrations_schema_migrations {
+  version: string;
+  statements: string[] | null;
+  name: string | null;
+}
 interface Table_vault_secrets {
   id: string;
   name: string | null;
@@ -362,6 +367,9 @@ interface Schema_supabase_functions {
   hooks: Table_supabase_functions_hooks;
   migrations: Table_supabase_functions_migrations;
 }
+interface Schema_supabase_migrations {
+  schema_migrations: Table_supabase_migrations_schema_migrations;
+}
 interface Schema_vault {
   secrets: Table_vault_secrets;
 }
@@ -379,6 +387,7 @@ interface Database {
   realtime: Schema_realtime;
   storage: Schema_storage;
   supabase_functions: Schema_supabase_functions;
+  supabase_migrations: Schema_supabase_migrations;
   vault: Schema_vault;
 }
 interface Extension {

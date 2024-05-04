@@ -300,10 +300,18 @@ type Override = {
       sso_providers?: string;
     };
   }
-  schema_migrations?: {
+  auth_schema_migrations?: {
     name?: string;
     fields?: {
       version?: string;
+    };
+  }
+  supabase_migrations_schema_migrations?: {
+    name?: string;
+    fields?: {
+      version?: string;
+      statements?: string;
+      name?: string;
     };
   }
   secrets?: {
@@ -580,7 +588,10 @@ export interface Fingerprint {
     flowState?: FingerprintRelationField;
     ssoProvider?: FingerprintRelationField;
   }
-  schemaMigrations?: {
+  authSchemaMigrations?: {
+
+  }
+  supabaseMigrationsSchemaMigrations?: {
 
   }
   secrets?: {
