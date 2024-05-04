@@ -21,9 +21,9 @@ export async function POST(req: Request) {
       ),
     },
   })
-  const currencies = await res.json()
 
   if (res.ok) {
+    const currencies = await res.json()
     return Response.json({ ...currencies })
   }
 
