@@ -10,7 +10,7 @@ type Enum_net_request_status = 'ERROR' | 'PENDING' | 'SUCCESS';
 type Enum_pgsodium_key_status = 'default' | 'expired' | 'invalid' | 'valid';
 type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' | 'hmacsha256' | 'hmacsha512' | 'kdf' | 'secretbox' | 'secretstream' | 'shorthash' | 'stream_xchacha20';
 type Enum_public_currency_type = 'crypto' | 'fiat';
-type Enum_public_transaction_status = 'confirmed' | 'fialed' | 'processing';
+type Enum_public_transaction_status = 'confirmed' | 'fialed' | 'not_confirmed' | 'processing';
 type Enum_public_transaction_type = 'airtime' | 'crypto-deposit' | 'fiat';
 interface Table_net_http_response {
   id: number | null;

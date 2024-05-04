@@ -34,6 +34,8 @@ export async function POST(request: Request) {
   //!!! replace with this signature === expectedSignature
   if (checkSignature) {
     //handle transaction type
+    //console.log("her3renfjrgrjfjenfej", checkSignature, body.type)
+
     if (body.type == "deposit") {
       //console.log(body, "dcdcdcdcdcdcd")
       return await handeleDeposit(body, supabase)
@@ -47,9 +49,10 @@ const handeleDeposit = async (
   body: any,
   supabase: SupabaseClient<Database>
 ) => {
-  //TODO, check if wè have ID befor running this.
+  //TODO, check if wè have ID before running this.
   //We first of all check if we have that foreign transcation id our the database
   //And inner join on parent transaction row
+
   const requestBody: CallbackData = body
   const { data: crypto_trasaction, error } = await supabase
     .from("crypto_transactions")
@@ -57,13 +60,14 @@ const handeleDeposit = async (
     .eq("foreign_transaction_id", requestBody.id)
     .single()
 
-  if (error) {
+  /*  if (error) {
     console.log(error)
-  }
+  } */
 
   if (crypto_trasaction == null) {
     //Processing
     //This a new txn, so this has a processing status
+    //TODO join this into a function
     const { data: transaction, error } = await supabase
       .from("transactions")
       .insert({
@@ -72,7 +76,7 @@ const handeleDeposit = async (
         currency: requestBody.currency_received.currency,
         receiver_id: requestBody.crypto_address.foreign_id,
         //receiver_description: `Processing deposit of ${requestBody.currency_received.amount_minus_fee}${requestBody.currency_received.currency}`,
-        transaction_status: "processing",
+        transaction_status: requestBody.status!,
       })
       .select()
       .single()
@@ -89,8 +93,9 @@ const handeleDeposit = async (
       })
     }
   } else {
-    //Updating!!!
     //If we have that transaction we are gonna update
+    //Updating!!!
+
     const { error } = await supabase
       .from("transactions")
       .update({ transaction_status: requestBody.status })
@@ -109,7 +114,6 @@ const handeleDeposit = async (
         p_amount: +requestBody.currency_received.amount_minus_fee!,
         p_currency: crypto_trasaction.transactions?.currency!,
       })
-
       //Maybe to send a mail or something
       //and if it failed nko, handle too
     }

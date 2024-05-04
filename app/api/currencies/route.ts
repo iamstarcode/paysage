@@ -22,6 +22,5 @@ export async function POST(req: Request) {
     },
   })
   const currencies = await res.json()
-  //console.log(currencies, "curr")
   return Response.json(currencies)
 }

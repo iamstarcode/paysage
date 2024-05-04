@@ -65,7 +65,7 @@ export default function Page() {
 
   const generateDescription = (transaction: Tables<"transactions">) => {
     if (transaction.transaction_type == "crypto-deposit") {
-      if (transaction.transaction_status == "processing") {
+      if (transaction.transaction_status == "not_confirmed") {
         return `Processing deposit of ${transaction.amount}${transaction.currency}`
       }
       if (transaction.transaction_status == "confirmed") {
@@ -90,7 +90,7 @@ export default function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions?.map((transaction: Transaction, i) => (
+          {transactions?.map((transaction: Tables<"transactions">, i) => (
             <TransactionBody key={i} user={user} transaction={transaction} />
           ))}
           {/*    {transactions?.map((transaction: Transaction) => (
@@ -182,7 +182,7 @@ const TransactionBody = ({
           console.error("Error fetching sender name:", error.message)
           return
         }
-        console.log(data, "ssss")
+        // console.log(data, "ssss")
 
         if (data) {
           setSenderName(`${data.first_name} ${data.last_name}`)
@@ -220,7 +220,7 @@ const TransactionBody = ({
     if (!transaction.sender_id || !transaction.receiver_id) {
       //one party transaction
       if (transaction.transaction_type == "crypto-deposit") {
-        if (transaction.transaction_status == "processing") {
+        if (transaction.transaction_status == "not_confirmed") {
           return `Processing deposit of ${transaction.amount}${transaction.currency}`
         }
         if (transaction.transaction_status == "confirmed") {

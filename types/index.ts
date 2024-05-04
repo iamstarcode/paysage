@@ -60,7 +60,7 @@ export type CallbackData = {
   transactions: CallbackTransaction[]
   fees: CallbckFee[]
   error: string
-  status: "processing" | "confirmed" | "fialed" | undefined
+  status: "processing" | "confirmed" | "fialed" | "not_confirmed" | undefined
 }
 
 type CryptoAddress = {
@@ -77,7 +77,7 @@ type Currency = {
   amount_minus_fee?: string // Optional field
 }
 
-type Transaction = {
+export type Transaction = {
   id: number
   currency: string
   transaction_type: string

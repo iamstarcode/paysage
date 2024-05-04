@@ -284,7 +284,11 @@ export type Database = {
     }
     Enums: {
       currency_type: "crypto" | "fiat"
-      transaction_status: "processing" | "confirmed" | "fialed"
+      transaction_status:
+        | "processing"
+        | "confirmed"
+        | "fialed"
+        | "not_confirmed"
       transaction_type: "fiat" | "airtime" | "crypto-deposit"
     }
     CompositeTypes: {
