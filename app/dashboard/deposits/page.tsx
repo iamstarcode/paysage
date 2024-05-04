@@ -32,8 +32,6 @@ export default async function Deposit() {
 
   const currencies = await res.json()
 
-  console.log(currencies, "ckdcikdcidci")
-
   const allCurrency: CurrencyType[] = currencies?.data
 
   const { data: wallets } = await supabase.from("wallets").select("*")

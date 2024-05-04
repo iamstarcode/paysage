@@ -24,11 +24,7 @@ export async function POST(req: Request) {
 
   if (res.ok) {
     const currencies = await res.json()
-    return Response.json({ ...currencies })
+    return Response.json({ ...currencies }, { status: 200 })
   }
-
-  console.log(res, "ressxededede")
-
-  return Response.json({ msg: "error occured" })
-  //console.log(currencies, "nrjfrjnfjrfnj")
+  return Response.json({ msg: "error occured" }, { status: 400 })
 }
