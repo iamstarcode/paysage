@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js"
 
+import { Tables } from "@/types/g-supabase"
 import { useTransactions } from "@/hooks/supabase"
 import { useToast } from "@/components/ui/use-toast"
 
@@ -27,40 +28,33 @@ function Realtime() {
       return redirect("/auth/login")
     }
 
+    const payloadNew: Tables<"transactions"> = payload.new
+
+    //console.log(payload.new, "cnvbvhrbvhrvbhr")
     let message = ""
-    if (payload?.new?.receiver_id! == user?.id) {
-      message = payload.new.receiver_description
-      console.log("you the reciever")
-    } else {
-      message = payload.new.sender_description
-      console.log("you the sender")
-    }
-    if (payload.eventType == "INSERT") {
-      toast({
-        description: (
-          <div className="flex flex-col">
-            <div className="inline-flex items-center">
-              <div className="h-8 w-8 bg-black rounded-full"></div>
-              <p className="ml-4">{message}</p>
-            </div>
-          </div>
-        ),
-      })
-    } else if (payload.eventType == "UPDATE") {
-      toast({
-        description: (
-          <div className="flex flex-col">
-            <div className="inline-flex items-center">
-              <div className="h-8 w-8 bg-black rounded-full"></div>
-              <p className="ml-4">{message}</p>
-            </div>
-          </div>
-        ),
-      })
+    if (payloadNew.transaction_type == "crypto-deposit") {
+      if (payloadNew.transaction_status == "not_confirmed") {
+        message = `Processing deposit of ${payloadNew.amount}${payloadNew.currency}`
+      }
+
+      if (payloadNew.transaction_status == "confirmed") {
+        message = `Confirmed deposit of ${payloadNew.amount}${payloadNew.currency}`
+      }
     }
 
+    toast({
+      description: (
+        <div className="flex flex-col">
+          <div className="inline-flex items-center">
+            <div className="h-8 w-8 bg-black rounded-full"></div>
+            <p className="ml-4">{message}</p>
+          </div>
+        </div>
+      ),
+    })
+
     mutate()
-    console.log("mutated")
+    //console.log("mutated")
     //revalidatePath("/dashboard/wallet")
   }
   useEffect(() => {
