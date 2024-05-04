@@ -25,12 +25,14 @@ export default async function Deposit() {
   })
  */
   const supabase = createClient()
-  const res = await fetch(getURL() + "/api/currencies", {
+  const res = await fetch(getURL() + "api/currencies", {
     method: "POST",
     body: JSON.stringify({ visible: true }),
   })
 
   const currencies = await res.json()
+
+  console.log(currencies, "ckdcikdcidci")
 
   const allCurrency: CurrencyType[] = currencies?.data
 

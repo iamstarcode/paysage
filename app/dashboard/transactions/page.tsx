@@ -57,11 +57,11 @@ export default function Page() {
   }, [supabase])
 
   //const
-  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
+  //const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies()
 
   //console.log(transactions, "gfgdg")
   if (transactionsError) <div>An error occured</div>
-  if (isCurrenciesLoading) return <TransactionSkeleton />
+  //if (isCurrenciesLoading) return <TransactionSkeleton />
 
   const generateDescription = (transaction: Tables<"transactions">) => {
     if (transaction.transaction_type == "crypto-deposit") {
