@@ -92,6 +92,11 @@ const handeleDeposit = async (
         user_id: requestBody.crypto_address.foreign_id,
       })
     }
+
+    return Response.json(
+      { message: "Processing deposit transaction" },
+      { status: 200 }
+    )
   } else {
     //If we have that transaction we are gonna update
     //Updating!!!
@@ -114,8 +119,9 @@ const handeleDeposit = async (
         p_amount: +requestBody.currency_received.amount_minus_fee!,
         p_currency: crypto_trasaction.transactions?.currency!,
       })
+      return Response.json({ message: "Deposit confirmed" }, { status: 200 })
       //Maybe to send a mail or something
-      //and if it failed nko, handle too
+      //and if it failed nko, handle too handle
     }
   }
 
