@@ -76,6 +76,7 @@ interface Table_auth_flow_state {
   created_at: string | null;
   updated_at: string | null;
   authentication_method: string;
+  auth_code_issued_at: string | null;
 }
 interface Table_supabase_functions_hooks {
   id: number;
@@ -188,6 +189,28 @@ interface Table_auth_refresh_tokens {
   parent: string | null;
   session_id: string | null;
 }
+interface Table_storage_s_3_multipart_uploads {
+  id: string;
+  in_progress_size: number;
+  upload_signature: string;
+  bucket_id: string;
+  key: string;
+  version: string;
+  owner_id: string | null;
+  created_at: string;
+}
+interface Table_storage_s_3_multipart_uploads_parts {
+  id: string;
+  upload_id: string;
+  size: number;
+  part_number: number;
+  bucket_id: string;
+  key: string;
+  etag: string;
+  owner_id: string | null;
+  version: string;
+  created_at: string;
+}
 interface Table_auth_saml_providers {
   id: string;
   sso_provider_id: string;
@@ -197,6 +220,7 @@ interface Table_auth_saml_providers {
   attribute_mapping: Json | null;
   created_at: string | null;
   updated_at: string | null;
+  name_id_format: string | null;
 }
 interface Table_auth_saml_relay_states {
   id: string;
@@ -204,7 +228,6 @@ interface Table_auth_saml_relay_states {
   request_id: string;
   for_email: string | null;
   redirect_to: string | null;
-  from_ip_address: string | null;
   created_at: string | null;
   updated_at: string | null;
   flow_state_id: string | null;
@@ -298,6 +321,7 @@ interface Table_auth_users {
   reauthentication_sent_at: string | null;
   is_sso_user: boolean;
   deleted_at: string | null;
+  is_anonymous: boolean;
 }
 interface Table_public_wallets {
   id: number;
@@ -362,6 +386,8 @@ interface Schema_storage {
   buckets: Table_storage_buckets;
   migrations: Table_storage_migrations;
   objects: Table_storage_objects;
+  s3_multipart_uploads: Table_storage_s_3_multipart_uploads;
+  s3_multipart_uploads_parts: Table_storage_s_3_multipart_uploads_parts;
 }
 interface Schema_supabase_functions {
   hooks: Table_supabase_functions_hooks;
@@ -403,6 +429,8 @@ interface Tables_relationships {
     };
     children: {
        objects_bucketId_fkey: "storage.objects";
+       s3_multipart_uploads_bucket_id_fkey: "storage.s3_multipart_uploads";
+       s3_multipart_uploads_parts_bucket_id_fkey: "storage.s3_multipart_uploads_parts";
     };
   };
   "public.crypto_transactions": {
@@ -499,6 +527,23 @@ interface Tables_relationships {
   "auth.refresh_tokens": {
     parent: {
        refresh_tokens_session_id_fkey: "auth.sessions";
+    };
+    children: {
+
+    };
+  };
+  "storage.s3_multipart_uploads": {
+    parent: {
+       s3_multipart_uploads_bucket_id_fkey: "storage.buckets";
+    };
+    children: {
+       s3_multipart_uploads_parts_upload_id_fkey: "storage.s3_multipart_uploads_parts";
+    };
+  };
+  "storage.s3_multipart_uploads_parts": {
+    parent: {
+       s3_multipart_uploads_parts_bucket_id_fkey: "storage.buckets";
+       s3_multipart_uploads_parts_upload_id_fkey: "storage.s3_multipart_uploads";
     };
     children: {
 

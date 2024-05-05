@@ -33,11 +33,11 @@ const usersStore = await seed.users((x) => [
   },
 
   {
-    id: "32cd5412-c0a4-4830-af6a-33448b5dd5c2",
+    id: "bad44483-1980-4e15-8260-ccfbe37f8207",
     instanceId: "00000000-0000-0000-0000-000000000000",
     aud: "authenticated",
     role: "authenticated",
-    email: "favourking95@gmail.com",
+    email: "murphybiola007@gmail.com",
     encryptedPassword:
       "$2a$10$VGQNx1KzIJ1DD0gz4.dL9uLYwFdSasKB0yoc/AkPfO2AJw44RRR5C",
     emailConfirmedAt: "2023-02-24T19:57:41.849Z",

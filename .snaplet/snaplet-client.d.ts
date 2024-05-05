@@ -51,6 +51,8 @@ type Override = {
       allowed_mime_types?: string;
       owner_id?: string;
       objects?: string;
+      s3_multipart_uploads?: string;
+      s3_multipart_uploads_parts?: string;
     };
   }
   crypto_transactions?: {
@@ -104,6 +106,7 @@ type Override = {
       created_at?: string;
       updated_at?: string;
       authentication_method?: string;
+      auth_code_issued_at?: string;
       saml_relay_states?: string;
     };
   }
@@ -270,6 +273,38 @@ type Override = {
       sessions?: string;
     };
   }
+  s3_multipart_uploads?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      in_progress_size?: string;
+      upload_signature?: string;
+      bucket_id?: string;
+      key?: string;
+      version?: string;
+      owner_id?: string;
+      created_at?: string;
+      buckets?: string;
+      s3_multipart_uploads_parts?: string;
+    };
+  }
+  s3_multipart_uploads_parts?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      upload_id?: string;
+      size?: string;
+      part_number?: string;
+      bucket_id?: string;
+      key?: string;
+      etag?: string;
+      owner_id?: string;
+      version?: string;
+      created_at?: string;
+      buckets?: string;
+      s3_multipart_uploads?: string;
+    };
+  }
   saml_providers?: {
     name?: string;
     fields?: {
@@ -281,6 +316,7 @@ type Override = {
       attribute_mapping?: string;
       created_at?: string;
       updated_at?: string;
+      name_id_format?: string;
       sso_providers?: string;
     };
   }
@@ -292,7 +328,6 @@ type Override = {
       request_id?: string;
       for_email?: string;
       redirect_to?: string;
-      from_ip_address?: string;
       created_at?: string;
       updated_at?: string;
       flow_state_id?: string;
@@ -425,6 +460,7 @@ type Override = {
       reauthentication_sent_at?: string;
       is_sso_user?: string;
       deleted_at?: string;
+      is_anonymous?: string;
       identities?: string;
       mfa_factors?: string;
       sessions?: string;
@@ -485,6 +521,8 @@ export interface Fingerprint {
     updatedAt?: FingerprintDateField;
     fileSizeLimit?: FingerprintNumberField;
     objects?: FingerprintRelationField;
+    s3MultipartUploads?: FingerprintRelationField;
+    s3MultipartUploadsParts?: FingerprintRelationField;
   }
   cryptoTransactions?: {
     id?: FingerprintNumberField;
@@ -505,6 +543,7 @@ export interface Fingerprint {
   flowStates?: {
     createdAt?: FingerprintDateField;
     updatedAt?: FingerprintDateField;
+    authCodeIssuedAt?: FingerprintDateField;
     samlRelayStates?: FingerprintRelationField;
   }
   hooks?: {
@@ -575,6 +614,19 @@ export interface Fingerprint {
     createdAt?: FingerprintDateField;
     updatedAt?: FingerprintDateField;
     session?: FingerprintRelationField;
+  }
+  s3MultipartUploads?: {
+    inProgressSize?: FingerprintNumberField;
+    createdAt?: FingerprintDateField;
+    bucket?: FingerprintRelationField;
+    s3MultipartUploadsPartsByUploadId?: FingerprintRelationField;
+  }
+  s3MultipartUploadsParts?: {
+    size?: FingerprintNumberField;
+    partNumber?: FingerprintNumberField;
+    createdAt?: FingerprintDateField;
+    bucket?: FingerprintRelationField;
+    upload?: FingerprintRelationField;
   }
   samlProviders?: {
     attributeMapping?: FingerprintJsonField;
