@@ -104,6 +104,6 @@ export type CryptoDepositType = {
   currency_received: Currency
   transactions: Transaction[]
   fees: Fee[]
-  error: string
+  errors: string[]
   status: string
 }

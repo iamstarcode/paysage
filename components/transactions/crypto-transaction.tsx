@@ -17,52 +17,24 @@ import DebitCredit from "./debit-credit"
 import KeyValuePair from "./key-value-pair"
 
 export default async function CrptionTransaction({ id }: { id: number }) {
-  // const { cryptoTransaction, isCryptoTransactionLoading } =
-  // useCryptoTransaction(id)
-
-  //const [txn, setTxn] = useState<CryptoDepositType | null>()
-
   const res = await fetch(getURL() + `/api/transaction-info`, {
     method: "POST",
     body: JSON.stringify({
-      //id: cryptoTransaction?.crypto_transactions?.foreign_transaction_id!,
-      id: "131001223",
+      id: 131005996,
     }),
   })
 
   const txn: CryptoDepositType = await res.json()
-  /*   await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 10000)
-  }) */
 
-  /*   useEffect(() => {
-    async function getTxn() {
-      const res = await fetch(`/api/transaction-info`, {
-        method: "POST",
-        body: JSON.stringify({
-          //id: cryptoTransaction?.crypto_transactions?.foreign_transaction_id!,
-          id: "131001223",
-        }),
-      })
-
-      const data = await res.json()
-      //console.log(data, "wskwksmwkmk")
-      setTxn(data)
-    }
-
-    getTxn()
-  }, [cryptoTransaction?.crypto_transactions?.foreign_transaction_id]) */
-  // console.log(txn!, "ddddd")
+  if (txn.errors) return <p>No transaction found.</p>
 
   return (
     <>
-      <div id="gfrghfrgfhrgfy" className="grid gap-1 md:gap-2">
-        {/*  <DebitCredit
-            amount={cryptoTransaction?.amount!}
-            currecny={cryptoTransaction?.currency!}
-          /> */}
+      <div className="grid gap-1 md:gap-2">
+        <DebitCredit
+          amount={+txn.currency_received?.amount!}
+          currecny={txn.currency_received?.currency!}
+        />
         <Card>
           <CardHeader>
             <CardDescription>Crypto Address</CardDescription>
@@ -124,7 +96,24 @@ export default async function CrptionTransaction({ id }: { id: number }) {
           </CardContent>
         </Card>
 
-        {/* eere */}
+        <Card>
+          <CardHeader>
+            <CardDescription>Fees</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2 text-md">
+              <KeyValuePair
+                kee="Crypto Deposit Fee"
+                value={txn.fees[0].amount! + txn.fees[0].currency}
+              />
+
+              <KeyValuePair
+                kee="Transfer Fee"
+                value={txn.fees[1].amount! + txn.fees[1].currency}
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   )
