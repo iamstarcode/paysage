@@ -58,7 +58,7 @@ export default async function CrptionTransaction({ id }: { id: number }) {
 
   return (
     <>
-      <div className="grid gap-1 md:gap-2">
+      <div id="gfrghfrgfhrgfy" className="grid gap-1 md:gap-2">
         {/*  <DebitCredit
             amount={cryptoTransaction?.amount!}
             currecny={cryptoTransaction?.currency!}
