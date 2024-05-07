@@ -37,6 +37,16 @@ type Override = {
       ip_address?: string;
     };
   }
+  broadcasts?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      channel_id?: string;
+      inserted_at?: string;
+      updated_at?: string;
+      channels?: string;
+    };
+  }
   buckets?: {
     name?: string;
     fields?: {
@@ -53,6 +63,17 @@ type Override = {
       objects?: string;
       s3_multipart_uploads?: string;
       s3_multipart_uploads_parts?: string;
+    };
+  }
+  channels?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      name?: string;
+      inserted_at?: string;
+      updated_at?: string;
+      broadcasts?: string;
+      presences?: string;
     };
   }
   crypto_transactions?: {
@@ -248,6 +269,16 @@ type Override = {
       buckets?: string;
     };
   }
+  presences?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      channel_id?: string;
+      inserted_at?: string;
+      updated_at?: string;
+      channels?: string;
+    };
+  }
   profiles?: {
     name?: string;
     fields?: {
@@ -341,6 +372,13 @@ type Override = {
       version?: string;
     };
   }
+  realtime_schema_migrations?: {
+    name?: string;
+    fields?: {
+      version?: string;
+      inserted_at?: string;
+    };
+  }
   supabase_migrations_schema_migrations?: {
     name?: string;
     fields?: {
@@ -403,6 +441,18 @@ type Override = {
       saml_providers?: string;
       saml_relay_states?: string;
       sso_domains?: string;
+    };
+  }
+  subscription?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      subscription_id?: string;
+      entity?: string;
+      filters?: string;
+      claims?: string;
+      claims_role?: string;
+      created_at?: string;
     };
   }
   transactions?: {
@@ -516,6 +566,13 @@ export interface Fingerprint {
     payload?: FingerprintJsonField;
     createdAt?: FingerprintDateField;
   }
+  broadcasts?: {
+    id?: FingerprintNumberField;
+    channelId?: FingerprintNumberField;
+    insertedAt?: FingerprintDateField;
+    updatedAt?: FingerprintDateField;
+    channel?: FingerprintRelationField;
+  }
   buckets?: {
     createdAt?: FingerprintDateField;
     updatedAt?: FingerprintDateField;
@@ -523,6 +580,13 @@ export interface Fingerprint {
     objects?: FingerprintRelationField;
     s3MultipartUploads?: FingerprintRelationField;
     s3MultipartUploadsParts?: FingerprintRelationField;
+  }
+  channels?: {
+    id?: FingerprintNumberField;
+    insertedAt?: FingerprintDateField;
+    updatedAt?: FingerprintDateField;
+    broadcasts?: FingerprintRelationField;
+    presences?: FingerprintRelationField;
   }
   cryptoTransactions?: {
     id?: FingerprintNumberField;
@@ -606,6 +670,13 @@ export interface Fingerprint {
     metadata?: FingerprintJsonField;
     bucket?: FingerprintRelationField;
   }
+  presences?: {
+    id?: FingerprintNumberField;
+    channelId?: FingerprintNumberField;
+    insertedAt?: FingerprintDateField;
+    updatedAt?: FingerprintDateField;
+    channel?: FingerprintRelationField;
+  }
   profiles?: {
     i?: FingerprintRelationField;
   }
@@ -643,6 +714,10 @@ export interface Fingerprint {
   authSchemaMigrations?: {
 
   }
+  realtimeSchemaMigrations?: {
+    version?: FingerprintNumberField;
+    insertedAt?: FingerprintDateField;
+  }
   supabaseMigrationsSchemaMigrations?: {
 
   }
@@ -671,6 +746,11 @@ export interface Fingerprint {
     samlProviders?: FingerprintRelationField;
     samlRelayStates?: FingerprintRelationField;
     ssoDomains?: FingerprintRelationField;
+  }
+  subscriptions?: {
+    id?: FingerprintNumberField;
+    claims?: FingerprintJsonField;
+    createdAt?: FingerprintDateField;
   }
   transactions?: {
     id?: FingerprintNumberField;

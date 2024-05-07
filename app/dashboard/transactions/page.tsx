@@ -250,7 +250,7 @@ const TransactionBody = ({
       })
 
       const data = await res.json()
-      console.log(data, "wskwksmwkmk")
+
       //setTxn(data)
     }
 

@@ -12,6 +12,8 @@ type Enum_pgsodium_key_type = 'aead-det' | 'aead-ietf' | 'auth' | 'generichash' 
 type Enum_public_currency_type = 'crypto' | 'fiat';
 type Enum_public_transaction_status = 'confirmed' | 'fialed' | 'not_confirmed' | 'processing';
 type Enum_public_transaction_type = 'airtime' | 'crypto-deposit' | 'fiat';
+type Enum_realtime_action = 'DELETE' | 'ERROR' | 'INSERT' | 'TRUNCATE' | 'UPDATE';
+type Enum_realtime_equality_op = 'eq' | 'gt' | 'gte' | 'in' | 'lt' | 'lte' | 'neq';
 interface Table_net_http_response {
   id: number | null;
   status_code: number | null;
@@ -29,6 +31,12 @@ interface Table_auth_audit_log_entries {
   created_at: string | null;
   ip_address: string;
 }
+interface Table_realtime_broadcasts {
+  id: number;
+  channel_id: number;
+  inserted_at: string;
+  updated_at: string;
+}
 interface Table_storage_buckets {
   id: string;
   name: string;
@@ -40,6 +48,12 @@ interface Table_storage_buckets {
   file_size_limit: number | null;
   allowed_mime_types: string[] | null;
   owner_id: string | null;
+}
+interface Table_realtime_channels {
+  id: number;
+  name: string;
+  inserted_at: string;
+  updated_at: string;
 }
 interface Table_public_crypto_transactions {
   id: number;
@@ -172,6 +186,12 @@ interface Table_storage_objects {
   version: string | null;
   owner_id: string | null;
 }
+interface Table_realtime_presences {
+  id: number;
+  channel_id: number;
+  inserted_at: string;
+  updated_at: string;
+}
 interface Table_public_profiles {
   id: string;
   first_name: string | null;
@@ -235,6 +255,10 @@ interface Table_auth_saml_relay_states {
 interface Table_auth_schema_migrations {
   version: string;
 }
+interface Table_realtime_schema_migrations {
+  version: number;
+  inserted_at: string | null;
+}
 interface Table_supabase_migrations_schema_migrations {
   version: string;
   statements: string[] | null;
@@ -275,6 +299,34 @@ interface Table_auth_sso_providers {
   resource_id: string | null;
   created_at: string | null;
   updated_at: string | null;
+}
+interface Table_realtime_subscription {
+  id: number;
+  subscription_id: string;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  entity: unknown;
+  /**
+  * We couldn't determine the type of this column. The type might be coming from an unknown extension
+  * or be specific to your database. Please if it's a common used type report this issue so we can fix it!
+  * Otherwise, please manually type this column by casting it to the correct type.
+  * @example
+  * Here is a cast example for copycat use:
+  * ```
+  * copycat.scramble(row.unknownColumn as string)
+  * ```
+  */
+  filters: unknown[];
+  claims: Json;
+  created_at: string;
 }
 interface Table_public_transactions {
   id: number;
@@ -380,7 +432,11 @@ interface Schema_public {
   wallets: Table_public_wallets;
 }
 interface Schema_realtime {
-
+  broadcasts: Table_realtime_broadcasts;
+  channels: Table_realtime_channels;
+  presences: Table_realtime_presences;
+  schema_migrations: Table_realtime_schema_migrations;
+  subscription: Table_realtime_subscription;
 }
 interface Schema_storage {
   buckets: Table_storage_buckets;
@@ -423,6 +479,14 @@ interface Extension {
   vault: "supabase_vault";
 }
 interface Tables_relationships {
+  "realtime.broadcasts": {
+    parent: {
+       broadcasts_channel_id_fkey: "realtime.channels";
+    };
+    children: {
+
+    };
+  };
   "storage.buckets": {
     parent: {
 
@@ -431,6 +495,15 @@ interface Tables_relationships {
        objects_bucketId_fkey: "storage.objects";
        s3_multipart_uploads_bucket_id_fkey: "storage.s3_multipart_uploads";
        s3_multipart_uploads_parts_bucket_id_fkey: "storage.s3_multipart_uploads_parts";
+    };
+  };
+  "realtime.channels": {
+    parent: {
+
+    };
+    children: {
+       broadcasts_channel_id_fkey: "realtime.broadcasts";
+       presences_channel_id_fkey: "realtime.presences";
     };
   };
   "public.crypto_transactions": {
@@ -511,6 +584,14 @@ interface Tables_relationships {
   "storage.objects": {
     parent: {
        objects_bucketId_fkey: "storage.buckets";
+    };
+    children: {
+
+    };
+  };
+  "realtime.presences": {
+    parent: {
+       presences_channel_id_fkey: "realtime.channels";
     };
     children: {
 

@@ -1,4 +1,7 @@
+import { Suspense } from "react"
+
 import RouteModal from "@/components/route-modal"
+import TransactionSkeleton from "@/components/skeletons/transaction"
 import Transaction from "@/components/transactions/transaction"
 
 function Page({
@@ -10,7 +13,9 @@ function Page({
 }) {
   return (
     <RouteModal>
-      <Transaction transaction_id={params.id} searchParams={searchParams} />
+      <Suspense fallback={<TransactionSkeleton />}>
+        <Transaction transaction_id={params.id} searchParams={searchParams} />
+      </Suspense>
     </RouteModal>
   )
 }

@@ -16,9 +16,7 @@ function Realtime() {
   const { mutate } = useTransactions()
   const { toast } = useToast()
 
-  const handleUpdates = async (
-    payload: RealtimePostgresChangesPayload<any>
-  ) => {
+  async function handleUpdates(payload: RealtimePostgresChangesPayload<any>) {
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -30,7 +28,6 @@ function Realtime() {
 
     const payloadNew: Tables<"transactions"> = payload.new
 
-    //console.log(payload.new, "cnvbvhrbvhrvbhr")
     let message = ""
     if (payloadNew.transaction_type == "crypto-deposit") {
       if (payloadNew.transaction_status == "not_confirmed") {
@@ -57,6 +54,7 @@ function Realtime() {
     //console.log("mutated")
     //revalidatePath("/dashboard/wallet")
   }
+
   useEffect(() => {
     async function fetcTransaction() {
       const {
