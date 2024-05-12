@@ -99,7 +99,7 @@ export async function apiRouteHandler({
       ? process.env.COINPAID_DEV_URL
       : process.env.COINPAID_URL
 
-  const fetcher = fetch(`${apiURL}/${urlSegment}`, {
+  const fetcher = fetch(`${apiURL}${urlSegment}`, {
     method,
     body: requestBody,
     headers: {
@@ -112,19 +112,7 @@ export async function apiRouteHandler({
     },
   })
 
-  /*  const json = await res.json()
-  if (res.ok) {
-    return Response.json(json)
-  } else {
-    console.log(json)
-    return Response.json(
-      { message: "An unknown error occured", json },
-      { status: 400 }
-    )
-  } */
-
   return fetcher
-  // return Response.json({ message: "An unknown error occured" }, { status: 400 })
 }
 
 export function shortenAddress(

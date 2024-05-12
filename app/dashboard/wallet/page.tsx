@@ -1,11 +1,19 @@
 import { Suspense } from "react"
+import { createClient } from "@/utils/supabase/server"
 
 import BalanceSkeleton from "@/components/skeletons/balance"
-import Transfer from "@/components/transfer"
-import Balance from "@/components/wallet/balance"
-import RecentTransactions from "@/components/wallet/recent-transactions"
+import Wallets from "@/components/wallet/wallets"
 
 export default async function Page() {
+  const supabase = createClient()
+
+  const { data: wallets } = await supabase.from("wallets").select("*")
+
+  await new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 5000)
+  })
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex justify-between items-center">
@@ -20,7 +28,7 @@ export default async function Page() {
               <BalanceSkeleton key={index} />
             ))}
           >
-            <Balance />
+            <Wallets wallets={wallets!} />
           </Suspense>
         </div>
       </div>

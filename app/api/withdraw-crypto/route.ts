@@ -8,11 +8,25 @@ export async function POST(request: Request) {
 
   const supabase = createClient()
 
-  const fetcher = await apiRouteHandler({
-    request,
-    urlSegment: "accounts/list",
-    method: "POST",
-  })
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  console.log(fetcher)
+  console.log(user, "Sxwxwxwx")
+
+  return
+  try {
+    const fetcher = await apiRouteHandler({
+      request,
+      urlSegment: "/accounts/list",
+      method: "POST",
+    })
+
+    const data = await fetcher.json()
+    console.log(data)
+  } catch (error) {
+    console.log(error)
+  }
+
+  return Response.json({ aa: "exedk" })
 }

@@ -4,12 +4,12 @@ import {
   useQuery,
 } from "@supabase-cache-helpers/postgrest-swr"
 
+import { getCurrencies } from "@/lib/queries"
+
 const supabase = createClient()
 
 export const useCurrencies = () => {
-  const { data, isLoading, error, mutate } = useQuery(
-    supabase.from("currencies").select("*")
-  )
+  const { data, isLoading, error, mutate } = useQuery(getCurrencies(supabase))
   return { data, isLoading, error, mutate }
 }
 
