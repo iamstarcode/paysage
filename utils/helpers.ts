@@ -84,23 +84,22 @@ export const getURL = () => {
 }
 
 export async function apiRouteHandler({
-  req,
+  request,
   urlSegment,
   method,
 }: {
-  req: Request
+  request: Request
   urlSegment: string
   method: string
 }) {
-  const data = await req.json()
-
-  //const requestBody = JSON.stringify(data)
+  const data = await request.json()
+  const requestBody = JSON.stringify(data)
   const apiURL =
     process.env.NODE_ENV == "development"
       ? process.env.COINPAID_DEV_URL
       : process.env.COINPAID_URL
 
-  /*   const res = await fetch(`${apiURL}${urlSegment}`, {
+  const fetcher = fetch(`${apiURL}/${urlSegment}`, {
     method,
     body: requestBody,
     headers: {
@@ -113,7 +112,7 @@ export async function apiRouteHandler({
     },
   })
 
-  const json = await res.json()
+  /*  const json = await res.json()
   if (res.ok) {
     return Response.json(json)
   } else {
@@ -124,7 +123,8 @@ export async function apiRouteHandler({
     )
   } */
 
-  return Response.json({ message: "An unknown error occured" }, { status: 400 })
+  return fetcher
+  // return Response.json({ message: "An unknown error occured" }, { status: 400 })
 }
 
 export function shortenAddress(

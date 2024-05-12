@@ -1,7 +1,6 @@
-import { createHmac, timingSafeEqual } from "crypto" // For signature verification (optional)
+import { createHmac } from "crypto" // For signature verification (optional)
 
-import { revalidatePath } from "next/cache"
-import { CallbackData, Transaction } from "@/types"
+import { CallbackData } from "@/types"
 import { createClient, SupabaseClient } from "@supabase/supabase-js"
 
 import { Database } from "@/types/g-supabase"
@@ -127,3 +126,5 @@ const handeleDeposit = async (
 
   return Response.json({ message: "Deposit callback done" }, { status: 201 })
 }
+
+const handleWithdraw = async () => {}
