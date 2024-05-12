@@ -12,7 +12,7 @@ export default async function Page() {
   await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
-    }, 500000)
+    }, 5000)
   })
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
