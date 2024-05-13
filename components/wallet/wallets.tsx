@@ -1,22 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { createClient } from "@/utils/supabase/server"
 import { PlusCircle } from "lucide-react"
 
 import { Tables } from "@/types/g-supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 //export const revalidate = 0
-function Wallets({ wallets }: { wallets: Tables<"wallets">[] }) {
+function Wallets({ wallets }: { wallets: Tables<"wallets">[] | null }) {
   /*  await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
     }, 10000)
   }) */
-
-  // const supabase = createClient()
-  // const { data: wallets } = await supabase.from("wallets").select("*")
 
   return (
     <>

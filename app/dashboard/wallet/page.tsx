@@ -7,13 +7,14 @@ import Wallets from "@/components/wallet/wallets"
 export default async function Page() {
   const supabase = createClient()
 
-  const { data: wallets } = await supabase.from("wallets").select("*")
-
-  await new Promise<void>((resolve) => {
+  /*   await new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
-    }, 5000)
+    }, 10000)
   })
+ */
+  const { data: wallets } = await supabase.from("wallets").select("*")
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex justify-between items-center">
@@ -28,9 +29,10 @@ export default async function Page() {
               <BalanceSkeleton key={index} />
             ))}
           >
-            <Wallets wallets={wallets!} />
+            <Wallets wallets={wallets} />
           </Suspense>
         </div>
+        kde
       </div>
 
       <div className="flex items-center gap-4">
