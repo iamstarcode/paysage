@@ -23,7 +23,7 @@ function Realtime() {
 
     //TODO, maybe to handle only to have the notifaction if the user is for this person
     if (!user) {
-      return redirect("/auth/login")
+      // return redirect("/auth/login")
     }
 
     const payloadNew: Tables<"transactions"> = payload.new

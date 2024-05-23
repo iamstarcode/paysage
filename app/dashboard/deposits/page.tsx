@@ -1,36 +1,21 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import { CurrencyType } from "@/types"
-import { getURL } from "@/utils/helpers"
 import { createClient } from "@/utils/supabase/server"
+import axios from "axios"
 
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { API_URL } from "@/app/constants"
 
 export default async function Deposit() {
-  /*  await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 10000)
-  })
- */
   const supabase = createClient()
-  const res = await fetch(getURL() + "api/currencies", {
+  const res = await axios(API_URL + "/coinspaid/currencies/list", {
     method: "POST",
-    body: JSON.stringify({ visible: true }),
+    data: { visible: true },
   })
 
-  const currencies = await res.json()
+  const currencies = await res.data
 
   const allCurrency: CurrencyType[] = currencies?.data
 
@@ -103,30 +88,36 @@ export default async function Deposit() {
               <CardTitle>All currencies</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {/*    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Suspense fallback={<Skeleton />}>
-                  {crypto.map((currency: CurrencyType) => (
-                    <Card key={currency.id} className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {crypto?.map((item) => (
+                  <Card key={item.currency.id} className="p-4">
+                    <Link
+                      href={`/dashboard/deposits/${item.currency.currency}/`}
+                    >
                       <CardContent className="p-0">
                         <div className="flex justify-between">
                           <div className="flex items-center">
                             <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-                            <p className="ml-4 text-sm">USD</p>
+                            <p className="ml-4 text-sm">
+                              {item.currency.currency}
+                            </p>
                           </div>
                           <div className="rounded-lg">
                             <span className="text-right block text-ellipsis text-sm font-semibold">
-                              240.76544987
+                              {item.wallet != undefined
+                                ? item.wallet.balance
+                                : 0}
                             </span>
                             <p className="text-right text-xs text-gray-300">
-                              240.8 USD
+                              240.8 USD rate in usd
                             </p>
                           </div>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
-                </Suspense>
-              </div> */}
+                    </Link>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -136,30 +127,36 @@ export default async function Deposit() {
               <CardTitle>All currencies</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {/*   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Suspense fallback={<Skeleton />}>
-                  {fiat.map((currency: CurrencyType) => (
-                    <Card key={currency.id} className="p-4 cursor-pointer">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {fiat?.map((item) => (
+                  <Card key={item.currency.id} className="p-4">
+                    <Link
+                      href={`/dashboard/deposits/${item.currency.currency}/`}
+                    >
                       <CardContent className="p-0">
                         <div className="flex justify-between">
                           <div className="flex items-center">
                             <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-                            <p className="ml-4 text-sm">USD</p>
+                            <p className="ml-4 text-sm">
+                              {item.currency.currency}
+                            </p>
                           </div>
                           <div className="rounded-lg">
                             <span className="text-right block text-ellipsis text-sm font-semibold">
-                              240.76544987
+                              {item.wallet != undefined
+                                ? item.wallet.balance
+                                : 0}
                             </span>
                             <p className="text-right text-xs text-gray-300">
-                              240.8 USD
+                              240.8 USD rate in usd
                             </p>
                           </div>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
-                </Suspense>
-              </div> */}
+                    </Link>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

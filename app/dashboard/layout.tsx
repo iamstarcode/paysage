@@ -17,15 +17,15 @@ export default async function DashboardLayout({
   deposit: React.ReactNode
   transaction: React.ReactNode
 }) {
-  const supabase = createClient()
+  /*  const supabase = createClient()
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return redirect("/auth/login")
-  }
+    // return redirect("/auth/login")
+  } */
 
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
