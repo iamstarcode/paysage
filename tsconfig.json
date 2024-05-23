@@ -31,7 +31,7 @@
     "components/icons",
     "app/dashboard/@transaction/default.js",
     "app/dashboard/transactions/layout",
-    "hooks/supabase.js",
+    "hooks/supabase/supabase.js",
     "app/api/transaction-info/route.js",
     "app/api/transaction-info/route.js"
   ],

@@ -6,6 +6,7 @@ import axios from "axios"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import DepositDialog from "@/components/deposit/deposit-dialog"
 import { API_URL } from "@/app/constants"
 
 export default async function Deposit() {
@@ -89,33 +90,8 @@ export default async function Deposit() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {crypto?.map((item) => (
-                  <Card key={item.currency.id} className="p-4">
-                    <Link
-                      href={`/dashboard/deposits/${item.currency.currency}/`}
-                    >
-                      <CardContent className="p-0">
-                        <div className="flex justify-between">
-                          <div className="flex items-center">
-                            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-                            <p className="ml-4 text-sm">
-                              {item.currency.currency}
-                            </p>
-                          </div>
-                          <div className="rounded-lg">
-                            <span className="text-right block text-ellipsis text-sm font-semibold">
-                              {item.wallet != undefined
-                                ? item.wallet.balance
-                                : 0}
-                            </span>
-                            <p className="text-right text-xs text-gray-300">
-                              240.8 USD rate in usd
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
+                {crypto?.map((item: any) => (
+                  <DepositDialog key={item.currency} item={item} />
                 ))}
               </div>
             </CardContent>
@@ -128,33 +104,8 @@ export default async function Deposit() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {fiat?.map((item) => (
-                  <Card key={item.currency.id} className="p-4">
-                    <Link
-                      href={`/dashboard/deposits/${item.currency.currency}/`}
-                    >
-                      <CardContent className="p-0">
-                        <div className="flex justify-between">
-                          <div className="flex items-center">
-                            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-                            <p className="ml-4 text-sm">
-                              {item.currency.currency}
-                            </p>
-                          </div>
-                          <div className="rounded-lg">
-                            <span className="text-right block text-ellipsis text-sm font-semibold">
-                              {item.wallet != undefined
-                                ? item.wallet.balance
-                                : 0}
-                            </span>
-                            <p className="text-right text-xs text-gray-300">
-                              240.8 USD rate in usd
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
+                {fiat?.map((item: any) => (
+                  <DepositDialog key={item.currency} item={item} />
                 ))}
               </div>
             </CardContent>

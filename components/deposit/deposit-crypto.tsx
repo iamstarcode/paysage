@@ -1,10 +1,10 @@
+"use client"
+
 import { useEffect, useState } from "react"
 import { CurrencyType } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import { Copy, User2 } from "lucide-react"
 
-import { Tables } from "@/types/g-supabase"
-import { useWalletByCurreny } from "@/hooks/supabase"
 import { Input } from "@/components/ui/input"
 
 import { Label } from "../ui/label"
