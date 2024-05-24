@@ -4,7 +4,7 @@ import {
   useQuery,
 } from "@supabase-cache-helpers/postgrest-swr"
 
-import { getCurrencies } from "@/lib/queries"
+import { getCurrencies, getDepositAddress } from "@/lib/queries"
 
 const supabase = createClient()
 
@@ -39,11 +39,9 @@ export const useWalletByCurreny = (currency) => {
 
 export const useDepositAdress = (currency, convert_to = null) => {
   const { data, isLoading, error, mutate } = useQuery(
-    supabase
-      .from("deposit_addresses")
-      .select("*")
-      .eq("currency", currency)
-      .single()
+    convert_to
+      ? getDepositAddress(supabase, currency, convert_to)
+      : getDepositAddress(supabase, currency)
   )
   return {
     depositAdress: data,

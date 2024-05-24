@@ -56,7 +56,7 @@ export default function DepositCrypto({
       }
     }
 
-    generateWallet()
+    //  generateWallet()
   }, [currency.currency, supabase])
 
   // if (isWalletLoading) return <p>Generating wallet</p>
